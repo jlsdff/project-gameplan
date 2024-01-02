@@ -1,6 +1,8 @@
 "use client";
 import React, { useState, useMemo, useReducer } from "react";
 import { Input, Button, Checkbox, Link } from "@nextui-org/react";
+import { signIn } from "@/helpers/signin";
+import { useRouter } from "next/navigation";
 
 function reducer(state, action) {
   const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i;
@@ -25,6 +27,14 @@ function reducer(state, action) {
           isTouched: true,
         },
       };
+    case "error":
+      return {
+        ...state,
+        error: {
+          message: action.message,
+          hasError: action.hasError
+        }
+      }
 
     default:
       return state;
@@ -43,11 +53,31 @@ export default function LoginForm() {
       isValid: false,
       isTouched: false,
     },
+    error: {
+      message: "",
+      hasError: false,
+    }
   });
+  const router = useRouter();
+
+  async function handleLogin(){
+    const {email, password} = state;
+
+    const res = await signIn(email.value, password.value)
+
+    console.log(res)
+
+    if(res.status === 'success'){
+      router.push('/admin/dashboard')
+    }else {
+      dispatch({type: "error", message: "Invalid Email or Password", hasError: true})
+    }
+
+  }
 
   return (
     <section className="max-w-96 w-96 rounded-lg border-2 border-neutral-100/50 p-4  ">
-      <h1 className="text-3xl font-bold text-center">Admin Login</h1>
+      <h1 className="text-2xl font-bold text-center">Admin Login</h1>
       <div className="flex flex-col gap-2 mt-4 ">
         <div className="w-full ">
           <Input
@@ -84,10 +114,16 @@ export default function LoginForm() {
             Forgot Password?
           </Link>
         </div>
+        {
+          state.error.hasError && (
+            <div className="text-danger text-sm text-center">{state.error.message}</div>
+          )
+        }
         <Button
           variant="shadow"
           color="primary"
-          disabled={!state.email.isValid && !state.password}
+          disabled={!state.email.isValid && state.password.value.length < 5}
+          onClick={handleLogin}
         >
           Login
         </Button>
