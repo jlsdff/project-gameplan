@@ -1,14 +1,11 @@
-"use client";
-import React, { useState, useEffect } from "react";
+"use client"
+import React from "react";
 import { AdminContext } from "@/context/adminContext";
-import { auth } from "@/lib/firebase/firebase";
-import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import {Spinner} from "@nextui-org/react";
 
 export default function AdminProvider({ children }) {
   const { user, loading } = useAuth();
-  const router = useRouter();
 
   if (loading) {
     return (
@@ -17,6 +14,5 @@ export default function AdminProvider({ children }) {
       </div>
     );
   }
-  console.log(user)
   return <AdminContext.Provider value={user}>{children}</AdminContext.Provider>;
 }

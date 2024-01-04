@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useContext } from "react";
 import {
   Navbar,
   NavbarBrand,
@@ -15,14 +15,28 @@ import {
   Avatar,
 } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
-// import {AcmeLogo} from "./AcmeLogo.jsx";
+import { auth } from "@/lib/firebase/firebase";
+import { AdminContext } from "@/context/adminContext";
+import { useRouter } from "next/navigation";
 
 export default function App() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const router = useRouter();
   const pathname = usePathname();
+  const adminContext = useContext(AdminContext);
 
   const menuItems = ["Teams", "Players", "Games", "Log Out"];
 
+  function signOut() {
+    auth
+      .signOut()
+      .then(() => {
+        router.push("/admin");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
   return (
     <Navbar onMenuOpenChange={setIsMenuOpen}>
       <NavbarContent>
@@ -86,9 +100,17 @@ export default function App() {
             />
           </DropdownTrigger>
           <DropdownMenu aria-label="Profile Actions" variant="flat">
-            <DropdownItem key="profile" className="h-14 gap-2">
+            <DropdownItem
+              key="profile"
+              className="h-14 gap-2"
+              onClick={() => {
+                router.push(`/admin/dashboard/${adminContext.uid}`);
+              }}
+            >
               <p className="font-semibold">Signed in as</p>
-              <p className="font-semibold">placeholder@example.com</p>
+              <p className="font-semibold">
+                {adminContext ? adminContext.email : "---"}
+              </p>
             </DropdownItem>
             {/* <DropdownItem key="settings">My Settings</DropdownItem>
             <DropdownItem key="team_settings">Team Settings</DropdownItem>
@@ -96,7 +118,7 @@ export default function App() {
             <DropdownItem key="system">System</DropdownItem>
             <DropdownItem key="configurations">Configurations</DropdownItem>
             <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem> */}
-            <DropdownItem key="logout" color="danger">
+            <DropdownItem key="logout" color="danger" onClick={signOut}>
               Log Out
             </DropdownItem>
           </DropdownMenu>
