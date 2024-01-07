@@ -6,14 +6,12 @@ import { Link } from "@nextui-org/react";
 
 export default function Hero() {
   return (
-    <section
-      className="w-full px-8 sm:px-16"
-    >
+    <section className="w-full px-8 sm:px-16">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 0.1 }}>
-
+        transition={{ duration: 1, delay: 0.1 }}
+      >
         <h1
           className={`${josefinSans.className} text-xl sm:text-5xl text-center sm:text-left sm:leading-snug`}
         >
@@ -29,7 +27,7 @@ export default function Hero() {
           Browse Now: &nbsp;
           <Link className="font-bold" href="/players">
             Players
-          </Link>{" "}  
+          </Link>{" "}
           &nbsp; | &nbsp;
           <Link className="font-bold" href="/teams">
             Teams
@@ -40,9 +38,9 @@ export default function Hero() {
           </Link>
         </p>
       </motion.div>
-      <>
-      
-      </>
+      <motion.div>
+        
+      </motion.div>
     </section>
   );
 }
