@@ -29,7 +29,7 @@ export default function Hero() {
           Browse Now: &nbsp;
           <Link className="font-bold" href="/players">
             Players
-          </Link>{" "}
+          </Link>{" "}  
           &nbsp; | &nbsp;
           <Link className="font-bold" href="/teams">
             Teams
