@@ -1,0 +1,20 @@
+import React from "react";
+import { Image } from "@nextui-org/react";
+import { josefinSans } from "../fonts";
+
+export default function UnderConstruction() {
+  return (
+    <section className="h-[90vh] flex flex-col justify-center items-center gap-5">
+      <div className="flex justify-center items-center w-[300px] md:w-[600px] lg:w-[900px] object-contain">
+        <Image
+          className="object-contain"
+          src="/underConstruction.svg"
+          width={"auto"}
+        />
+      </div>
+      <h1 className={`text-2xl sm:text-4xl font-black ${josefinSans.className}`}>
+        Under Construction
+      </h1>
+    </section>
+  );
+}
