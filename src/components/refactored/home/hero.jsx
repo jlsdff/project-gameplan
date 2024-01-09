@@ -11,7 +11,7 @@ export default function Hero() {
       className="min-h-[90vh] flex justify-center items-center overflow-hidden relative"
       id="hero"
     >
-      <div className="w-full px-8 sm:px-16 flex justify-between items-center  flex-col lg:flex-row gap-10 z-10 ">
+      <div className="w-full px-8 py-4 sm:py-8 sm:px-16 flex justify-between items-center  flex-col lg:flex-row gap-10 z-10 ">
         <motion.div
           className=" z-20 order-2 md:order-1"
           initial={{ opacity: 0 }}
