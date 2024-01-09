@@ -1,8 +1,9 @@
 import React from 'react'
-import UnderConstruction from '@/components/ui/underConstruction'
 
 export default function Games () {
   return (
-    <UnderConstruction />
+    <main className='flex min-h-screen flex-col items-center justify-between p-24'>
+      <p>Games Page</p>
+    </main>
   )
 }

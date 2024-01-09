@@ -1,8 +1,9 @@
 import Image from 'next/image'
-import UnderConstruction from '@/components/ui/underConstruction'
 
 export default function Home() {
   return (
-    <UnderConstruction />
+    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+      <p>Teams Page</p>
+    </main>
   )
 }
