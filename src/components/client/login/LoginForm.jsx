@@ -32,9 +32,9 @@ function reducer(state, action) {
         ...state,
         error: {
           message: action.message,
-          hasError: action.hasError
-        }
-      }
+          hasError: action.hasError,
+        },
+      };
 
     default:
       return state;
@@ -56,23 +56,27 @@ export default function LoginForm() {
     error: {
       message: "",
       hasError: false,
-    }
+    },
   });
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
-  async function handleLogin(){
-    const {email, password} = state;
+  async function handleLogin() {
+    setIsLoading(true);
+    const { email, password } = state;
 
-    const res = await signIn(email.value, password.value)
+    const res = await signIn(email.value, password.value);
 
-    console.log(res)
-
-    if(res.status === 'success'){
-      router.push('/admin/dashboard')
-    }else {
-      dispatch({type: "error", message: "Invalid Email or Password", hasError: true})
+    if (res.status === "success") {
+      router.push("/admin/dashboard");
+    } else {
+      dispatch({
+        type: "error",
+        message: "Invalid Email or Password",
+        hasError: true,
+      });
+      setIsLoading(false);
     }
-
   }
 
   return (
@@ -114,16 +118,17 @@ export default function LoginForm() {
             Forgot Password?
           </Link>
         </div>
-        {
-          state.error.hasError && (
-            <div className="text-danger text-sm text-center">{state.error.message}</div>
-          )
-        }
+        {state.error.hasError && (
+          <div className="text-danger text-sm text-center">
+            {state.error.message}
+          </div>
+        )}
         <Button
           variant="shadow"
           color="primary"
           disabled={!state.email.isValid && state.password.value.length < 5}
           onClick={handleLogin}
+          isLoading={isLoading}
         >
           Login
         </Button>
