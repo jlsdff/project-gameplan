@@ -7,7 +7,7 @@ import { Image } from "@nextui-org/react";
 
 export default function MissionAndVision() {
   return (
-    <section className="bg-gradient-to-r from-primary-500 to-primary-600 p-8 sm:px-16 sm:py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 min-h-[50vh] relative overflow-hidden z-10">
+    <section className="bg-gradient-to-r from-primary-500 to-primary-600 p-8 sm:px-16 sm:py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 place-items-center gap-4 lg:gap-5 min-h-[50vh] relative overflow-hidden z-10">
       <div className="absolute -left-[200px] sm:-left-[100px] opacity-100 h-full -z-10">
         <Image
           className="object-cover w-full"
