@@ -36,12 +36,14 @@ async function getPlayer(id) {
     });
   return error ? error : player;
 }
-
-async function getPlayersByTeam(team) {
+async function getPlayerByLikeName(name){
   let error;
-  const players = await firestore
+  const player = await firestore
     .collection("players")
-    .where("team", "==", team)
+    .where("firstname", ">=", name)
+    .where("firstname", "<=", name + "\uf8ff")
+    .where("lastname", ">=", name)
+    .where("lastname", "<=", name + "\uf8ff")
     .get()
     .then((querySnapshot) => {
       let players = [];
@@ -51,10 +53,12 @@ async function getPlayersByTeam(team) {
       return players;
     })
     .catch((err) => {
-      console.log("Error getting documents: ", error);
+      console.log("Error getting document:", error);
       error = err;
     });
-  return error ? error : players;
+
+  return error ? error : player;
+
 }
 
 export { getPlayers, getPlayer };
