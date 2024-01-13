@@ -1,16 +1,20 @@
 import { firestore } from "./firebase";
 
-async function getPlayers(limit) {
+// GET ALL PLAYERS
+async function getPlayers(limit, startAfter) {
   const count = limit || 10;
   let error;
 
   const players = await firestore
     .collection("players")
+    .orderBy("firstname")
+    .limit(count)
+    .startAfter(startAfter ? startAfter : 0)
     .get()
     .then((querySnapshot) => {
       let players = [];
       querySnapshot.forEach((doc) => {
-        players.push(doc.data());
+        players.push({ id: doc.id, ...doc.data() });
       });
       return players;
     })
@@ -21,8 +25,10 @@ async function getPlayers(limit) {
   return error ? error : players;
 }
 
+// GET PLAYER BY ID
 async function getPlayer(id) {
   let error;
+
   const player = await firestore
     .collection("players")
     .doc(id)
@@ -36,14 +42,18 @@ async function getPlayer(id) {
     });
   return error ? error : player;
 }
-async function getPlayerByLikeName(name){
+
+// GET PLAYER BY LIKE NAME
+async function getPlayerByLikeName(name, startAfter) {
   let error;
+
   const player = await firestore
     .collection("players")
     .where("firstname", ">=", name)
     .where("firstname", "<=", name + "\uf8ff")
     .where("lastname", ">=", name)
     .where("lastname", "<=", name + "\uf8ff")
+    .startAfter(startAfter ? startAfter : 0)
     .get()
     .then((querySnapshot) => {
       let players = [];
@@ -58,7 +68,6 @@ async function getPlayerByLikeName(name){
     });
 
   return error ? error : player;
-
 }
 
-export { getPlayers, getPlayer };
+export { getPlayers, getPlayer, getPlayerByLikeName };
