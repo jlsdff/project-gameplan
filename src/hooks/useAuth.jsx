@@ -23,10 +23,9 @@ export function useAuth() {
           router.push("/admin");
         }
         setLoading(false);
-      },
-      [user]
+      }  
     );
-  });
+  },[]);
 
   return { user, loading };
 }

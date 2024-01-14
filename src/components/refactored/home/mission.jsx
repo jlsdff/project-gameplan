@@ -13,6 +13,7 @@ export default function MissionAndVision() {
           className="object-cover w-full"
           src="/logo-background.svg"
           width={"auto"}
+          alt="project gameplan logo"
         />
       </div>
       <motion.div

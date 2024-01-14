@@ -9,24 +9,24 @@ import {
 } from "@nextui-org/table";
 
 export default function CustomTable({ data }) {
-  
-  const sampleData = {
-    firstname: "John",
-    lastname: "Doe",
-    middlename: "Y.",
-    birthdate: new Date("1990-01-01"),
-    birthplace: "Manila",
-    actions: "Edit | Delete",
-  };
+
 
   const columns = useMemo(() => {
+    const sampleData = {
+      firstname: "John",
+      lastname: "Doe",
+      middlename: "Y.",
+      birthdate: new Date("1990-01-01"),
+      birthplace: "Manila",
+      actions: "Edit | Delete",
+    };  
     return Object.keys(sampleData).map((value, index) => {
       return {
         key: index,
         name: value,
       };
     });
-  }, [sampleData]);
+  }, []);
 
   return (
     <Table aria-label="Player Table" className="bg-transparent">

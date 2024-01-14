@@ -10,7 +10,7 @@ export default function Footer() {
         <div className="flex flex-col gap-1 sm:gap-4">
           <div className="mb-1 sm:mb-5 flex justify-start items-center gap-4 ">
             <div className="w-[64px] sm:w-[125px]">
-              <Image src="/TPG.svg" width={115} />
+              <Image src="/TPG.svg" width={115} alt="project gameplan logo" />
             </div>
             <span className={`${josefinSans.className} text-xl sm:text-3xl `}>
               THE

@@ -5,10 +5,11 @@ import { josefinSans } from "../fonts";
 export default function UnderConstruction() {
   return (
     <section className="h-[90vh] flex flex-col justify-center items-center gap-5">
-      <div className="flex justify-center items-center w-[300px] md:w-[600px] lg:w-[900px] object-contain">
+      <div className="flex justify-center items-center w-[300px] md:w-[600px] object-contain">
         <Image
           className="object-contain"
           src="/underConstruction.svg"
+          alt="under construction"
           width={"auto"}
         />
       </div>

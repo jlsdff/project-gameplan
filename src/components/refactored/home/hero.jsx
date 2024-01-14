@@ -45,11 +45,11 @@ export default function Hero() {
           </p>
         </motion.div>
         <div className="z-10 order-1 md:order-2">
-          <Image src="/greek-freek.svg" />
+          <Image src="/greek-freek.svg" alt="greek freek"/>
         </div>
       </div>
       <div className="absolute -z-10 -right-[100px] top-1/3 hidden lg:block">
-        <Image src="/Ball.svg" />
+        <Image src="/Ball.svg" alt="ball" />
       </div>
     </section>
   );
