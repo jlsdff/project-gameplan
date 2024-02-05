@@ -13,19 +13,17 @@ export default function Footer() {
               <Image src="/TPG.svg" width={115} alt="project gameplan logo" />
             </div>
             <span className={`${josefinSans.className} text-xl sm:text-3xl `}>
-              THE
-              <br />
-              PROJECT
+              PROJECT:
               <br />
               GAMEPLAN
             </span>
           </div>
           <p className=" text-sm ">1234 Lorem St. Quezon City, Metro Manila</p>
-          <p className=" text-sm ">theprojectgameplan@email.com</p>
+          <a href="mailto:theprojectgameplan@email.com"><p className=" text-sm ">projectgameplan@gmail.com</p></a>
         </div>
         <div className="">
           <h3 className="text-xl font-bold mb-1 sm:mb-4">
-            The Project Gameplan
+            Who we are
           </h3>
           <div className="flex flex-col justify-start gap-1">
             <Link
@@ -96,7 +94,7 @@ export default function Footer() {
         </div>
       </div>
       <div className=" p-5 bg-primary-800 text-center flex justify-center items-center ">
-        <span className=" text-xs " >Copyright 2023 ©  The Project Gameplan  </span>
+        <span className=" text-xs " >Copyright 2023 ©  Project:Gameplan  </span>
       </div>
     </section>
   );

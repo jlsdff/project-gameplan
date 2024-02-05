@@ -16,6 +16,7 @@ export default function UnderConstruction() {
       <h1 className={`text-2xl sm:text-4xl font-black ${josefinSans.className}`}>
         Under Construction
       </h1>
+      <h2><a href="/">Back to home</a></h2>
     </section>
   );
 }
