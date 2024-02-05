@@ -1,8 +1,8 @@
 "use client"
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { auth } from "@/lib/firebase/firebase";
-import { useRouter } from "next/navigation";
-import { usePathname } from "next/navigation";
+import { useRouter } from "next/router"; // Corrected import
+import { usePathname } from "next/router"; // Corrected import
 
 export function useAuth() {
   const [user, setUser] = useState(null);
@@ -11,7 +11,7 @@ export function useAuth() {
   const pathname = usePathname();
 
   useEffect(() => {
-    auth.onAuthStateChanged(
+    const unsubscribe = auth.onAuthStateChanged(
       async (user) => {
         if (user) {
           setUser(user);
@@ -25,7 +25,8 @@ export function useAuth() {
         setLoading(false);
       }  
     );
-  },[]);
 
-  return { user, loading };
+    // Clean up function
+    return () => unsubscribe();
+  }, [router, pathname]); // Added dependencies
 }
