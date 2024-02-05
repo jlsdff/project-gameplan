@@ -24,7 +24,7 @@ export default function Hero() {
             More Than a Game
             <br />
             <span className="font-bold sm:font-black my-4">
-              The Project Gameplan
+              Project:GamePlan
             </span>
             <br />
             Where Passion Meets Performance
