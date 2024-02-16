@@ -39,8 +39,8 @@ export default function Hero() {
               Teams
             </Link>{" "}
             &nbsp; | &nbsp;
-            <Link className="text-xs sm:text-base font-bold" href="/games">
-              Games
+            <Link className="text-xs sm:text-base font-bold" href="/leagues">
+              Leagues
             </Link>
           </p>
         </motion.div>

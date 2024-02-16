@@ -59,7 +59,7 @@ export default function TopNav() {
           <Link href="/players" className="w-full" size="lg">Players</Link>
         </NavbarItem>
         <NavbarItem isActive={pathname === "/games"}>
-          <Link href="/games" className="w-full" size="lg">Games</Link>
+          <Link href="/leagues" className="w-full" size="lg">Leagues</Link>
         </NavbarItem>
         <NavbarItem isActive={pathname === "/teams"}>
           <Link href="/teams" className="w-full" size="lg">Teams</Link>
@@ -73,7 +73,7 @@ export default function TopNav() {
           </Link>
         </NavbarItem>
         <NavbarItem isActive={pathname === "/games"}>
-          <Link className="" href="/games">
+          <Link className="" href="/leagues">
             Leagues
           </Link>
         </NavbarItem>
