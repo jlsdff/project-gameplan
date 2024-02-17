@@ -18,13 +18,13 @@ export default function Footer() {
               GAMEPLAN
             </span>
           </div>
-          <p className=" text-sm ">1234 Lorem St. Quezon City, Metro Manila</p>
-          <a href="mailto:theprojectgameplan@email.com"><p className=" text-sm ">projectgameplan@gmail.com</p></a>
+          <p className=" text-sm ">Quezon City, Philippines</p>
+          <a href="mailto:projectgameplan.99@gmail.com">
+            <p className=" text-sm ">projectgameplan.99@gmail.com</p>
+          </a>
         </div>
         <div className="">
-          <h3 className="text-xl font-bold mb-1 sm:mb-4">
-            Who we are
-          </h3>
+          <h3 className="text-xl font-bold mb-1 sm:mb-4">Who we are</h3>
           <div className="flex flex-col justify-start gap-1">
             <Link
               className="text-sm sm:text-base text-white hover:text-neutral-200"
@@ -74,19 +74,13 @@ export default function Footer() {
           <div className="flex flex-col justify-start gap-1">
             <Link
               className="text-sm sm:text-base text-white hover:text-neutral-200"
-              href="/"
+              href="https://www.facebook.com/ProjectGamePlan"
             >
               Facebook
             </Link>
             <Link
               className="text-sm sm:text-base text-white hover:text-neutral-200"
-              href="/"
-            >
-              Twitter
-            </Link>
-            <Link
-              className="text-sm sm:text-base text-white hover:text-neutral-200"
-              href="/"
+              href="https://www.instagram.com/projectgameplan/"
             >
               Instagram
             </Link>
@@ -94,7 +88,7 @@ export default function Footer() {
         </div>
       </div>
       <div className=" p-5 bg-primary-800 text-center flex justify-center items-center ">
-        <span className=" text-xs " >Copyright 2023 ©  Project:Gameplan  </span>
+        <span className=" text-xs ">Copyright 2023 © Project:Gameplan </span>
       </div>
     </section>
   );

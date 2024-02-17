@@ -5,6 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import {Spinner} from "@nextui-org/react";
 
 export default function AdminProvider({ children }) {
+  
   const { user, loading } = useAuth();
 
   if (loading) {

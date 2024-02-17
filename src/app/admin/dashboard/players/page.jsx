@@ -1,13 +1,11 @@
 import React from "react";
-import CustomTable from "@/components/ui/table/table";
+import DataDisplay from "@/components/admin/dataDisplay/dataDisplay";
 
 export default function Players() {
-
-  let sampleData = {}
   
   return (
     <section className="min-h-screen p-8 sm:p-16 ">
-      <CustomTable data={sampleData} />
+      <DataDisplay total={20} />
     </section>
   );
 }
