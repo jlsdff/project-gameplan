@@ -11,25 +11,40 @@ export function useAuth() {
   const pathname = usePathname();
 
   useEffect(() => {
-    const handleAuthStateChanged = async (user) => {
-      if (user) {
-        setUser(user);
-        if (pathname === "/admin") {
-          router.push("/admin/dashboard");
-        }
-      } else {
-        setUser(null);
-        router.push("/admin");
+    // const handleAuthStateChanged = async (user) => {
+    //   if (user) {
+    //     setUser(user);
+    //     if (pathname === "/admin") {
+    //       router.push("/admin/dashboard");
+    //     }
+    //   } else {
+    //     setUser(null);
+    //     router.push("/admin");
+    //   }
+    //   setLoading(false);
+    // };
+
+    // const unsubscribe = auth.onAuthStateChanged(handleAuthStateChanged);
+
+    // return () => {
+    //   unsubscribe();
+    // };
+
+    const user = auth.currentUser;
+
+    if (user) {
+      setUser(user);
+      console.log(user)
+      if (pathname === "/admin") {
+        router.push("/admin/dashboard");
       }
-      setLoading(false);
-    };
-
-    const unsubscribe = auth.onAuthStateChanged(handleAuthStateChanged);
-
-    return () => {
-      unsubscribe();
-    };
-  }, [pathname, router]);
+    } else {
+      setUser(null);
+      router.push("/admin");
+    }
+    setLoading(false);
+    
+  }, []);
 
   return { user, loading };
 }
