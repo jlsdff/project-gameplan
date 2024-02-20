@@ -1,11 +1,16 @@
 import React from "react";
-import DataDisplay from "@/components/admin/dataDisplay/dataDisplay";
+import DataDisplayPlayer from "@/components/admin/players/dataDisplayPlayers";
+
+export const metadata = {
+  title: "Admin | Players",
+};
+
 
 export default function Players() {
   
   return (
     <section className="min-h-screen p-8 sm:p-16 ">
-      <DataDisplay total={20} />
+      <DataDisplayPlayer />
     </section>
   );
 }

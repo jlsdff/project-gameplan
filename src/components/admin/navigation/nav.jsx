@@ -31,6 +31,7 @@ export default function App() {
     auth
       .signOut()
       .then(() => {
+        window.localStorage.removeItem("user");
         router.push("/admin");
       })
       .catch((error) => {

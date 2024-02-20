@@ -12,6 +12,7 @@ export function useAuth() {
     const handleAuthStateChanged = async (user) => {
       if (user) {
         setUser(user);
+        window.localStorage.setItem("user", JSON.stringify(user));
       }
     };
 
