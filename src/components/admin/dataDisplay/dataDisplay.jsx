@@ -3,20 +3,28 @@ import React, { useState } from "react";
 import { Input, Divider, Button, Pagination } from "@nextui-org/react";
 import CustomTable from "../../ui/table/table";
 
-export default function DataDisplay({ data, pagination, columns, topToolBar }) {
-  const [isLoading, setIsLoading] = useState(true);
-  // const [totalData, setTotalData] = useState(totalPage);
+export default function DataDisplay({
+  pagination,
+  topToolBar,
+  dataContents,
+  isLoading
+}) {
 
   const { totalPage, currentPage, setCurrentPage, initialPage } = pagination;
 
+  const {
+    columns,
+    rows,
+    isSelectable,
+    renderCell
+  } = dataContents;
+
   return (
     <section className="">
-      {topToolBar && (
-        topToolBar
-      )}
+      {topToolBar && topToolBar}
       <Divider orientation="horizontal" className="my-4" />
       <div>
-        {/* <CustomTable columns={columns} data={data} isLoading={isLoading} /> */}
+        <CustomTable columns={columns} rows={rows} isLoading={isLoading} isSelectable={isSelectable} renderCell={renderCell} />
       </div>
       <Divider orientation="horizontal" className="my-4" />
       <div className="flex justify-center">
