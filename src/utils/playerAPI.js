@@ -2,7 +2,7 @@ import { firestore } from "@/lib/firebase/firebase";
 
 // CREATE PLAYERS
 export async function createPlayer(player) {
-  return await firestore.collection("players").add(player);
+  return await firestore.collection("players").add(player)
 }
 
 // READ PLAYERS

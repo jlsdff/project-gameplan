@@ -21,8 +21,15 @@ import DataDisplay from "../dataDisplay/dataDisplay";
 import ToolbarDataDisplay from "../dataDisplay/toolbarDataDisplay";
 import AddIcon from "@/assets/addIcon";
 import { newPlayer as newPlayerFirebase } from "@/helpers/players/newplayer";
-import { getPlayersByPage } from "@/helpers/players/getPlayers";
 import { playerColumns } from "@/helpers/players/columns";
+import EditPlayerModal from "./EditPlayerModal";
+import {
+  createPlayer,
+  getPlayersByPage,
+  updatePlayer,
+  deletePlayer,
+} from "@/utils/playerAPI";
+import { incrementPlayer } from "@/utils/coutersAPI";
 
 const newPlayerReducer = (state, action) => {
   switch (action.type) {
@@ -57,6 +64,7 @@ const newPlayerReducer = (state, action) => {
       return { ...state, birthplace: action.value };
     case "reset":
       return {
+        title: "New Player",
         firstname: "",
         lastname: "",
         middlename: "",
@@ -67,7 +75,26 @@ const newPlayerReducer = (state, action) => {
         height: "",
         weight: "",
         citizenship: "",
+        key: "",
       };
+    case "edit":
+      return {
+        ...state,
+        firstname: action.value.firstname,
+        lastname: action.value.lastname,
+        middlename: action.value.middlename,
+        number: action.value.number,
+        birthdate: action.value.birthdate,
+        birthplace: action.value.birthplace,
+        positions: action.value.positions,
+        height: action.value.height,
+        weight: action.value.weight,
+        citizenship: action.value.citizenship,
+        key: action.value.key,
+        title: "Edit Player",
+      };
+    case "title":
+      return { ...state, title: action.value };
     default:
       return state;
   }
@@ -94,41 +121,39 @@ export default function DataDisplayPlayer() {
     height: "",
     weight: "",
     citizenship: "",
+    title: "New Player",
+    key: "",
   });
 
   useEffect(() => {
     async function getPlayers() {
       const players = await getPlayersByPage(currentPage - 1, 10);
-      players.docs.forEach((player) => console.log(player.id));
 
       const rows = players.docs.map((player) => {
         return {
-          key: player.id,
           ...player.data(),
-          actions: (
-            [
-              {
-                label: "Edit",
-                onClick: (item, key) => {
-                  const rowKey = item.key;
-                  console.log("editing", item, key);
-                },
-                color: "primary",
-                isIconOnly: true,
-                icon: <EditIcon />,
+          key: player.id,
+          actions: [
+            {
+              label: "Edit",
+              onClick: (item, key) => {
+                dispatch({ type: "edit", value: item });
+                onOpen();
               },
-              {
-                label: "Delete",
-                onClick: (item, key) => {
-                  const rowKey = item.key;
-                  console.log("deleting", item, key);
-                },
-                color: "danger",
-                isIconOnly: true,
-                icon: <DeleteIcon />,
-              }
-            ]
-          ),
+              color: "primary",
+              isIconOnly: true,
+              icon: <EditIcon />,
+            },
+            {
+              label: "Delete",
+              onClick: (item, key) => {
+                deletePlayerHandler(item.key);
+              },
+              color: "danger",
+              isIconOnly: true,
+              icon: <DeleteIcon />,
+            },
+          ],
         };
       });
 
@@ -140,63 +165,105 @@ export default function DataDisplayPlayer() {
   }, [currentPage]);
 
   const renderCell = useCallback((item, key) => {
-    switch (key){
+    switch (key) {
       case "firstname":
-        return (
-          <div>
-            {item.firstname}
-          </div>
-        )
+        return <div>{item.firstname}</div>;
       case "lastname":
-        return (
-          <div>
-            {item.lastname}
-          </div>
-        )
+        return <div>{item.lastname}</div>;
       case "middlename":
-        return (
-          <div>
-            {item.middlename}
-          </div>
-        )
+        return <div>{item.middlename}</div>;
       case "number":
-        return (
-          <div>
-            {item.number}
-          </div>
-        )
+        return <div>{item.number}</div>;
       case "positions":
-        return (
-          <div>
-            {item.positions.join(", ")}
-          </div>
-        )
+        return <div>{item.positions.join(", ")}</div>;
       case "actions":
-        return (
-          item.actions.map((action, index) => (
+        return item.actions.map((action, index) => {
+          return (
             <Button
               key={index}
               color={action.color || "primary"}
               variant="light"
               size="sm"
               isIconOnly={action.isIconOnly}
-              onClick={()=> action.onClick(item, key)}
+              onClick={() => action.onClick(item, key)}
             >
               {action.icon || action.label || ""}
             </Button>
-          ))
-        )
+          );
+        });
     }
-  }, [])
-  
+  }, []);
+
   const newPlayerHandler = useCallback(async () => {
-    await newPlayerFirebase(newPlayer)
+    await createPlayer(newPlayer)
       .then((res) => {
+        setRows((prev) => {
+          return [
+            ...prev,
+            {
+              key: res.id,
+              ...newPlayer,
+              actions: [
+                {
+                  label: "Edit",
+                  onClick: (item, key) => {
+                    dispatch({ type: "edit", value: item });
+                    onOpen();
+                  },
+                  color: "primary",
+                  isIconOnly: true,
+                  icon: <EditIcon />,
+                },
+                {
+                  label: "Delete",
+                  onClick: (item, key) => {
+                    deletePlayerHandler(item.key);
+                  },
+                  color: "danger",
+                  isIconOnly: true,
+                  icon: <DeleteIcon />,
+                },
+              ],
+            },
+          ];
+        });
+        // setCurrentPage(currentPage)
         dispatch({ type: "reset" });
+        incrementPlayer();
         alert("Player added");
       })
-      .catch((err) => alert("Error adding player"));
+      .catch((err) => {
+        console.error(err);
+        alert("Error adding player");
+      });
   }, [newPlayer]);
+
+  const deletePlayerHandler = useCallback((id) => {
+    deletePlayer(id)
+      .then(() => {
+        alert("Player deleted");
+        setRows((prev) => {
+          return prev.filter((player) => player.key !== id);
+        });
+      })
+      .catch((err) => alert("Error deleting player"));
+  }, []);
+
+  const updatePlayerHandler = useCallback((id, data) => {
+    updatePlayer(id, data)
+      .then(() => {
+        alert("Player updated");
+        setRows((prev) => {
+          return prev.map((player) => {
+            if (player.key === id) {
+              return { key: id, ...data, actions: player.actions };
+            }
+            return player;
+          });
+        });
+      })
+      .catch((err) => alert("Error updating player"));
+  }, []);
 
   return (
     <>
@@ -210,7 +277,11 @@ export default function DataDisplayPlayer() {
           {(onClose) => (
             <>
               <ModalHeader>
-                <h1>New Player</h1>
+                <h1>
+                  {newPlayer.title === "New Player"
+                    ? "New Player"
+                    : "Edit Player"}
+                </h1>
               </ModalHeader>
 
               <ModalBody>
@@ -340,17 +411,30 @@ export default function DataDisplayPlayer() {
               </ModalBody>
 
               <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
+                <Button
+                  color="danger"
+                  variant="light"
+                  onPress={() => {
+                    dispatch({ type: "reset" });
+                    onClose();
+                  }}
+                >
                   Close
                 </Button>
                 <Button
                   color="primary"
                   onPress={() => {
-                    newPlayerHandler();
+                    if (newPlayer.title === "New Player") {
+                      newPlayerHandler();
+                    } else if (newPlayer.title === "Edit Player") {
+                      updatePlayerHandler(newPlayer.key, newPlayer);
+                    } else {
+                      console.error("Unknow Request");
+                    }
                     onClose();
                   }}
                 >
-                  New Player
+                  {newPlayer.title === "New Player" ? "Add" : "Update"}
                 </Button>
               </ModalFooter>
             </>
@@ -369,7 +453,7 @@ export default function DataDisplayPlayer() {
             columns: playerColumns,
             rows: rows,
             isSelectable: true,
-            renderCell: renderCell
+            renderCell: renderCell,
           }}
           topToolBar={
             <ToolbarDataDisplay
@@ -396,7 +480,10 @@ export default function DataDisplayPlayer() {
                 {
                   isIconOnly: true,
                   ariaLabel: "add player",
-                  onClick: () => onOpen(),
+                  onClick: () => {
+                    dispatch({ type: "reset" });
+                    onOpen();
+                  },
                   icon: <AddIcon />,
                   isDisabled: false,
                   size: "sm",
