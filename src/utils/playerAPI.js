@@ -40,12 +40,22 @@ export async function getPlayerById(id) {
 }
 
 export async function getPlayerByLikeName(name) {
-  return await firestore
+  const firstNameQuery = await firestore
+    .collection("players")
+    .orderBy("firstname")
+    .startAt(name)
+    .endAt(name + "\uf8ff")
+    .get()
+
+  const lastNameQuery = await firestore
     .collection("players")
     .orderBy("lastname")
     .startAt(name)
     .endAt(name + "\uf8ff")
-    .get();
+    .get()
+
+    
+  return [...firstNameQuery.docs, ...lastNameQuery.docs];
 }
 
 // UPDATE PLAYERS

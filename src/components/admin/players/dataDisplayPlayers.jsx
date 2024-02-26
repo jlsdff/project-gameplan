@@ -1,5 +1,11 @@
 "use client";
-import React, { useState, useReducer, useEffect, useCallback } from "react";
+import React, {
+  useState,
+  useReducer,
+  useEffect,
+  useCallback,
+  useMemo,
+} from "react";
 import {
   Input,
   Divider,
@@ -28,8 +34,13 @@ import {
   getPlayersByPage,
   updatePlayer,
   deletePlayer,
+  getPlayerByLikeName,
 } from "@/utils/playerAPI";
-import { incrementPlayer, decrementPlayer, getPlayerCount } from "@/utils/coutersAPI";
+import {
+  incrementPlayer,
+  decrementPlayer,
+  getPlayerCount,
+} from "@/utils/coutersAPI";
 
 const newPlayerReducer = (state, action) => {
   switch (action.type) {
@@ -128,9 +139,8 @@ export default function DataDisplayPlayer() {
 
   useEffect(() => {
     async function getPlayers() {
+      setTotalPage(Math.ceil((await getPlayerCount()) / limitPerPage));
 
-      setTotalPage(Math.ceil(await getPlayerCount() / limitPerPage));
-      
       const players = await getPlayersByPage(currentPage - 1, limitPerPage);
 
       const rows = players.docs.map((player) => {
@@ -241,6 +251,41 @@ export default function DataDisplayPlayer() {
       });
   }, [newPlayer]);
 
+  const searchPlayerByNameHandler = useCallback(async () => {
+
+    const results = await getPlayerByLikeName(nameSearch)
+      .then(res => res.map(player => {
+        return {
+          id: player.id,
+          ...player.data(),
+          actions: [
+            {
+              label: "Edit",
+              onClick: (item, key) => {
+                dispatch({ type: "edit", value: item });
+                onOpen();
+              },
+              color: "primary",
+              isIconOnly: true,
+              icon: <EditIcon />,
+            },
+            {
+              label: "Delete",
+              onClick: (item, key) => {
+                deletePlayerHandler(item.key);
+              },
+              color: "danger",
+              isIconOnly: true,
+              icon: <DeleteIcon />,
+            },
+          ],
+        }
+    }))
+
+    setRows(results);
+    
+  }, [nameSearch]);
+
   const deletePlayerHandler = useCallback((id) => {
     deletePlayer(id)
       .then(() => {
@@ -251,7 +296,7 @@ export default function DataDisplayPlayer() {
         decrementPlayer();
       })
       .catch((err) => {
-        alert("Error deleting player")
+        alert("Error deleting player");
         console.error(err);
       });
   }, []);
@@ -468,7 +513,7 @@ export default function DataDisplayPlayer() {
                 label: "Search by name",
                 value: nameSearch,
                 onChange: (value) => setNameSearch(value),
-                onSearch: () => console.log("searching"),
+                onSearch: () => searchPlayerByNameHandler(nameSearch),
                 isIconOnly: true,
                 icon: <SearchIcon />,
                 isDisabled: nameSearch.length > 0 ? false : true,
