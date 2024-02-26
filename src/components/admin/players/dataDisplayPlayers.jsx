@@ -29,7 +29,7 @@ import {
   updatePlayer,
   deletePlayer,
 } from "@/utils/playerAPI";
-import { incrementPlayer, decrementPlayer } from "@/utils/coutersAPI";
+import { incrementPlayer, decrementPlayer, getPlayerCount } from "@/utils/coutersAPI";
 
 const newPlayerReducer = (state, action) => {
   switch (action.type) {
@@ -128,6 +128,9 @@ export default function DataDisplayPlayer() {
 
   useEffect(() => {
     async function getPlayers() {
+
+      setTotalPage(Math.ceil(await getPlayerCount() / limitPerPage));
+      
       const players = await getPlayersByPage(currentPage - 1, limitPerPage);
 
       const rows = players.docs.map((player) => {

@@ -14,3 +14,8 @@ export async function decrementPlayer() {
     .doc("players")
     .update({ size: FieldValue.increment(-1) });
 }
+
+export async function getPlayerCount() {
+  const doc = await firestore.collection("counters").doc("players").get();
+  return doc.data().size;
+}
