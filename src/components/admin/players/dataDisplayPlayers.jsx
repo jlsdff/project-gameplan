@@ -29,7 +29,7 @@ import {
   updatePlayer,
   deletePlayer,
 } from "@/utils/playerAPI";
-import { incrementPlayer } from "@/utils/coutersAPI";
+import { incrementPlayer, decrementPlayer } from "@/utils/coutersAPI";
 
 const newPlayerReducer = (state, action) => {
   switch (action.type) {
@@ -103,6 +103,7 @@ const newPlayerReducer = (state, action) => {
 export default function DataDisplayPlayer() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
+  const [limitPerPage, setLimitPerPage] = useState(2);
   const [rows, setRows] = useState([]);
 
   const [nameSearch, setNameSearch] = useState("");
@@ -127,7 +128,7 @@ export default function DataDisplayPlayer() {
 
   useEffect(() => {
     async function getPlayers() {
-      const players = await getPlayersByPage(currentPage - 1, 10);
+      const players = await getPlayersByPage(currentPage - 1, limitPerPage);
 
       const rows = players.docs.map((player) => {
         return {
@@ -227,7 +228,6 @@ export default function DataDisplayPlayer() {
             },
           ];
         });
-        // setCurrentPage(currentPage)
         dispatch({ type: "reset" });
         incrementPlayer();
         alert("Player added");
@@ -245,8 +245,12 @@ export default function DataDisplayPlayer() {
         setRows((prev) => {
           return prev.filter((player) => player.key !== id);
         });
+        decrementPlayer();
       })
-      .catch((err) => alert("Error deleting player"));
+      .catch((err) => {
+        alert("Error deleting player")
+        console.error(err);
+      });
   }, []);
 
   const updatePlayerHandler = useCallback((id, data) => {

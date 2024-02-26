@@ -49,9 +49,8 @@ export default function ToolbarDataDisplay({
         {toolBars &&
           toolBars.map((toolbar, index) => {
             return (
-              <Tooltip content={toolbar.toolTip || null} >
+              <Tooltip content={toolbar.toolTip || null}  key={index} >
                 <Button
-                  key={index}
                   isIconOnly={toolbar.isIconOnly || false}
                   color={toolbar.variant || "primary"}
                   aria-label={toolbar.ariaLabel || ""}
