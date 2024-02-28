@@ -23,9 +23,20 @@ export default function DataDisplay({
     <section className="">
       {topToolBar && topToolBar}
       <Divider orientation="horizontal" className="my-4" />
-      <div>
-        <CustomTable columns={columns} rows={rows} isLoading={isLoading} isSelectable={isSelectable} renderCell={renderCell} />
-      </div>
+      {
+        isLoading ? (
+          <div className="flex justify-center">
+            <p>Loading...</p>
+          </div>
+        ) : (
+          <CustomTable
+            columns={columns}
+            rows={rows}
+            isSelectable={isSelectable}
+            renderCell={renderCell}
+          />
+        )
+      }
       <Divider orientation="horizontal" className="my-4" />
       <div className="flex justify-center">
         <Pagination
