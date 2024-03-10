@@ -9,7 +9,9 @@ export const metadata = {
 export default function Teams() {
   return (
     <DataDisplayProvider>
-      <DataDisplayTeams />
+      <section className="min-h-screen p-8 sm:p-16">
+        <DataDisplayTeams />
+      </section>
     </DataDisplayProvider>
   );
 }
