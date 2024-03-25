@@ -2,6 +2,9 @@ import { firestore } from "@/lib/firebase/firebase";
 
 // CREATE PLAYERS
 export async function createPlayer(player) {
+  player.createdAt = new Date().toISOString();
+  player.updatedAt = new Date().toISOString();
+
   return await firestore.collection("players").add(player);
 }
 
@@ -40,27 +43,45 @@ export async function getPlayerById(id) {
 }
 
 export async function getPlayerByLikeName(name) {
+  
   const firstNameQuery = await firestore
     .collection("players")
     .orderBy("firstname")
-    .startAt(name)
-    .endAt(name + "\uf8ff")
-    .get()
+    .where("firstname", ">=", name)
+    .where("firstname", "<=", name + "\uf8ff")
+    .get();
 
   const lastNameQuery = await firestore
     .collection("players")
     .orderBy("lastname")
-    .startAt(name)
-    .endAt(name + "\uf8ff")
-    .get()
+    .where("lastname", ">=", name)
+    .where("lastname", "<=", name + "\uf8ff")
+    .get();
 
-    
-  return [...firstNameQuery.docs, ...lastNameQuery.docs];
+  const results = []
+
+  firstNameQuery.forEach(doc => {
+    results.push(doc);
+  })
+
+  lastNameQuery.forEach( doc => {
+    if(!results.some( result => result.id === doc.id)) {
+      results.push(doc);
+    }
+  })
+
+  return results;
+
 }
 
 // UPDATE PLAYERS
 export async function updatePlayer(id, data) {
-  return await firestore.collection("players").doc(id).update(data);
+  data.updatedAt = new Date().toISOString();
+
+  return await firestore
+    .collection("players")
+    .doc(id)
+    .update(data, { merge: true });
 }
 
 // DELETE PLAYERS
