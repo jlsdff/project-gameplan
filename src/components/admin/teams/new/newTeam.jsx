@@ -1,10 +1,13 @@
 "use client";
-import React, { useCallback, useMemo, useReducer } from "react";
+import React, { useCallback, useEffect, useMemo, useReducer } from "react";
 import { Input, Button } from "@nextui-org/react";
 import SearchIcon from "@/assets/searchIcon";
+import DeleteIcon from "@/assets/deleteIcon";
+import XIcon from "@/assets/xIcon";
 import SearchBar from "@/components/ui/searchBar/searchBar";
 import NewTeamSearchDisplay from "./newTeamSearchDisplay";
-import { getPlayerByLikeName } from "@/utils/playerAPI";
+import { getPlayerByLikeName, getPlayerById } from "@/utils/playerAPI";
+import PlayerContainer from "./playerContainer";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -18,7 +21,17 @@ const reducer = (state, action) => {
       return { ...state, searchValue: action.value };
     case "searchedPlayers":
       return { ...state, searchedPlayers: action.value };
-
+    case "players":
+      if (state.players.some((player) => player.id === action.value.id)) {
+        return state;
+      } else {
+        return { ...state, players: [...state.players, action.value] };
+      }
+    case "removePlayer":
+      return {
+        ...state,
+        players: state.players.filter((player) => player.id !== action.value),
+      };
     default:
       return state;
   }
@@ -35,10 +48,8 @@ export default function NewTeam() {
       loading: false,
       hasSearch: false,
     },
+    players: [],
   });
-
-  if (team.searchValue) {
-  }
 
   const onSearchPlayers = useCallback(async () => {
     teamReducer({
@@ -66,6 +77,14 @@ export default function NewTeam() {
       });
     return playersRes;
   }, [team.searchValue]);
+
+  const addPlayer = useCallback((player) => {
+    teamReducer({ type: "players", value: player });
+  }, []);
+
+  const removePlayer = useCallback((player) => {
+    teamReducer({ type: "removePlayer", value: player.id });
+  }, []);
 
   return (
     <section className="mx-8 my-4 ">
@@ -127,13 +146,35 @@ export default function NewTeam() {
                   data={team.searchedPlayers.data}
                   loading={team.searchedPlayers.loading}
                   hasSearch={team.searchedPlayers.hasSearch}
+                  addPlayer={addPlayer}
+                  removePlayer={removePlayer}
                 />
               </div>
             </div>
           </div>
           <div id="player-container" className="min-h-[300px]">
             <h2 className="my-2 font-bold">Players</h2>
-            <div></div>
+            <div>
+              {team.players.map((player) => {
+                return (
+                  <PlayerContainer
+                    key={player.id}
+                    player={player}
+                    endContent={[
+                      {
+                        isIconOnly: true,
+                        toolTip: "Remove from team",
+                        icon: <XIcon />,
+                        onClick: removePlayer,
+                        color: "danger",
+                        size: "sm",
+                        radius: "full",
+                      },
+                    ]}
+                  />
+                );
+              })}
+            </div>
           </div>
         </div>
       </section>
