@@ -7,7 +7,9 @@ import XIcon from "@/assets/xIcon";
 import SearchBar from "@/components/ui/searchBar/searchBar";
 import NewTeamSearchDisplay from "./newTeamSearchDisplay";
 import { getPlayerByLikeName, getPlayerById } from "@/utils/playerAPI";
+import { createTeam } from "@/utils/teamAPI";
 import PlayerContainer from "./playerContainer";
+import { useRouter } from "next/navigation";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -38,6 +40,9 @@ const reducer = (state, action) => {
 };
 
 export default function NewTeam() {
+
+  const router = useRouter()
+  
   const [team, teamReducer] = useReducer(reducer, {
     teamName: "",
     teamAbbr: "",
@@ -86,9 +91,37 @@ export default function NewTeam() {
     teamReducer({ type: "removePlayer", value: player.id });
   }, []);
 
+  const handleSaveButton = useCallback( async ()=>{
+    const data = {
+      teamName: team.teamName,
+      teamAbbr: team.teamAbbr,
+      teamLogo: team.teamLogo,
+      players: team.players.map(player=>player.id)
+    };
+    const res = await createTeam(data)
+      .then(res => {
+        alert("Team created successfully", "Team has been created successfully");
+        router.push("/admin/dashboard/teams")
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Error", "An error occurred while creating the team")
+      })
+  },[]);
+
+  const handleCancelButton = useCallback(()=>{
+    router.push("/admin/dashboard/teams")    
+  },[]);
+
   return (
     <section className="mx-8 my-4 ">
-      <h1 className="mb-4 text-xl md:text-3xl">New Team</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="mb-4 text-xl md:text-3xl">New Team</h1>
+        <div className="hidden gap-2 md:flex">
+          <Button variant="solid" size="md" color="primary" onClick={handleSaveButton} >Save</Button>
+          <Button variant="light" size="md" color="secondary" onClick={handleCancelButton} >Cancel</Button>
+        </div>
+      </div>
       <section className="container gap-4">
         <div className="mb-4 ">
           <h2 className="my-2 font-bold">Team Details</h2>
@@ -111,12 +144,22 @@ export default function NewTeam() {
             />
             <Input
               type="file"
-              value={team.teamLogo}
-              onValueChange={(value) =>
-                teamReducer({ type: "teamLogo", value })
-              }
+              onChange={e => {
+                const file = e.target.files[0]
+                teamReducer({ type: "teamLogo", value: file });
+              }}
               className="my-2 md:my-0"
             />
+            {/* <div>
+              <input
+                type="file"
+                // value={team.teamLogo}
+                onChange={(e)=>{
+                  const file = e.target.files[0];
+                  teamReducer({type: "teamLogo", value: file});
+                }}
+              />
+            </div> */}
           </div>
         </div>
         <div className="gap-4 columns-1 md:columns-2 ">
@@ -176,6 +219,10 @@ export default function NewTeam() {
               })}
             </div>
           </div>
+        </div>
+        <div className="flex items-center justify-center gap-2 md:hidden">
+          <Button variant="solid" size="md" color="primary" onClick={handleSaveButton} >Save</Button>
+          <Button variant="light" size="md" color="secondary" onClick={handleCancelButton} >Cancel</Button>
         </div>
       </section>
     </section>

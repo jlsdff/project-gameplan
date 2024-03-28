@@ -21,6 +21,7 @@ export default function PlayerContainer({ player, endContent }) {
       <div>
         {endContent.map((content, index) => (
           <Button
+            key={index}
             isIconOnly={content.isIconOnly}
             size={content.size || "sm"}
             color={content.color || "secondary"}
