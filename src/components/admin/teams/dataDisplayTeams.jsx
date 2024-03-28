@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useContext, useState, useEffect, useMemo } from "react";
 import { DataDisplayTeamsContext } from "@/context/dataDisplayTeamsContext";
 import DataDisplay from "../dataDisplay/dataDisplay";
 import { teamsColumns } from "@/helpers/teams/columns";
@@ -17,29 +17,76 @@ import SearchIcon from "@/assets/searchIcon";
 import AddIcon from "@/assets/addIcon";
 import DeleteIcon from "@/assets/deleteIcon";
 import { useRouter } from "next/navigation";
+import { getTeamCount } from "@/utils/coutersAPI";
+import { getTeamsByPage } from "@/utils/teamAPI";
 
 export default function DataDisplayTeams() {
   const { dataDisplayTeams } = useContext(DataDisplayTeamsContext);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [limitPerPage, setLimitPerPage] = useState(10);
+  const [limitPerPage, setLimitPerPage] = useState(2);
+  const [totalPage, setTotalPage] = useState(1);
+
   const [teamSearch, setTeamSearch] = useState("");
   const [rows, setRows] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const router = useRouter()
+  const router = useRouter();
+
+  useEffect(() => {
+    fetchTeams();
+  }, [limitPerPage, currentPage]);
+
+  const fetchTeams = useCallback(async () => {
+
+    setTotalPage(Math.ceil((await getTeamCount()) / limitPerPage));
+
+    const teams = await getTeamsByPage(currentPage - 1, limitPerPage);
+
+    const rows = teams.docs.map(team => {
+      return {
+        ...team.data(),
+        key: team.id,
+        actions: [
+          {
+            label: "Edit",
+            size: "sm",
+            radius: "sm",
+            color: "primary",
+            variant: "solid",
+            isIconOnly: false,
+            onClick: (item, key) => {console.log(item, key)}
+          },
+          {
+            label: "Delete",
+            size: "sm",
+            radius: "sm",
+            color: "danger",
+            variant: "solid",
+            isIconOnly: false,
+            onClick: (item, key) => {console.log(item, key)}
+          },
+        ],
+      }
+    })
+
+    setRows(rows);
+
+    return rows;
+    
+  }, [limitPerPage, currentPage]);
 
   const renderCell = useCallback((item, key) => {
     switch (key) {
       case "teamTag":
-        return <div>item.teamTag</div>;
+        return <div>{item.teamAbbr}</div>;
       case "teamName":
-        return <div>item.teamName</div>;
+        return <div>{item.teamName}</div>;
       case "wins":
-        return <div>item.wins</div>;
+        return <div>{item.wins || 0}</div>;
       case "losses":
-        return <div>item.losses</div>;
+        return <div>{item.losses || 0}</div>;
       case "actions":
-        return item.action.map((action, index) => {
+        return item.actions.map((action, index) => {
           return (
             <Button
               key={index}
@@ -49,7 +96,7 @@ export default function DataDisplayTeams() {
               variant={action.variant || "solid"}
               isIconOnly={action.isIconOnly || false}
             >
-              {isIconOnly ? action.icon : action.label}
+              {action.isIconOnly ? action.icon : action.label}
             </Button>
           );
         });
@@ -70,7 +117,7 @@ export default function DataDisplayTeams() {
       <section className="">
         <DataDisplay
           pagination={{
-            totalPage: 10,
+            totalPage: totalPage,
             currentPage: currentPage,
             setCurrentPage: setCurrentPage,
             initialPage: 1,
@@ -109,7 +156,7 @@ export default function DataDisplayTeams() {
                   isIconOnly: true,
                   ariaLabel: "add player",
                   onClick: () => {
-                    router.push('/admin/dashboard/teams/new')
+                    router.push("/admin/dashboard/teams/new");
                   },
                   icon: <AddIcon />,
                   isDisabled: false,

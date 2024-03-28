@@ -15,16 +15,16 @@ export default function ToolbarDataDisplay({
     isIconOnly,
     icon,
     isDisabled,
-    color,
+    color, 
     searchVariant,
     ...searchComponentProps
   } = searchComponent;
   return (
     <>
       {title && <h1 className="text-2xl font-bold">{title}</h1>}
-      <section className="flex justify-start items-center">
+      <section className="flex items-center justify-start">
         {searchComponent && (
-          <div className="flex w-full gap-2 justify-center items-center">
+          <div className="flex items-center justify-center w-full gap-2">
             <Input
               className="w-full"
               variant="flat"
