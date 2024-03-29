@@ -38,17 +38,28 @@ export async function getTeamsByPage(page, limit, orderBy = "teamName") {
 
 // POST FUNCTIONS
 export async function createTeam(team) {
-  await incrementTeam().catch(() => {
-    throw new Error("Error incrementing team counter");
-  });
+  console.log(team);
 
-  return await uploadImage(team.teamLogo).then((res) => {
-    console.log({ ...team, teamLogo: res.ref.fullPath });
-    return firestore
-      .collection("teams")
-      .doc()
-      .set({ ...team, teamLogo: res.ref.fullPath });
-  });
+  // Check if teamName, teamAbbr, and teamLogo are not empty
+  if(!team.teamName || !team.teamAbbr || !team.teamLogo) {
+    throw new Error("Please fill out all fields");
+  }
+  
+  return await uploadImage(team.teamLogo)
+    .then((res) => {
+      incrementTeam().catch((err) => {
+        console.error(err);
+        console.log("Error incrementing team counter");
+      });
+      return firestore
+        .collection("teams")
+        .doc()
+        .set({ ...team, teamLogo: res });
+    })
+    .catch((err) => {
+      console.log(err);
+      throw new Error("Error uploading image");
+    });
 }
 
 // PUT FUNCTIONS

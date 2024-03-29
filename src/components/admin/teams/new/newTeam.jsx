@@ -103,15 +103,11 @@ export default function NewTeam() {
         alert("Team created successfully", "Team has been created successfully");
         router.push("/admin/dashboard/teams")
       })
-      .catch(err => {
-        console.error(err);
-        alert("Error", "An error occurred while creating the team")
-      })
-  },[]);
+  },[team]);
 
   const handleCancelButton = useCallback(()=>{
     router.push("/admin/dashboard/teams")    
-  },[]);
+  }, []);
 
   return (
     <section className="mx-8 my-4 ">
@@ -148,6 +144,7 @@ export default function NewTeam() {
                 const file = e.target.files[0]
                 teamReducer({ type: "teamLogo", value: file });
               }}
+              accept="image/png, image/jpeg, image/jpg, image/svg"
               className="my-2 md:my-0"
             />
             {/* <div>

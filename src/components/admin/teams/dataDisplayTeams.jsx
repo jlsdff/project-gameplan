@@ -19,7 +19,7 @@ import DeleteIcon from "@/assets/deleteIcon";
 import EditIcon from "@/assets/editIcon";
 import { useRouter } from "next/navigation";
 import { getTeamCount } from "@/utils/coutersAPI";
-import { getTeamsByPage } from "@/utils/teamAPI";
+import { getTeamsByPage, deleteTeam } from "@/utils/teamAPI";
 
 export default function DataDisplayTeams() {
   const { dataDisplayTeams } = useContext(DataDisplayTeamsContext);
@@ -56,17 +56,17 @@ export default function DataDisplayTeams() {
             variant: "solid",
             isIconOnly: true,
             icon: <EditIcon />,
-            onClick: (item, key) => {console.log(item, key)}
+            onClick: editTeamHandler
           },
           {
             label: "Delete",
             size: "sm",
             radius: "sm",
             color: "danger",
-            variant: "solid",
+            variant: "light",
             isIconOnly: true,
             icon: <DeleteIcon />,
-            onClick: (item, key) => {console.log(item, key)}
+            onClick: deleteTeamHandler
           },
         ],
       }
@@ -96,6 +96,7 @@ export default function DataDisplayTeams() {
               color={action.color || "default"}
               variant={action.variant || "solid"}
               isIconOnly={action.isIconOnly || false}
+              onClick={() => action.onClick(item, key)}
             >
               {action.isIconOnly ? action.icon : action.label}
             </Button>
@@ -105,11 +106,11 @@ export default function DataDisplayTeams() {
   }, []);
 
   const editTeamHandler = useCallback( (item, key) => {
-
+    // router.push(`/admin/dash/board/teams/new/&id=${item.key}`);
   },[])
 
-  const deleteTeamHandler = useCallback( (item, key) => {
-
+  const deleteTeamHandler = useCallback( async (item, key) => {
+    await deleteTeam(item.key);
   },[])
 
   const searchTeamNameHandler = useCallback((value) => {
@@ -143,7 +144,7 @@ export default function DataDisplayTeams() {
                 label: "Search",
                 value: teamSearch,
                 onChange: (value) => setTeamSearch(value),
-                onSearch: () => searchTeamNameHandler(nameSearch),
+                onSearch: () => searchTeamNameHandler(teamSearch),
                 isIconOnly: true,
                 icon: <SearchIcon />,
                 isDisabled: teamSearch.length > 0 ? false : true,
