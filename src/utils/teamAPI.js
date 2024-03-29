@@ -1,5 +1,6 @@
 import { firestore } from "@/lib/firebase/firebase";
 import { uploadImage, getImageUrl } from "./imagesAPI";
+import { decrementTeam, incrementTeam } from "./coutersAPI";
 
 // GET FUNCTIONS
 export async function getTeamById(id) {
@@ -10,39 +11,43 @@ export async function getAllTeams() {
   return firestore.collection("teams").get();
 }
 
-export async function getTeamsByPage(page, limit, orderBy = "teamName"){
-  let lastDoc = null
+export async function getTeamsByPage(page, limit, orderBy = "teamName") {
+  let lastDoc = null;
 
-  if(page > 0){
+  if (page > 0) {
     const snapshot = await firestore
       .collection("teams")
       .orderBy(orderBy, "asc")
       .limit(page * limit)
-      .get()
+      .get();
 
-    lastDoc = snapshot.docs[snapshot.docs.length - 1]
+    lastDoc = snapshot.docs[snapshot.docs.length - 1];
   }
 
   let query = firestore
     .collection("teams")
     .orderBy(orderBy, "asc")
-    .limit(limit)
+    .limit(limit);
 
-  if(lastDoc){
-    query = query.startAfter(lastDoc)
+  if (lastDoc) {
+    query = query.startAfter(lastDoc);
   }
 
-  return await query.get()
-  
+  return await query.get();
 }
 
 // POST FUNCTIONS
 export async function createTeam(team) {
-  
-  return await uploadImage(team.teamLogo)
-  .then((res) => {
-    console.log({...team, teamLogo: res.ref.fullPath})
-    return firestore.collection("teams").doc().set({...team, teamLogo: res.ref.fullPath});
+  await incrementTeam().catch(() => {
+    throw new Error("Error incrementing team counter");
+  });
+
+  return await uploadImage(team.teamLogo).then((res) => {
+    console.log({ ...team, teamLogo: res.ref.fullPath });
+    return firestore
+      .collection("teams")
+      .doc()
+      .set({ ...team, teamLogo: res.ref.fullPath });
   });
 }
 
@@ -53,6 +58,7 @@ export async function updateTeam(id, team) {
 
 // DELETE FUNCTIONS
 export async function deleteTeam(id) {
+  decrementTeam();
   return firestore.collection("teams").doc(id).delete();
 }
 
