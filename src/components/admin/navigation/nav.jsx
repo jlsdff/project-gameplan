@@ -25,7 +25,7 @@ export default function App() {
   const pathname = usePathname();
   const adminContext = useContext(AdminContext);
 
-  const menuItems = ["Teams", "Players", "Games", "Log Out"];
+  const menuItems = ["Teams", "Players", "Games", "Leagues", "Blogs", "Log Out"];
 
   function signOut() {
     auth
@@ -53,7 +53,7 @@ export default function App() {
         </NavbarBrand>
       </NavbarContent>
 
-      <NavbarContent className="hidden sm:flex gap-4" justify="center">
+      <NavbarContent className="hidden gap-4 sm:flex" justify="center">
         <NavbarItem isActive={pathname === "/admin/dashboard/teams"}>
           <Link
             color={
@@ -84,6 +84,26 @@ export default function App() {
             Games
           </Link>
         </NavbarItem>
+        <NavbarItem isActive={pathname === "/admin/dashboard/leagues"}>
+          <Link
+            color={
+              pathname === "/admin/dashboard/leagues" ? "primary" : "foreground"
+            }
+            href="/admin/dashboard/leagues"
+          >
+            Leagues
+          </Link>
+        </NavbarItem>
+        <NavbarItem isActive={pathname === "/admin/dashboard/blogs"}>
+          <Link
+            color={
+              pathname === "/admin/dashboard/blogs" ? "primary" : "foreground"
+            }
+            href="/admin/dashboard/blogs"
+          >
+            Blogs
+          </Link>
+        </NavbarItem>
       </NavbarContent>
       <NavbarContent as={"div"} justify="end">
         <Dropdown>
@@ -103,7 +123,7 @@ export default function App() {
           <DropdownMenu aria-label="Profile Actions" variant="flat">
             <DropdownItem
               key="profile"
-              className="h-14 gap-2"
+              className="gap-2 h-14"
               onClick={() => {
                 router.push(`/admin/dashboard/${adminContext.uid}`);
               }}
