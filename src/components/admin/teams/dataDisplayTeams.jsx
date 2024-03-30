@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useCallback, useContext, useState, useEffect, useMemo } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useState,
+  useEffect,
+  useMemo,
+} from "react";
 import { DataDisplayTeamsContext } from "@/context/dataDisplayTeamsContext";
 import DataDisplay from "../dataDisplay/dataDisplay";
 import { teamsColumns } from "@/helpers/teams/columns";
@@ -19,7 +25,7 @@ import DeleteIcon from "@/assets/deleteIcon";
 import EditIcon from "@/assets/editIcon";
 import { useRouter } from "next/navigation";
 import { getTeamCount } from "@/utils/coutersAPI";
-import { getTeamsByPage, deleteTeam } from "@/utils/teamAPI";
+import { getTeamsByPage, deleteTeam, getTeamByName } from "@/utils/teamAPI";
 
 export default function DataDisplayTeams() {
   const { dataDisplayTeams } = useContext(DataDisplayTeamsContext);
@@ -38,12 +44,11 @@ export default function DataDisplayTeams() {
   }, [limitPerPage, currentPage]);
 
   const fetchTeams = useCallback(async () => {
-
     setTotalPage(Math.ceil((await getTeamCount()) / limitPerPage));
 
     const teams = await getTeamsByPage(currentPage - 1, limitPerPage);
 
-    const rows = teams.docs.map(team => {
+    const rows = teams.docs.map((team) => {
       return {
         ...team.data(),
         key: team.id,
@@ -56,7 +61,7 @@ export default function DataDisplayTeams() {
             variant: "solid",
             isIconOnly: true,
             icon: <EditIcon />,
-            onClick: editTeamHandler
+            onClick: editTeamHandler,
           },
           {
             label: "Delete",
@@ -66,14 +71,13 @@ export default function DataDisplayTeams() {
             variant: "light",
             isIconOnly: true,
             icon: <DeleteIcon />,
-            onClick: deleteTeamHandler
+            onClick: deleteTeamHandler,
           },
         ],
-      }
-    })
+      };
+    });
 
     setRows(rows);
-    
   }, [limitPerPage, currentPage]);
 
   const renderCell = useCallback((item, key) => {
@@ -105,24 +109,38 @@ export default function DataDisplayTeams() {
     }
   }, []);
 
-  const editTeamHandler = useCallback( (item, key) => {
+  const editTeamHandler = useCallback((item, key) => {
     router.push(`/admin/dashboard/teams/${item.key}`);
-  },[])
+  }, []);
 
-  const deleteTeamHandler = useCallback( async (item, key) => {
+  const deleteTeamHandler = useCallback(async (item, key) => {
     await deleteTeam(item.key)
-    .then(()=>{
-      alert("Team deleted successfully", "Team has been deleted successfully");
-      fetchTeams();
-    })
-    .catch(err => {
-      console.error(err);
-      alert("Error deleting team", "There was an error deleting the team");
-    })
-  },[])
+      .then(() => {
+        alert(
+          "Team deleted successfully",
+          "Team has been deleted successfully"
+        );
+        fetchTeams();
+      })
+      .catch((err) => {
+        console.error(err);
+        alert("Error deleting team", "There was an error deleting the team");
+      });
+  }, []);
 
-  const searchTeamNameHandler = useCallback((value) => {
-    console.log(value);
+  const searchTeamNameHandler = useCallback(async (value) => {
+    await getTeamByName(value)
+      .then((res) => {
+        const data = res.docs.map((doc) => {
+          return { id: doc.id, ...doc.data() };
+        });
+        setRows(data);
+        setTotalPage(1);
+      })
+      .catch((err) => {
+        console.error(err);
+        alert("Error searching team", "There was an error searching the team");
+      });
   }, []);
 
   const selectedRowKeysHandler = useCallback((key) => {
