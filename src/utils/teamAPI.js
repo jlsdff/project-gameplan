@@ -69,8 +69,12 @@ export async function updateTeam(id, team) {
 
 // DELETE FUNCTIONS
 export async function deleteTeam(id) {
-  decrementTeam();
-  return firestore.collection("teams").doc(id).delete();
+  return firestore.collection("teams").doc(id).delete().then(()=>{
+    decrementTeam().catch((err) => {
+      console.error(err);
+      console.log("Error decrementing team counter");
+    });
+  })
 }
 
 // OTHER FUNCTIONS

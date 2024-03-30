@@ -215,16 +215,6 @@ export default function NewTeam({ ...props }) {
                 className="my-2 md:my-0"
               />
             </Tooltip>
-            {/* <div>
-              <input
-                type="file"
-                // value={team.teamLogo}
-                onChange={(e)=>{
-                  const file = e.target.files[0];
-                  teamReducer({type: "teamLogo", value: file});
-                }}
-              />
-            </div> */}
           </div>
         </div>
         <div className="gap-4 columns-1 md:columns-2 ">

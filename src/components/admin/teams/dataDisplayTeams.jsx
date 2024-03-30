@@ -110,7 +110,15 @@ export default function DataDisplayTeams() {
   },[])
 
   const deleteTeamHandler = useCallback( async (item, key) => {
-    await deleteTeam(item.key);
+    await deleteTeam(item.key)
+    .then(()=>{
+      alert("Team deleted successfully", "Team has been deleted successfully");
+      fetchTeams();
+    })
+    .catch(err => {
+      console.error(err);
+      alert("Error deleting team", "There was an error deleting the team");
+    })
   },[])
 
   const searchTeamNameHandler = useCallback((value) => {
