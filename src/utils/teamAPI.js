@@ -36,6 +36,17 @@ export async function getTeamsByPage(page, limit, orderBy = "teamName") {
   return await query.get();
 }
 
+export async function getTeamByName(name){
+  const teamName = name.slice(0, 1).toUpperCase() + name.slice(1).toLowerCase();
+
+  return firestore.collection("teams")
+    .where("teamName", ">=", teamName)
+    .where("teamName", "<=", teamName + "\uf8ff")
+    .get();
+  
+}
+
+
 // POST FUNCTIONS
 export async function createTeam(team) {
   console.log(team);
