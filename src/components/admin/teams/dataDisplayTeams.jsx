@@ -132,7 +132,33 @@ export default function DataDisplayTeams() {
     await getTeamByName(value)
       .then((res) => {
         const data = res.docs.map((doc) => {
-          return { id: doc.id, ...doc.data() };
+          return {
+            id: doc.id,
+            key: doc.id,
+            actions: [
+              {
+                label: "Edit",
+                size: "sm",
+                radius: "sm",
+                color: "light",
+                variant: "solid",
+                isIconOnly: true,
+                icon: <EditIcon />,
+                onClick: editTeamHandler,
+              },
+              {
+                label: "Delete",
+                size: "sm",
+                radius: "sm",
+                color: "danger",
+                variant: "light",
+                isIconOnly: true,
+                icon: <DeleteIcon />,
+                onClick: deleteTeamHandler,
+              },
+            ],
+            ...doc.data(),
+          };
         });
         setRows(data);
         setTotalPage(1);
