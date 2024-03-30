@@ -106,7 +106,7 @@ export default function DataDisplayTeams() {
   }, []);
 
   const editTeamHandler = useCallback( (item, key) => {
-    // router.push(`/admin/dash/board/teams/new/&id=${item.key}`);
+    router.push(`/admin/dashboard/teams/${item.key}`);
   },[])
 
   const deleteTeamHandler = useCallback( async (item, key) => {

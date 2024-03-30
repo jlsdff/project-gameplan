@@ -1,13 +1,13 @@
 "use client";
-import React, { useCallback, useEffect, useMemo, useReducer } from "react";
-import { Input, Button } from "@nextui-org/react";
+import React, { useCallback, useEffect, useState, useReducer } from "react";
+import { Input, Button, Tooltip } from "@nextui-org/react";
 import SearchIcon from "@/assets/searchIcon";
 import DeleteIcon from "@/assets/deleteIcon";
 import XIcon from "@/assets/xIcon";
 import SearchBar from "@/components/ui/searchBar/searchBar";
 import NewTeamSearchDisplay from "./newTeamSearchDisplay";
 import { getPlayerByLikeName, getPlayerById } from "@/utils/playerAPI";
-import { createTeam } from "@/utils/teamAPI";
+import { createTeam, getTeamById, updateTeam } from "@/utils/teamAPI";
 import PlayerContainer from "./playerContainer";
 import { useRouter } from "next/navigation";
 
@@ -34,15 +34,25 @@ const reducer = (state, action) => {
         ...state,
         players: state.players.filter((player) => player.id !== action.value),
       };
+
+    case "hydrate":
+      return {
+        ...state,
+        teamName: action.value.teamName,
+        teamAbbr: action.value.teamAbbr,
+        players: action.value.players,
+      };
+
     default:
       return state;
   }
 };
 
-export default function NewTeam() {
+export default function NewTeam({ ...props }) {
+  console.log(props);
 
-  const router = useRouter()
-  
+  const router = useRouter();
+
   const [team, teamReducer] = useReducer(reducer, {
     teamName: "",
     teamAbbr: "",
@@ -55,6 +65,27 @@ export default function NewTeam() {
     },
     players: [],
   });
+
+  const [lastSavedData, setLastSavedData] = useState({});
+
+  useEffect(() => {
+    const idParameter = props.id;
+
+    if (idParameter) {
+      getTeamById(idParameter).then(async (res) => {
+        const data = { id: res.id, ...res.data() };
+        const players = await data.players.map(async (player) => {
+          const playerData = await getPlayerById(player).then((res) => {
+            return { id: res.id, ...res.data() };
+          });
+          return playerData;
+        });
+        data.players = await Promise.all(players);
+        teamReducer({ type: "hydrate", value: data });
+        setLastSavedData(data);
+      });
+    }
+  }, []);
 
   const onSearchPlayers = useCallback(async () => {
     teamReducer({
@@ -91,31 +122,66 @@ export default function NewTeam() {
     teamReducer({ type: "removePlayer", value: player.id });
   }, []);
 
-  const handleSaveButton = useCallback( async ()=>{
-    const data = {
-      teamName: team.teamName,
-      teamAbbr: team.teamAbbr,
-      teamLogo: team.teamLogo,
-      players: team.players.map(player=>player.id)
-    };
-    const res = await createTeam(data)
-      .then(res => {
-        alert("Team created successfully", "Team has been created successfully");
-        router.push("/admin/dashboard/teams")
-      })
-  },[team]);
+  const handleSaveButton = useCallback(async () => {
+    if (!props.id) {
+      const data = {
+        teamName: team.teamName,
+        teamAbbr: team.teamAbbr,
+        teamLogo: team.teamLogo,
+        players: team.players.map((player) => player.id),
+      };
+      const res = await createTeam(data).then((res) => {
+        alert(
+          "Team created successfully",
+          "Team has been created successfully"
+        );
+        router.push("/admin/dashboard/teams");
+      });
+    } else {
+      const data = {
+        ...lastSavedData,
+        teamName: team.teamName,
+        teamAbbr: team.teamAbbr,
+        teamLogo: team.teamLogo ? team.teamLogo : lastSavedData.teamLogo,
+        players: team.players.map((player) => player.id),
+      };
 
-  const handleCancelButton = useCallback(()=>{
-    router.push("/admin/dashboard/teams")    
+      const res = await updateTeam(props.id, data)
+        .then(res => {
+          alert("Team updated successfully", "Team has been updated successfully");
+          router.push("/admin/dashboard/teams");
+        })
+
+    }
+  }, [team]);
+
+  const handleCancelButton = useCallback(() => {
+    router.push("/admin/dashboard/teams");
   }, []);
 
   return (
     <section className="mx-8 my-4 ">
       <div className="flex items-center justify-between">
-        <h1 className="mb-4 text-xl md:text-3xl">New Team</h1>
+        <h1 className="mb-4 text-xl md:text-3xl">
+          {props.id ? "Edit Team" : "New Team"}
+        </h1>
         <div className="hidden gap-2 md:flex">
-          <Button variant="solid" size="md" color="primary" onClick={handleSaveButton} >Save</Button>
-          <Button variant="light" size="md" color="secondary" onClick={handleCancelButton} >Cancel</Button>
+          <Button
+            variant="solid"
+            size="md"
+            color="primary"
+            onClick={handleSaveButton}
+          >
+            Save
+          </Button>
+          <Button
+            variant="light"
+            size="md"
+            color="secondary"
+            onClick={handleCancelButton}
+          >
+            Cancel
+          </Button>
         </div>
       </div>
       <section className="container gap-4">
@@ -138,15 +204,17 @@ export default function NewTeam() {
               }
               className="my-2 md:my-0"
             />
-            <Input
-              type="file"
-              onChange={e => {
-                const file = e.target.files[0]
-                teamReducer({ type: "teamLogo", value: file });
-              }}
-              accept="image/png, image/jpeg, image/jpg, image/svg"
-              className="my-2 md:my-0"
-            />
+            <Tooltip content="Team Logo">
+              <Input
+                type="file"
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  teamReducer({ type: "teamLogo", value: file });
+                }}
+                accept="image/png, image/jpeg, image/jpg, image/svg"
+                className="my-2 md:my-0"
+              />
+            </Tooltip>
             {/* <div>
               <input
                 type="file"
@@ -218,8 +286,22 @@ export default function NewTeam() {
           </div>
         </div>
         <div className="flex items-center justify-center gap-2 md:hidden">
-          <Button variant="solid" size="md" color="primary" onClick={handleSaveButton} >Save</Button>
-          <Button variant="light" size="md" color="secondary" onClick={handleCancelButton} >Cancel</Button>
+          <Button
+            variant="solid"
+            size="md"
+            color="primary"
+            onClick={handleSaveButton}
+          >
+            Save
+          </Button>
+          <Button
+            variant="light"
+            size="md"
+            color="secondary"
+            onClick={handleCancelButton}
+          >
+            Cancel
+          </Button>
         </div>
       </section>
     </section>

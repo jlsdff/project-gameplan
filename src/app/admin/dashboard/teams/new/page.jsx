@@ -4,10 +4,10 @@ export const metadata = {
   title: "New Team",
 };
 
-export default function NewTeamPage() {
+export default function NewTeamPage({params}) {
   return (
     <div>
-      <NewTeam />
+      <NewTeam {...params} />
     </div>
   );
 }
