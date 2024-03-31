@@ -184,8 +184,8 @@ export default function NewTeam({ ...props }) {
           </Button>
         </div>
       </div>
-      <section className="container gap-4">
-        <div className="mb-4 ">
+      <section className="gap-4">
+        <div className="w-full mb-4">
           <h2 className="my-2 font-bold">Team Details</h2>
           <div className="gap-2 columns-1 md:columns-3">
             <Input
