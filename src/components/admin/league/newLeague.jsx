@@ -13,6 +13,7 @@ import AddIcon from "@/assets/addIcon";
 import Editor from "@/components/ui/editorJs/editorJs";
 import SearchIcon from "@/assets/searchIcon";
 import { getTeamByName } from "@/utils/teamAPI";
+import XIcon from "@/assets/xIcon";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -98,15 +99,30 @@ export default function NewLeague() {
 
   const handleAddTeam = useCallback(
     (team) => {
-      
-      const isAdded = leagueState.addedTeams.some((addedTeam) => addedTeam.id === team.id);
+      const isAdded = leagueState.addedTeams.some(
+        (addedTeam) => addedTeam.id === team.id
+      );
 
       if (!isAdded) {
         leagueDispatch({
           type: "addedTeams",
           value: [...leagueState.addedTeams, team],
         });
-      } 
+        const updatedSearchResult = leagueState.searchResult.filter(
+          (searchedTeam) => searchedTeam.id !== team.id
+        );
+        leagueDispatch({ type: "searchResult", value: updatedSearchResult });
+      }
+    },
+    [leagueState.addedTeams, leagueState.searchResult]
+  );
+
+  const handleRemoveTeam = useCallback(
+    (team) => {
+      const updatedTeams = leagueState.addedTeams.filter(
+        (addedTeam) => addedTeam.id !== team.id
+      );
+      leagueDispatch({ type: "addedTeams", value: updatedTeams });
     },
     [leagueState.addedTeams]
   );
@@ -114,21 +130,7 @@ export default function NewLeague() {
   return (
     <div>
       <form action="#" method="post">
-        <div className="items-center justify-between block md:flex">
-          <h1 className="py-4 text-xl md:text-2xl">New League</h1>
-          <div className="items-center justify-center hidden gap-2 md:flex">
-            <Button onClick={handleSaveButton} variant="solid" color="primary">
-              Save
-            </Button>
-            <Button
-              onClick={handleCancelButton}
-              variant="light"
-              color="secondary"
-            >
-              Cancel
-            </Button>
-          </div>
-        </div>
+        <h1 className="py-4 text-xl md:text-2xl">New League</h1>
         <div className="gap-2 space-y-2 columns-1 md:columns-2">
           <Input
             label="League Title"
@@ -191,7 +193,7 @@ export default function NewLeague() {
           </CheckboxGroup>
         </div>
         <div>
-          <h2>League Details</h2>
+          <h2 className="mt-4 mb-2 text-xl font-bold">League Details</h2>
           <ScrollShadow
             hideScrollBar
             className="min-h-[50px] max-h-[400px] overflow-y-scroll"
@@ -200,8 +202,10 @@ export default function NewLeague() {
           </ScrollShadow>
         </div>
       </form>
-      <div className="my-4 columns-1 md:columns-2">
+      <h2 className="mt-4 mb-2 text-xl font-bold">Participating Teams</h2>
+      <div className=" columns-1 md:columns-2">
         <div className="flex flex-col space-y-2 break-inside-avoid ">
+          <h3>Search Teams</h3>
           <form className="flex items-center justify-center gap-2 break-inside-avoid">
             <Input
               type="text"
@@ -222,13 +226,69 @@ export default function NewLeague() {
             </Button>
           </form>
           <div id="search-results-container" className="">
-            <ul>
-              {leagueState.searchResult.length === 0 ? (
-                <p className="px-3 py-2 text-center text-danger">
-                  No Data Found
-                </p>
-              ) : (
-                leagueState.searchResult.map((team, index) => {
+            {/* Search Result */}
+            <ScrollShadow
+              hideScrollBar
+              className="min-h-[50px] max-h-[300px] overflow-y-scroll"
+            >
+              <ul className="space-y-1">
+                {leagueState.searchResult.length === 0 ? (
+                  <p className="px-3 py-2 text-center text-danger">
+                    No Data Found
+                  </p>
+                ) : (
+                  leagueState.searchResult.map((team, index) => {
+                    return (
+                      <li
+                        key={team.id}
+                        className="flex items-center justify-between px-3 py-2 border-2 rounded-md border-neutral-400/50 hover:border-neutral-400 "
+                      >
+                        <div className="flex items-center justify-start gap-2">
+                          <Avatar
+                            src={team.teamLogo}
+                            name={team.teamName}
+                            showFallback
+                          />
+                          <div>
+                            <h3 className="font-bold">
+                              <span className="text-sm font-normal">
+                                {team.teamAbbr}
+                              </span>{" "}
+                              {` ${team.teamName}`}
+                            </h3>
+                            <p className="text-xs">{`${team.wins} - ${team.loses}`}</p>
+                          </div>
+                        </div>
+                        <Button
+                          variant="light"
+                          color="secondary"
+                          size="sm"
+                          isIconOnly
+                          onClick={() => {
+                            handleAddTeam(team);
+                          }}
+                        >
+                          <AddIcon />
+                        </Button>
+                      </li>
+                    );
+                  })
+                )}
+              </ul>
+            </ScrollShadow>
+          </div>
+        </div>
+        <div>
+          <h3>Added Teams</h3>
+          {leagueState.addedTeams.length === 0 ? (
+            <p className="px-3 py-2 text-center text-danger">No Teams Added</p>
+          ) : (
+            <ScrollShadow
+              hideScrollBar
+              className="min-h-[50px] max-h-[400px] overflow-y-scroll"
+            >
+              <ul className="space-y-1">
+                {leagueState.addedTeams.map((team, index) => {
                   return (
                     <li
                       key={team.id}
@@ -256,18 +316,26 @@ export default function NewLeague() {
                         size="sm"
                         isIconOnly
                         onClick={() => {
-                          handleAddTeam(team);
+                          handleRemoveTeam(team);
                         }}
                       >
-                        <AddIcon />
+                        <XIcon />
                       </Button>
                     </li>
                   );
-                })
-              )}
-            </ul>
-          </div>
+                })}
+              </ul>
+            </ScrollShadow>
+          )}
         </div>
+      </div>
+      <div className="flex items-center justify-center gap-2 mt-4">
+        <Button onClick={handleSaveButton} variant="solid" color="primary">
+          Save
+        </Button>
+        <Button onClick={handleCancelButton} variant="light" color="secondary">
+          Cancel
+        </Button>
       </div>
     </div>
   );
