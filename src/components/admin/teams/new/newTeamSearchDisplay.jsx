@@ -6,12 +6,15 @@ import AddIcon from "@/assets/addIcon";
 
 export default function NewTeamSearchDisplay({
   data,
+  initialDisplay,
   loading,
   hasSearch,
   addPlayer,
   removePlayer,
   ...props
 }) {
+  initialDisplay = initialDisplay || "Search for players to add to the team";
+
   const endContents = useMemo(() => {
     return [
       {
@@ -37,7 +40,7 @@ export default function NewTeamSearchDisplay({
   if (!hasSearch) {
     return (
       <div className="w-full mx-4 my-2 text-center">
-        <p>⬆&nbsp;Search for players to add to the team&nbsp;⬆</p>
+        <p>⬆&nbsp;{initialDisplay}&nbsp;⬆</p>
       </div>
     );
   }
@@ -45,7 +48,7 @@ export default function NewTeamSearchDisplay({
   if (data.length === 0) {
     return (
       <div className="w-full mx-4 my-2 text-center">
-        <p>No players found</p>
+        <p>No Data found</p>
       </div>
     );
   }

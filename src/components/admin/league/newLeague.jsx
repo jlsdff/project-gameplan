@@ -7,10 +7,12 @@ import {
   Checkbox,
   Button,
   ScrollShadow,
+  Avatar,
 } from "@nextui-org/react";
 import AddIcon from "@/assets/addIcon";
 import Editor from "@/components/ui/editorJs/editorJs";
 import SearchIcon from "@/assets/searchIcon";
+import { getTeamByName } from "@/utils/teamAPI";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -28,6 +30,12 @@ const reducer = (state, action) => {
       return { ...state, leagueData: action.value };
     case "leagueImage":
       return { ...state, leagueImage: action.value };
+    case "searchValue":
+      return { ...state, searchValue: action.value };
+    case "searchResult":
+      return { ...state, searchResult: action.value };
+    case "addedTeams":
+      return { ...state, addedTeams: action.value };
     default:
       return state;
   }
@@ -42,6 +50,9 @@ export default function NewLeague() {
     leagueImage: null,
     dateSchedule: [],
     leagueData: [],
+    searchValue: "",
+    searchResult: [],
+    addedTeams: [],
   });
 
   const days = useMemo(
@@ -64,6 +75,42 @@ export default function NewLeague() {
   const handleLeagueDataChange = useCallback((data) => {
     leagueDispatch({ type: "leagueData", value: data });
   }, []);
+
+  const handleSearchTeams = useCallback(
+    (e) => {
+      e.preventDefault();
+      const teams = getTeamByName(leagueState.searchValue)
+        .then((res) => {
+          const data = res.docs.map((doc) => {
+            return {
+              id: doc.id,
+              ...doc.data(),
+            };
+          });
+          leagueDispatch({ type: "searchResult", value: data });
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+    [leagueState.searchValue]
+  );
+
+  const handleAddTeam = useCallback(
+    (team) => {
+      
+      const isAdded = leagueState.addedTeams.some((addedTeam) => addedTeam.id === team.id);
+
+      if (!isAdded) {
+        leagueDispatch({
+          type: "addedTeams",
+          value: [...leagueState.addedTeams, team],
+        });
+      } 
+    },
+    [leagueState.addedTeams]
+  );
+
   return (
     <div>
       <form action="#" method="post">
@@ -154,18 +201,73 @@ export default function NewLeague() {
         </div>
       </form>
       <div className="my-4 columns-1 md:columns-2">
-        <form className="flex items-center justify-center gap-2 break-inside-avoid">
-          <Input
-            type="text"
-            label="Search Teams"
-            onValueChange={(value) => {
-              console.log(value); // TODO: Search Teams
-            }}
-          />
-          <Button type="submit" variant="solid" color="primary" size="sm" isIconOnly>
-            <SearchIcon />
-          </Button>
-        </form>
+        <div className="flex flex-col space-y-2 break-inside-avoid ">
+          <form className="flex items-center justify-center gap-2 break-inside-avoid">
+            <Input
+              type="text"
+              label="Search Teams"
+              onValueChange={(value) => {
+                leagueDispatch({ type: "searchValue", value });
+              }}
+            />
+            <Button
+              type="submit"
+              variant="solid"
+              color="primary"
+              size="sm"
+              isIconOnly
+              onClick={handleSearchTeams}
+            >
+              <SearchIcon />
+            </Button>
+          </form>
+          <div id="search-results-container" className="">
+            <ul>
+              {leagueState.searchResult.length === 0 ? (
+                <p className="px-3 py-2 text-center text-danger">
+                  No Data Found
+                </p>
+              ) : (
+                leagueState.searchResult.map((team, index) => {
+                  return (
+                    <li
+                      key={team.id}
+                      className="flex items-center justify-between px-3 py-2 border-2 rounded-md border-neutral-400/50 hover:border-neutral-400 "
+                    >
+                      <div className="flex items-center justify-start gap-2">
+                        <Avatar
+                          src={team.teamLogo}
+                          name={team.teamName}
+                          showFallback
+                        />
+                        <div>
+                          <h3 className="font-bold">
+                            <span className="text-sm font-normal">
+                              {team.teamAbbr}
+                            </span>{" "}
+                            {` ${team.teamName}`}
+                          </h3>
+                          <p className="text-xs">{`${team.wins} - ${team.loses}`}</p>
+                        </div>
+                      </div>
+                      <Button
+                        variant="light"
+                        color="secondary"
+                        size="sm"
+                        isIconOnly
+                        onClick={() => {
+                          handleAddTeam(team);
+                        }}
+                      >
+                        <AddIcon />
+                      </Button>
+                    </li>
+                  );
+                })
+              )}
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   );
