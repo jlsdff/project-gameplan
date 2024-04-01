@@ -10,7 +10,7 @@ const _defaultData = {
     {
       type: "header",
       data: {
-        text: "This is my awesome editor!",
+        text: "Start Here!",
         level: 1,
       },
     },

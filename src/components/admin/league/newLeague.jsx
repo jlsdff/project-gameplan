@@ -64,14 +64,26 @@ export default function NewLeague() {
   const handleSaveButton = useCallback(() => {
     // TODO: Save League
     // TODO: handle Dependencies
+
+    const data = {
+      title: leagueState.title,
+      venue: leagueState.venue,
+      timeFrom: leagueState.timeFrom,
+      timeTo: leagueState.timeTo,
+      dateSchedule: leagueState.dateSchedule,
+      leagueData: leagueState.leagueData,
+      leagueImage: leagueState.leagueImage,
+      participatingTeams: leagueState.addedTeams,
+    };
+    
     console.log("Saving League State", leagueState);
-  });
+  },[]);
 
   const handleCancelButton = useCallback(() => {
     // TODO: Cancel League
     // TODO: handle Dependencies
     console.log("Cancelling League State", leagueState);
-  });
+  },[]);
 
   const handleLeagueDataChange = useCallback((data) => {
     leagueDispatch({ type: "leagueData", value: data });
@@ -136,11 +148,13 @@ export default function NewLeague() {
             label="League Title"
             required
             onValueChange={(value) => leagueDispatch({ type: "title", value })}
+            value={leagueState.title}
           />
           <Input
             label="Venue"
             required
             onValueChange={(value) => leagueDispatch({ type: "venue", value })}
+            value={leagueState.venue}
           />
           <Input
             type="file"
@@ -160,6 +174,7 @@ export default function NewLeague() {
                 onValueChange={(value) =>
                   leagueDispatch({ type: "timeFrom", value })
                 }
+                value={leagueState.timeFrom}
               />
               <span>To</span>
               <Input
@@ -169,6 +184,7 @@ export default function NewLeague() {
                 onValueChange={(value) =>
                   leagueDispatch({ type: "timeTo", value })
                 }
+                value={leagueState.timeTo}
               />
             </div>
           </div>
