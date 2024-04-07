@@ -40,7 +40,7 @@ import {
   incrementPlayer,
   decrementPlayer,
   getPlayerCount,
-} from "@/utils/coutersAPI";
+} from "@/utils/countersAPI";
 
 const newPlayerReducer = (state, action) => {
   switch (action.type) {

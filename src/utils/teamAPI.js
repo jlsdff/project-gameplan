@@ -1,6 +1,6 @@
 import { firestore } from "@/lib/firebase/firebase";
 import { uploadImage, getImageUrl } from "./imagesAPI";
-import { decrementTeam, incrementTeam } from "./coutersAPI";
+import { decrementTeam, incrementTeam } from "./countersAPI";
 
 // GET FUNCTIONS
 export async function getTeamById(id) {

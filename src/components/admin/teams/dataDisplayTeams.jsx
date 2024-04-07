@@ -24,7 +24,7 @@ import AddIcon from "@/assets/addIcon";
 import DeleteIcon from "@/assets/deleteIcon";
 import EditIcon from "@/assets/editIcon";
 import { useRouter } from "next/navigation";
-import { getTeamCount } from "@/utils/coutersAPI";
+import { getTeamCount } from "@/utils/countersAPI";
 import { getTeamsByPage, deleteTeam, getTeamByName } from "@/utils/teamAPI";
 
 export default function DataDisplayTeams() {

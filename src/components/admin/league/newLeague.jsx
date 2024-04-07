@@ -14,6 +14,8 @@ import Editor from "@/components/ui/editorJs/editorJs";
 import SearchIcon from "@/assets/searchIcon";
 import { getTeamByName } from "@/utils/teamAPI";
 import XIcon from "@/assets/xIcon";
+import { createLeague } from "@/utils/leagueAPI";
+import { useRouter } from "next/navigation";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -56,15 +58,14 @@ export default function NewLeague() {
     addedTeams: [],
   });
 
+  const router = useRouter();
+
   const days = useMemo(
     () => ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
     []
   );
 
   const handleSaveButton = useCallback(() => {
-    // TODO: Save League
-    // TODO: handle Dependencies
-
     const data = {
       title: leagueState.title,
       venue: leagueState.venue,
@@ -75,15 +76,36 @@ export default function NewLeague() {
       leagueImage: leagueState.leagueImage,
       participatingTeams: leagueState.addedTeams,
     };
+
+    // Verify if all required fields are filled
+    if (
+      data.title === "" ||
+      data.venue === "" ||
+      data.timeFrom === "" ||
+      data.timeTo === "" ||
+      data.dateSchedule.length === 0 ||
+      data.leagueImage === null ||
+      data.participatingTeams.length === 0
+    ) {
+      alert("Please fill out all required fields");
+      return;
+    }else {
+      createLeague(data)
+        .then(() => {
+          alert("League created successfully");
+          router.push("/admin/dashboard/leagues");
+        })
+        .catch((error) => {
+          console.error(error);
+        })
+    }
+
     
-    console.log("Saving League State", leagueState);
-  },[]);
+  }, [leagueState]);
 
   const handleCancelButton = useCallback(() => {
-    // TODO: Cancel League
-    // TODO: handle Dependencies
-    console.log("Cancelling League State", leagueState);
-  },[]);
+    router.push("/admin/dashboard/leagues");
+  }, []);
 
   const handleLeagueDataChange = useCallback((data) => {
     leagueDispatch({ type: "leagueData", value: data });
@@ -193,7 +215,6 @@ export default function NewLeague() {
             orientation="horizontal"
             value={leagueState.dateSchedule}
             onValueChange={(value) => {
-              console.log(value);
               leagueDispatch({ type: "dateSchedule", value });
             }}
           >
