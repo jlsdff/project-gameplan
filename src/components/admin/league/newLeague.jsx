@@ -74,7 +74,7 @@ export default function NewLeague() {
       dateSchedule: leagueState.dateSchedule,
       leagueData: leagueState.leagueData,
       leagueImage: leagueState.leagueImage,
-      participatingTeams: leagueState.addedTeams,
+      participatingTeams: leagueState.addedTeams.map((team) => team.id),
     };
 
     // Verify if all required fields are filled
@@ -85,11 +85,12 @@ export default function NewLeague() {
       data.timeTo === "" ||
       data.dateSchedule.length === 0 ||
       data.leagueImage === null ||
-      data.participatingTeams.length === 0
+      data.participatingTeams.length === 0 ||
+      Object.keys(data.leagueData).length === 0
     ) {
       alert("Please fill out all required fields");
       return;
-    }else {
+    } else {
       createLeague(data)
         .then(() => {
           alert("League created successfully");
@@ -97,10 +98,8 @@ export default function NewLeague() {
         })
         .catch((error) => {
           console.error(error);
-        })
+        });
     }
-
-    
   }, [leagueState]);
 
   const handleCancelButton = useCallback(() => {
