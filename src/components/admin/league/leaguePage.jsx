@@ -3,11 +3,31 @@ import React, { useRef, useReducer, useCallback } from "react";
 import { Input, Button, Link } from "@nextui-org/react";
 import SearchIcon from "@/assets/searchIcon";
 import AddIcon from "@/assets/addIcon";
+import LeagueDataDisplay from "./leagueDataDisplay";
+import { getLeaguesByLikeTitle } from "@/utils/leagueAPI";
 
 const reducer = (state, action) => {
   switch (action.type) {
     case "searchInput":
       return { ...state, searchInput: action.value };
+    case "isLoading":
+      return {
+        ...state,
+        leagues: {
+          ...state.leagues,
+          loading: true,
+        },
+      };
+    case "searchLeagues":
+      return {
+        searchInput: "",
+        leagues: {
+          ...state.leagues,
+          loading: false,
+          data: action.value,
+        },
+      };
+
     default:
       return state;
   }
@@ -23,8 +43,26 @@ export default function LeaguePageAdmin() {
     searchInput: "",
   });
 
-  const handleSearch = useCallback((e) => {
+  const handleSearch = useCallback(async (e) => {
     e.preventDefault();
+
+    dispatch({ type: "isLoading" });
+    const data = await getLeaguesByLikeTitle(leagueState.searchInput)
+      .then((res) => {
+        return res.docs.map((doc) => {
+          return {
+            id: doc.id,
+            ...doc.data(),
+          };
+        });
+      })
+      .catch((error) => console.error(error));
+    dispatch( {type: "searchLeagues", value: data} )
+    
+    if (!data) {
+      alert("No leagues found")
+    }
+
   });
 
   return (
@@ -57,6 +95,9 @@ export default function LeaguePageAdmin() {
           </Button>
         </Link>
       </div>
+      <section className="mt-4">
+        <LeagueDataDisplay searchedLeagues={leagueState.leagues.data} />
+      </section>
     </section>
   );
 }

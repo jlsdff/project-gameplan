@@ -13,7 +13,7 @@ export async function getImageUrl(fileName) {
   return await imagesRef.child(fileName).getDownloadURL();
 }
 
-export async function deleteImage(downloadURL){
+export async function deleteImageByURL(downloadURL){
   const imageRef = storage.refFromURL(downloadURL);
   return await imageRef.delete();
 }

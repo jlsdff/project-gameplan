@@ -1,5 +1,5 @@
 "use client";
-import React, { useReducer, useCallback, useMemo } from "react";
+import React, { useReducer, useCallback, useMemo, useEffect } from "react";
 import {
   Input,
   Tooltip,
@@ -12,10 +12,10 @@ import {
 import AddIcon from "@/assets/addIcon";
 import Editor from "@/components/ui/editorJs/editorJs";
 import SearchIcon from "@/assets/searchIcon";
-import { getTeamByName } from "@/utils/teamAPI";
+import { getTeamByName, getTeamById } from "@/utils/teamAPI";
 import XIcon from "@/assets/xIcon";
-import { createLeague } from "@/utils/leagueAPI";
-import { useRouter } from "next/navigation";
+import { createLeague, getLeagueById, updateLeague } from "@/utils/leagueAPI";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -31,6 +31,8 @@ const reducer = (state, action) => {
       return { ...state, timeTo: action.value };
     case "leagueData":
       return { ...state, leagueData: action.value };
+    case "startDate":
+      return { ...state, startDate: action.value };
     case "leagueImage":
       return { ...state, leagueImage: action.value };
     case "searchValue":
@@ -39,18 +41,22 @@ const reducer = (state, action) => {
       return { ...state, searchResult: action.value };
     case "addedTeams":
       return { ...state, addedTeams: action.value };
+    case "setLeagueData":
+      return { ...state, ...action.value };
     default:
       return state;
   }
 };
 
 export default function NewLeague() {
+  const searchParams = useSearchParams();
   const [leagueState, leagueDispatch] = useReducer(reducer, {
     title: "",
     venue: "",
     timeFrom: "",
     timeTo: "",
     leagueImage: null,
+    startDate: "",
     dateSchedule: [],
     leagueData: [],
     searchValue: "",
@@ -65,18 +71,74 @@ export default function NewLeague() {
     []
   );
 
+  useEffect(() => {
+    if (searchParams.has("id")) {
+      const id = searchParams.get("id");
+      getLeagueById(id)
+        .then((res) => {
+          let data = res.data();
+          const teamIds = data.participatingTeams;
+          fetchTeamsByIds(teamIds)
+            .then(teams => {
+              data.addedTeams = teams;
+            })
+          leagueDispatch({ type: "setLeagueData", value: data });
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  }, []);
+
+  const fetchTeamsByIds = useCallback(async (teamIds) => {
+    const teams = []
+    teamIds.forEach( async (id) => { 
+      
+      const team = await getTeamById(id)
+        .then(res => {
+          const teamData =  {
+            id: res.id,
+            ...res.data()
+          }
+          leagueDispatch({type: "addedTeams", value: [...leagueState.addedTeams, teamData]})
+          return teamData
+        })
+        .catch(error => {
+          console.error(error)
+          alert("Failed to fetch team data")
+        }) 
+
+      teams.push(team)
+    })
+  
+    return teams;
+  });
+
   const handleSaveButton = useCallback(() => {
+
     const data = {
       title: leagueState.title,
       venue: leagueState.venue,
       timeFrom: leagueState.timeFrom,
       timeTo: leagueState.timeTo,
       dateSchedule: leagueState.dateSchedule,
+      startDate: leagueState.startDate,
       leagueData: leagueState.leagueData,
       leagueImage: leagueState.leagueImage,
       participatingTeams: leagueState.addedTeams.map((team) => team.id),
     };
 
+    if(searchParams.has("id")) {
+      updateLeague(searchParams.get("id"), data)
+        .then(() => {
+          alert("League updated successfully");
+          router.push("/admin/dashboard/leagues");
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+      return;
+    }
     // Verify if all required fields are filled
     if (
       data.title === "" ||
@@ -84,9 +146,9 @@ export default function NewLeague() {
       data.timeFrom === "" ||
       data.timeTo === "" ||
       data.dateSchedule.length === 0 ||
-      data.leagueImage === null ||
       data.participatingTeams.length === 0 ||
-      Object.keys(data.leagueData).length === 0
+      Object.keys(data.leagueData).length === 0 ||
+      data.startDate === ""
     ) {
       alert("Please fill out all required fields");
       return;
@@ -227,6 +289,16 @@ export default function NewLeague() {
               </Checkbox>
             ))}
           </CheckboxGroup>
+          <div>
+            <Input
+              label="Starting Date"
+              type="date"
+              value={leagueState.startDate}
+              onValueChange={(value) =>
+                leagueDispatch({ type: "startDate", value })
+              }
+            />
+          </div>
         </div>
         <div>
           <h2 className="mt-4 mb-2 text-xl font-bold">League Details</h2>

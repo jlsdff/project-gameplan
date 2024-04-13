@@ -4,11 +4,11 @@ import { decrementTeam, incrementTeam } from "./countersAPI";
 
 // GET FUNCTIONS
 export async function getTeamById(id) {
-  return firestore.collection("teams").doc(id).get();
+  return await firestore.collection("teams").doc(id).get();
 }
 
 export async function getAllTeams() {
-  return firestore.collection("teams").get();
+  return await firestore.collection("teams").get();
 }
 
 export async function getTeamsByPage(page, limit, orderBy = "teamName") {
@@ -75,12 +75,12 @@ export async function createTeam(team) {
 
 // PUT FUNCTIONS
 export async function updateTeam(id, team) {
-  return firestore.collection("teams").doc(id).update(team, { merge: true });
+  return await firestore.collection("teams").doc(id).update(team, { merge: true });
 }
 
 // DELETE FUNCTIONS
 export async function deleteTeam(id) {
-  return firestore.collection("teams").doc(id).delete().then(()=>{
+  return await firestore.collection("teams").doc(id).delete().then(()=>{
     decrementTeam().catch((err) => {
       console.error(err);
       console.log("Error decrementing team counter");
