@@ -18,7 +18,6 @@ export default function Footer() {
               GAMEPLAN
             </span>
           </div>
-          <p className=" text-sm ">1234 Lorem St. Quezon City, Metro Manila</p>
           <a href="mailto:theprojectgameplan@email.com"><p className=" text-sm ">projectgameplan@gmail.com</p></a>
         </div>
         <div className="">
