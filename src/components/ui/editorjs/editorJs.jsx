@@ -35,8 +35,9 @@ export default function Editor({
       onReady: () => {
         ejInstance.current = editor;
         ejInstance.current.saver.save().then((outputData) => {
-          onChange(outputData);
+          onChange(defaultData);
         });
+        // ejInstance.current.render(defaultData);
       },
       onChange: () => {
         ejInstance.current.saver.save().then((outputData) => {

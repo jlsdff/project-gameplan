@@ -306,7 +306,7 @@ export default function NewLeague() {
             hideScrollBar
             className="min-h-[50px] max-h-[400px] overflow-y-scroll"
           >
-            <Editor onChange={handleLeagueDataChange} />
+            <Editor onChange={handleLeagueDataChange} defaultData={leagueState.leagueData} />
           </ScrollShadow>
         </div>
       </form>
