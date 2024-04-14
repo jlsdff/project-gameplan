@@ -6,7 +6,7 @@ import MissionAndVision from "@/components/refactored/home/mission";
 import HowWeAchieveIt from "@/components/refactored/home/achieve";
 
 export const metadata = {
-  title: "THE PROJECT GAMEPLAN",
+  title: "Project:Gameplan",
   description: "A basketball analytics platform for coaches and players",
 };
 
