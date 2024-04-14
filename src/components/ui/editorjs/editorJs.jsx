@@ -60,5 +60,5 @@ export default function Editor({
     };
   }, []);
 
-  return <div className="p-2 border-2 rounded-md border-neutral-400" id="editorjs"></div>;
+  return <div className="p-2" id="editorjs"></div>;
 }

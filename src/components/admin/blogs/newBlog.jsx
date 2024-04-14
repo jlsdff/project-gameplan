@@ -10,6 +10,7 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
+  Divider
 } from "@nextui-org/react";
 import Editor from "@/components/ui/editorjs/editorJs";
 import { createPortal } from "react-dom";
@@ -152,6 +153,7 @@ export default function NewBlog() {
               }}
             />
           </div>
+          <Divider />
           <ScrollShadow
             hideScrollBar
             id="blog-content"
@@ -161,10 +163,12 @@ export default function NewBlog() {
               onChange={(data) =>
                 blogDispatch({ type: "content", value: data })
               }
+
             />
           </ScrollShadow>
+          <Divider />
           <div className="flex flex-col gap-2 md:flex-row">
-            <Button onClick={ (e) => handlePublishedButton(e)}>Published</Button>
+            <Button onClick={ (e) => handlePublishedButton(e)}>Publish</Button>
             <Button onClick={ (e) => handleDraftButton(e)}>Draft</Button>
             <Button onClick={ (e) => handleCancelBlogButton(e)}>Cancel</Button>
           </div>
@@ -184,7 +188,7 @@ export default function NewBlog() {
                   variant="light"
                   onPress={() => {
                     blogReducer.modal.onModalCancel();
-                    onClose()
+                    onClose();
                   }}
                 >
                   Cancel
