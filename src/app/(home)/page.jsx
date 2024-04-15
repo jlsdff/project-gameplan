@@ -7,7 +7,7 @@ import HowWeAchieveIt from "@/components/refactored/home/achieve";
 import OngoingLeague from "@/components/refactored/home/ongoingLeague";
 
 export const metadata = {
-  title: "THE PROJECT GAMEPLAN",
+  title: "Project:Gameplan",
   description: "A basketball analytics platform for coaches and players",
 };
 
