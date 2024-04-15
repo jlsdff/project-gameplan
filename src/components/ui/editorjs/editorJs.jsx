@@ -25,26 +25,22 @@ export default function Editor({
 }) {
   const ejInstance = useRef(null);
 
-  defaultData = defaultData || _defaultData;
-  tools = tools || EDITOR_JS_TOOLS;
+  const myData = defaultData || _defaultData;
+  const myTools = tools || EDITOR_JS_TOOLS;
 
   const initializeEditor = useCallback(() => {
     const editor = new EditorJS({
       holder: "editorjs",
-      tools: tools,
+      tools: myTools,
       onReady: () => {
         ejInstance.current = editor;
-        ejInstance.current.saver.save().then((outputData) => {
-          onChange(defaultData);
-        });
-        // ejInstance.current.render(defaultData);
       },
       onChange: () => {
         ejInstance.current.saver.save().then((outputData) => {
           onChange(outputData);
         });
       },
-      data: defaultData,
+      data: myData,
     });
   }, []);
 

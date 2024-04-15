@@ -58,7 +58,7 @@ export default function NewLeague() {
     leagueImage: null,
     startDate: "",
     dateSchedule: [],
-    leagueData: [],
+    leagueData: {},
     searchValue: "",
     searchResult: [],
     addedTeams: [],
