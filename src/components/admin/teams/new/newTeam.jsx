@@ -153,7 +153,7 @@ export default function NewTeam({ ...props }) {
         })
 
     }
-  }, [team, lastSavedData, props.id]);
+  }, [team, lastSavedData, props.id, router]);
 
   const handleCancelButton = useCallback(() => {
     router.push("/admin/dashboard/teams");
