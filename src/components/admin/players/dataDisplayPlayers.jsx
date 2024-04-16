@@ -171,7 +171,7 @@ export default function DataDisplayPlayer() {
       console.log("Players", rows);
     }
     getPlayers();
-  }, [currentPage]);
+  }, [currentPage, deletePlayerHandler, limitPerPage, onOpen]);
 
   const renderCell = useCallback((item, key) => {
     switch (key) {
@@ -244,7 +244,7 @@ export default function DataDisplayPlayer() {
         console.error(err);
         alert("Error adding player");
       });
-  }, [newPlayer]);
+  }, [newPlayer, deletePlayerHandler, onOpen]);
 
   const searchPlayerByNameHandler = useCallback(async () => {
 
@@ -279,7 +279,7 @@ export default function DataDisplayPlayer() {
 
     setRows(results);
     
-  }, [nameSearch]);
+  }, [nameSearch, deletePlayerHandler, onOpen]);
 
   const deletePlayerHandler = useCallback((id) => {
     deletePlayer(id)

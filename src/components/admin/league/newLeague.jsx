@@ -88,7 +88,7 @@ export default function NewLeague() {
           console.error(error);
         });
     }
-  }, []);
+  }, [fetchTeamsByIds, searchParams.get("id")]);
 
   const fetchTeamsByIds = useCallback(async (teamIds) => {
     const teams = []
@@ -112,7 +112,7 @@ export default function NewLeague() {
     })
   
     return teams;
-  });
+  }, [leagueState.addedTeams, leagueState.addedTeams.length]);
 
   const handleSaveButton = useCallback(() => {
 
@@ -162,15 +162,15 @@ export default function NewLeague() {
           console.error(error);
         });
     }
-  }, [leagueState]);
+  }, [leagueState, router, searchParams.get("id")]);
 
   const handleCancelButton = useCallback(() => {
     router.push("/admin/dashboard/leagues");
-  }, []);
+  }, [router]);
 
   const handleLeagueDataChange = useCallback((data) => {
     leagueDispatch({ type: "leagueData", value: data });
-  }, []);
+  }, [router]);
 
   const handleSearchTeams = useCallback(
     (e) => {

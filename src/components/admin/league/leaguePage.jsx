@@ -63,7 +63,7 @@ export default function LeaguePageAdmin() {
       alert("No leagues found")
     }
 
-  });
+  }, [leagueState.searchInput]);
 
   return (
     <section>

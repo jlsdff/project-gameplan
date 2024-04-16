@@ -85,7 +85,7 @@ export default function NewBlog() {
       }
     }})
     onOpen()
-  },[]);
+  },[onOpen]);
 
   const handleDraftButton = useCallback((e) => {
     e.preventDefault();
@@ -103,7 +103,7 @@ export default function NewBlog() {
       }
     })
     onOpen()
-  },[])
+  },[onOpen])
 
   const handleCancelBlogButton = useCallback(e => {
     e.preventDefault()
@@ -121,7 +121,7 @@ export default function NewBlog() {
       }
     })
     onOpen()
-  },[])
+  },[onOpen, router])
 
   return (
     <>

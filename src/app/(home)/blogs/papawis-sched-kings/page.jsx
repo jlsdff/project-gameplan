@@ -22,8 +22,8 @@ export default function PapawisSchedKings() {
           <p className="text-sm leading-relaxed tracking-wide text-justify md:text-medium indent-8 ">
             Meet the Basketboleros, a tight-knit basketball community formed in
             2013 out of a passion for the game. With a growing roster of players
-            and a commitment to camaraderie, they've become more than just a
-            sports group—they're a network of friends and connections.
+            and a commitment to camaraderie, they&apos;ve become more than just a
+            sports group—they&apos;re a network of friends and connections.
             Organizing regular games and events, they welcome collaborations
             with other clubs and leagues, fostering a spirit of support and
             community within the basketball scene.

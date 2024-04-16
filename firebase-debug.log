@@ -457,3 +457,159 @@ https://nextjs.org/docs/messages/module-not-found
 [debug] [2024-04-16T16:58:14.038Z] Error: ENOENT: no such file or directory, open 'C:\Users\juliu\Documents\Github\project-gameplan\.next\export-marker.json'
 [error] 
 [error] Error: An unexpected error has occurred.
+[debug] [2024-04-16T16:59:34.911Z] ----------------------------------------------------------------------
+[debug] [2024-04-16T16:59:34.917Z] Command:       C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2024-04-16T16:59:34.917Z] CLI Version:   13.0.2
+[debug] [2024-04-16T16:59:34.918Z] Platform:      win32
+[debug] [2024-04-16T16:59:34.918Z] Node Version:  v20.10.0
+[debug] [2024-04-16T16:59:34.918Z] Time:          Wed Apr 17 2024 00:59:34 GMT+0800 (China Standard Time)
+[debug] [2024-04-16T16:59:34.918Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-04-16T16:59:35.066Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-04-16T16:59:35.067Z] > authorizing via signed-in user (juliusterrence.duff@gmail.com)
+[debug] [2024-04-16T16:59:35.067Z] [iam] checking project the-project-gameplan for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2024-04-16T16:59:35.071Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/the-project-gameplan:testIamPermissions [none]
+[debug] [2024-04-16T16:59:35.071Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/the-project-gameplan:testIamPermissions x-goog-quota-user=projects/the-project-gameplan
+[debug] [2024-04-16T16:59:35.071Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/the-project-gameplan:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2024-04-16T16:59:36.300Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/the-project-gameplan:testIamPermissions 200
+[debug] [2024-04-16T16:59:36.301Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/the-project-gameplan:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2024-04-16T16:59:36.302Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/the-project-gameplan [none]
+[debug] [2024-04-16T16:59:36.916Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/the-project-gameplan 200
+[debug] [2024-04-16T16:59:36.917Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/the-project-gameplan {"projectId":"the-project-gameplan","projectNumber":"1060600103566","displayName":"The Project Gameplan","name":"projects/the-project-gameplan","resources":{"hostingSite":"the-project-gameplan","realtimeDatabaseInstance":"the-project-gameplan-default-rtdb","storageBucket":"the-project-gameplan.appspot.com","locationId":"asia-southeast1"},"state":"ACTIVE","etag":"1_6dd18cc5-87f5-44f0-9e58-106c6199549e"}
+[debug] [2024-04-16T16:59:46.342Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/the-project-gameplan/sites pageToken=&pageSize=10
+[debug] [2024-04-16T16:59:47.344Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/the-project-gameplan/sites 200
+[debug] [2024-04-16T16:59:47.345Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/the-project-gameplan/sites {"sites":[{"name":"projects/the-project-gameplan/sites/the-project-gameplan","defaultUrl":"https://the-project-gameplan.web.app","type":"DEFAULT_SITE"}]}
+[debug] [2024-04-16T16:59:47.346Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/the-project-gameplan/sites 
+[debug] [2024-04-16T16:59:47.859Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/the-project-gameplan/sites 200
+[debug] [2024-04-16T16:59:47.859Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/the-project-gameplan/sites {"sites":[{"name":"projects/the-project-gameplan/sites/the-project-gameplan","defaultUrl":"https://the-project-gameplan.web.app","type":"DEFAULT_SITE"}]}
+[debug] [2024-04-16T16:59:47.860Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/the-project-gameplan/webApps/-/config [none]
+[debug] [2024-04-16T16:59:48.986Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/the-project-gameplan/webApps/-/config 200
+[debug] [2024-04-16T16:59:48.987Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/the-project-gameplan/webApps/-/config {"projectId":"the-project-gameplan","appId":"1:1060600103566:web:1322262655eff59c47ffdf","databaseURL":"https://the-project-gameplan-default-rtdb.asia-southeast1.firebasedatabase.app","storageBucket":"the-project-gameplan.appspot.com","locationId":"asia-southeast1","apiKey":"AIzaSyAA3j1F-HPOE8iVu1P-IHAsoSg9Ff5hbIA","authDomain":"the-project-gameplan.firebaseapp.com","messagingSenderId":"1060600103566","measurementId":"G-QRY63GX8DG"}
+[info] 
+   Thank you for trying our early preview of Next.js support on Firebase Hosting.
+   During the preview, support is best-effort and breaking changes can be expected. Proceed with caution.
+
+   Documentation: https://firebase.google.com/docs/hosting/frameworks/nextjs
+   File a bug: https://github.com/firebase/firebase-tools/issues/new?template=bug_report.md
+   Submit a feature request: https://github.com/firebase/firebase-tools/issues/new?template=feature_request.md
+
+   We'd love to learn from you. Express your interest in helping us shape the future of Firebase Hosting: https://goo.gle/41enW5X
+
+[debug] [2024-04-16T17:00:13.785Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/the-project-gameplan/sites/the-project-gameplan [none]
+[debug] [2024-04-16T17:00:14.687Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/the-project-gameplan/sites/the-project-gameplan 200
+[debug] [2024-04-16T17:00:14.688Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/the-project-gameplan/sites/the-project-gameplan {"name":"projects/the-project-gameplan/sites/the-project-gameplan","defaultUrl":"https://the-project-gameplan.web.app","type":"DEFAULT_SITE"}
+[info]    ▲ Next.js 14.0.4
+
+[info]    - Environments: .env.local
+
+   Creating an optimized production build ...
+
+[info]  ⚠ Compiled with warnings
+
+
+[info] ./src/components/ui/editorJs/editorJs.jsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|C:\Users\juliu\Documents\Github\project-gameplan\node_modules\next\dist\build\webpack\loaders\next-flight-client-module-loader.js!C:\Users\juliu\Documents\Github\project-gameplan\node_modules\next\dist\build\webpack\loaders\next-swc-loader.js??ruleSet[1].rules[13].oneOf[4].use[1]!C:\Users\juliu\Documents\Github\project-gameplan\src\components\ui\editorJs\editorJs.jsx|app-pages-browser
+    Used by 1 module(s), i. e.
+    javascript/auto|C:\Users\juliu\Documents\Github\project-gameplan\node_modules\next\dist\build\webpack\loaders\next-flight-client-module-loader.js!C:\Users\juliu\Documents\Github\project-gameplan\node_modules\next\dist\build\webpack\loaders\next-swc-loader.js??ruleSet[1].rules[13].oneOf[4].use[1]!C:\Users\juliu\Documents\Github\project-gameplan\src\components\admin\league\newLeague.jsx|app-pages-browser
+* javascript/auto|C:\Users\juliu\Documents\Github\project-gameplan\node_modules\next\dist\build\webpack\loaders\next-flight-client-module-loader.js!C:\Users\juliu\Documents\Github\project-gameplan\node_modules\next\dist\build\webpack\loaders\next-swc-loader.js??ruleSet[1].rules[13].oneOf[4].use[1]!C:\Users\juliu\Documents\Github\project-gameplan\src\components\ui\editorjs\editorJs.jsx|app-pages-browser
+    Used by 1 module(s), i. e.
+    javascript/auto|C:\Users\juliu\Documents\Github\project-gameplan\node_modules\next\dist\build\webpack\loaders\next-flight-client-module-loader.js!C:\Users\juliu\Documents\Github\project-gameplan\node_modules\next\dist\build\webpack\loaders\next-swc-loader.js??ruleSet[1].rules[13].oneOf[4].use[1]!C:\Users\juliu\Documents\Github\project-gameplan\src\components\admin\blogs\newBlog.jsx|app-pages-browser
+
+Import trace for requested module:
+./src/components/ui/editorJs/editorJs.jsx
+./src/components/admin/league/newLeague.jsx
+
+./src/components/ui/editorJs/tools.js
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|C:\Users\juliu\Documents\Github\project-gameplan\node_modules\next\dist\build\webpack\loaders\next-flight-client-module-loader.js!C:\Users\juliu\Documents\Github\project-gameplan\node_modules\next\dist\build\webpack\loaders\next-swc-loader.js??ruleSet[1].rules[13].oneOf[4].use[1]!C:\Users\juliu\Documents\Github\project-gameplan\src\components\ui\editorJs\tools.js|app-pages-browser
+    Used by 1 module(s), i. e.
+    javascript/auto|C:\Users\juliu\Documents\Github\project-gameplan\node_modules\next\dist\build\webpack\loaders\next-flight-client-module-loader.js!C:\Users\juliu\Documents\Github\project-gameplan\node_modules\next\dist\build\webpack\loaders\next-swc-loader.js??ruleSet[1].rules[13].oneOf[4].use[1]!C:\Users\juliu\Documents\Github\project-gameplan\src\components\ui\editorJs\editorJs.jsx|app-pages-browser
+* javascript/auto|C:\Users\juliu\Documents\Github\project-gameplan\node_modules\next\dist\build\webpack\loaders\next-flight-client-module-loader.js!C:\Users\juliu\Documents\Github\project-gameplan\node_modules\next\dist\build\webpack\loaders\next-swc-loader.js??ruleSet[1].rules[13].oneOf[4].use[1]!C:\Users\juliu\Documents\Github\project-gameplan\src\components\ui\editorjs\tools.js|app-pages-browser
+    Used by 1 module(s), i. e.
+    javascript/auto|C:\Users\juliu\Documents\Github\project-gameplan\node_modules\next\dist\build\webpack\loaders\next-flight-client-module-loader.js!C:\Users\juliu\Documents\Github\project-gameplan\node_modules\next\dist\build\webpack\loaders\next-swc-loader.js??ruleSet[1].rules[13].oneOf[4].use[1]!C:\Users\juliu\Documents\Github\project-gameplan\src\components\ui\editorjs\editorJs.jsx|app-pages-browser
+
+Import trace for requested module:
+./src/components/ui/editorJs/tools.js
+./src/components/ui/editorJs/editorJs.jsx
+./src/components/admin/league/newLeague.jsx
+
+./src/components/ui/editorJs/editorJs.jsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|C:\Users\juliu\Documents\Github\project-gameplan\node_modules\next\dist\build\webpack\loaders\next-flight-client-module-loader.js!C:\Users\juliu\Documents\Github\project-gameplan\node_modules\next\dist\build\webpack\loaders\next-swc-loader.js??ruleSet[1].rules[14].oneOf[5].use[1]!C:\Users\juliu\Documents\Github\project-gameplan\src\components\ui\editorJs\editorJs.jsx|ssr
+    Used by 1 module(s), i. e.
+    javascript/auto|C:\Users\juliu\Documents\Github\project-gameplan\node_modules\next\dist\build\webpack\loaders\next-flight-client-module-loader.js!C:\Users\juliu\Documents\Github\project-gameplan\node_modules\next\dist\build\webpack\loaders\next-swc-loader.js??ruleSet[1].rules[14].oneOf[5].use[1]!C:\Users\juliu\Documents\Github\project-gameplan\src\components\admin\league\newLeague.jsx|ssr
+* javascript/auto|C:\Users\juliu\Documents\Github\project-gameplan\node_modules\next\dist\build\webpack\loaders\next-flight-client-module-loader.js!C:\Users\juliu\Documents\Github\project-gameplan\node_modules\next\dist\build\webpack\loaders\next-swc-loader.js??ruleSet[1].rules[14].oneOf[5].use[1]!C:\Users\juliu\Documents\Github\project-gameplan\src\components\ui\editorjs\editorJs.jsx|ssr
+    Used by 1 module(s), i. e.
+    javascript/auto|C:\Users\juliu\Documents\Github\project-gameplan\node_modules\next\dist\build\webpack\loaders\next-flight-client-module-loader.js!C:\Users\juliu\Documents\Github\project-gameplan\node_modules\next\dist\build\webpack\loaders\next-swc-loader.js??ruleSet[1].rules[14].oneOf[5].use[1]!C:\Users\juliu\Documents\Github\project-gameplan\src\components\admin\blogs\newBlog.jsx|ssr
+
+Import trace for requested module:
+./src/components/ui/editorJs/editorJs.jsx
+./src/components/admin/league/newLeague.jsx
+
+./src/components/ui/editorJs/tools.js
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|C:\Users\juliu\Documents\Github\project-gameplan\node_modules\next\dist\build\webpack\loaders\next-flight-client-module-loader.js!C:\Users\juliu\Documents\Github\project-gameplan\node_modules\next\dist\build\webpack\loaders\next-swc-loader.js??ruleSet[1].rules[14].oneOf[5].use[1]!C:\Users\juliu\Documents\Github\project-gameplan\src\components\ui\editorJs\tools.js|ssr
+    Used by 1 module(s), i. e.
+    javascript/auto|C:\Users\juliu\Documents\Github\project-gameplan\node_modules\next\dist\build\webpack\loaders\next-flight-client-module-loader.js!C:\Users\juliu\Documents\Github\project-gameplan\node_modules\next\dist\build\webpack\loaders\next-swc-loader.js??ruleSet[1].rules[14].oneOf[5].use[1]!C:\Users\juliu\Documents\Github\project-gameplan\src\components\ui\editorJs\editorJs.jsx|ssr
+* javascript/auto|C:\Users\juliu\Documents\Github\project-gameplan\node_modules\next\dist\build\webpack\loaders\next-flight-client-module-loader.js!C:\Users\juliu\Documents\Github\project-gameplan\node_modules\next\dist\build\webpack\loaders\next-swc-loader.js??ruleSet[1].rules[14].oneOf[5].use[1]!C:\Users\juliu\Documents\Github\project-gameplan\src\components\ui\editorjs\tools.js|ssr
+    Used by 1 module(s), i. e.
+    javascript/auto|C:\Users\juliu\Documents\Github\project-gameplan\node_modules\next\dist\build\webpack\loaders\next-flight-client-module-loader.js!C:\Users\juliu\Documents\Github\project-gameplan\node_modules\next\dist\build\webpack\loaders\next-swc-loader.js??ruleSet[1].rules[14].oneOf[5].use[1]!C:\Users\juliu\Documents\Github\project-gameplan\src\components\ui\editorjs\editorJs.jsx|ssr
+
+Import trace for requested module:
+./src/components/ui/editorJs/tools.js
+./src/components/ui/editorJs/editorJs.jsx
+./src/components/admin/league/newLeague.jsx
+
+
+[info]    Linting and checking validity of types ...
+
+[info] 
+Failed to compile.
+
+./src/app/(home)/blogs/papawis-sched-kings/page.jsx
+25:50  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+26:30  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+
+./src/components/admin/blogs/blogDataDisplay.jsx
+38:25  Warning: React Hook useCallback does nothing when called with only one argument. Did you forget to pass an array of dependencies?  react-hooks/exhaustive-deps
+
+./src/components/admin/blogs/newBlog.jsx
+88:5  Warning: React Hook useCallback has a missing dependency: 'onOpen'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+106:5  Warning: React Hook useCallback has a missing dependency: 'onOpen'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+124:5  Warning: React Hook useCallback has missing dependencies: 'onOpen' and 'router'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/admin/league/leagueDataDisplay.jsx
+56:6  Warning: React Hook useCallback has a missing dependency: 'limitPerPage'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+58:25  Warning: React Hook useCallback does nothing when called with only one argument. Did you forget to pass an array of dependencies?  react-hooks/exhaustive-deps
+62:27  Warning: React Hook useCallback does nothing when called with only one argument. Did you forget to pass an array of dependencies?  react-hooks/exhaustive-deps
+158:6  Warning: React Hook useCallback has missing dependencies: 'fetchLeagues', 'handleDeleteRow', and 'handleEditRow'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
+187:6  Warning: React Hook useCallback has a missing dependency: 'lastSnapshots'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/admin/league/leaguePage.jsx
+46:24  Warning: React Hook useCallback does nothing when called with only one argument. Did you forget to pass an array of dependencies?  react-hooks/exhaustive-deps
+
+./src/components/admin/league/newLeague.jsx
+91:6  Warning: React Hook useEffect has missing dependencies: 'fetchTeamsByIds' and 'searchParams'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
+93:27  Warning: React Hook useCallback does nothing when called with only one argument. Did you forget to pass an array of dependencies?  react-hooks/exhaustive-deps
+165:6  Warning: React Hook useCallback has missing dependencies: 'router' and 'searchParams'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
+169:6  Warning: React Hook useCallback has a missing dependency: 'router'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/admin/players/dataDisplayPlayers.jsx
+174:6  Warning: React Hook useEffect has missing dependencies: 'deletePlayerHandler', 'limitPerPage', and 'onOpen'. Either include them or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setTotalPage' needs the current value of 'limitPerPage'.  react-hooks/exhaustive-deps
+247:6  Warning: React Hook useCallback has missing dependencies: 'deletePlayerHandler' and 'onOpen'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
+282:6  Warning: React Hook useCallback has missing dependencies: 'deletePlayerHandler' and 'onOpen'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/basic-features/eslint#disabling-rules
+
+[debug] [2024-04-16T17:01:01.045Z] Error: ENOENT: no such file or directory, open 'C:\Users\juliu\Documents\Github\project-gameplan\.next\export-marker.json'
+[error] 
+[error] Error: An unexpected error has occurred.

@@ -37,7 +37,7 @@ export default function BlogDataDisplay() {
 
   const handleNewBlog = useCallback(() => {
     router.push("/admin/dashboard/blogs/new");
-  });
+  }, [router, blogReducer.search.searchInput, blogReducer.search.isLoading ]);
 
   return (
     <>
