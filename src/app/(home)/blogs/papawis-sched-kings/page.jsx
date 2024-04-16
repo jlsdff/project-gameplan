@@ -131,17 +131,6 @@ export default function PapawisSchedKings() {
             aming schedules, like and follow lang kayo sa Basketboleros page.
           </p>
         </div>
-        <div>
-          <p className="text-sm leading-relaxed tracking-wide text-justify indent-8 md:text-medium">
-            The Basketboleros exemplify the power of sports in building bonds
-            and expanding horizons. From humble beginnings to a thriving
-            community, their dedication to basketball transcends the court,
-            enriching lives and fostering friendships along the way. As they
-            continue to grow, collaborate, and organize events, their passion
-            for the game remains unwavering, serving as an inspiration to
-            aspiring players and sports enthusiasts everywhere.
-          </p>
-        </div>
       </main>
       <Footer />
     </>
