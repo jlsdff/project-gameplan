@@ -15,47 +15,52 @@ const _defaultData = {
       },
     },
   ],
+  version: "2.29.1",
 };
 
 export default function Editor({
   onSave,
   onChange,
-  defaultData,
-  tools,
+  defaultData = _defaultData,
+  tools = EDITOR_JS_TOOLS,
 }) {
-  const ejInstance = useRef(null);
-
-  const myData = defaultData || _defaultData;
-  const myTools = tools || EDITOR_JS_TOOLS;
-
-  const initializeEditor = useCallback(() => {
-    const editor = new EditorJS({
-      holder: "editorjs",
-      tools: myTools,
-      onReady: () => {
-        ejInstance.current = editor;
-      },
-      onChange: () => {
-        ejInstance.current.saver.save().then((outputData) => {
-          onChange(outputData);
-        });
-      },
-      data: myData,
-    });
-  }, []);
+  const editorContainer = useRef(null);
+  const [editorInstance, setEditorInstance] = useState(null);
 
   useEffect(() => {
-    if (ejInstance.current === null) {
-      initializeEditor(); 
+    if (editorContainer.current) {
+      const editor = new EditorJS({
+        holder: editorContainer.current,
+        tools: tools,
+        data: defaultData,
+        onChange: async () => {
+          // if (onChange) {
+          //   const updatedData = await editor.save();
+          //   onChange(updatedData);
+          // }
+        },
+        onReady: () => {
+          console.log("Editor.js is ready to work!");
+        },
+        onSave: async () => {
+          const savedData = await editor.saver().save()
+            .then(outputData => {
+              onSave(outputData);
+            })
+          return savedData;
+        }
+      });
+
+      setEditorInstance(editor);
     }
 
+    // Cleanup on unmount
     return () => {
-      if (ejInstance.current) {
-        ejInstance?.current?.destroy();
-        ejInstance.current = null;
+      if (editorInstance) {
+        editorInstance.destroy();
       }
     };
-  }, []);
+  }, [defaultData, tools, onChange]);
 
-  return <div className="p-2" id="editorjs"></div>;
+  return <div ref={editorContainer} />;
 }
