@@ -395,3 +395,65 @@ info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/d
 [debug] [2024-04-16T16:54:15.411Z] Error: ENOENT: no such file or directory, open 'C:\Users\juliu\Documents\Github\project-gameplan\.next\export-marker.json'
 [error] 
 [error] Error: An unexpected error has occurred.
+[debug] [2024-04-16T16:57:15.581Z] ----------------------------------------------------------------------
+[debug] [2024-04-16T16:57:15.588Z] Command:       C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2024-04-16T16:57:15.589Z] CLI Version:   13.0.2
+[debug] [2024-04-16T16:57:15.590Z] Platform:      win32
+[debug] [2024-04-16T16:57:15.590Z] Node Version:  v20.10.0
+[debug] [2024-04-16T16:57:15.591Z] Time:          Wed Apr 17 2024 00:57:15 GMT+0800 (China Standard Time)
+[debug] [2024-04-16T16:57:15.591Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-04-16T16:57:15.857Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-04-16T16:57:15.859Z] > authorizing via signed-in user (juliusterrence.duff@gmail.com)
+[debug] [2024-04-16T16:57:15.859Z] [iam] checking project the-project-gameplan for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2024-04-16T16:57:15.865Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/the-project-gameplan:testIamPermissions [none]
+[debug] [2024-04-16T16:57:15.865Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/the-project-gameplan:testIamPermissions x-goog-quota-user=projects/the-project-gameplan
+[debug] [2024-04-16T16:57:15.866Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/the-project-gameplan:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2024-04-16T16:57:17.060Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/the-project-gameplan:testIamPermissions 200
+[debug] [2024-04-16T16:57:17.061Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/the-project-gameplan:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2024-04-16T16:57:17.064Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/the-project-gameplan [none]
+[debug] [2024-04-16T16:57:17.501Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/the-project-gameplan 200
+[debug] [2024-04-16T16:57:17.502Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/the-project-gameplan {"projectId":"the-project-gameplan","projectNumber":"1060600103566","displayName":"The Project Gameplan","name":"projects/the-project-gameplan","resources":{"hostingSite":"the-project-gameplan","realtimeDatabaseInstance":"the-project-gameplan-default-rtdb","storageBucket":"the-project-gameplan.appspot.com","locationId":"asia-southeast1"},"state":"ACTIVE","etag":"1_6dd18cc5-87f5-44f0-9e58-106c6199549e"}
+[debug] [2024-04-16T16:57:30.611Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/the-project-gameplan/sites pageToken=&pageSize=10
+[debug] [2024-04-16T16:57:31.548Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/the-project-gameplan/sites 200
+[debug] [2024-04-16T16:57:31.549Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/the-project-gameplan/sites {"sites":[{"name":"projects/the-project-gameplan/sites/the-project-gameplan","defaultUrl":"https://the-project-gameplan.web.app","type":"DEFAULT_SITE"}]}
+[debug] [2024-04-16T16:57:31.551Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/the-project-gameplan/sites 
+[debug] [2024-04-16T16:57:31.954Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/the-project-gameplan/sites 200
+[debug] [2024-04-16T16:57:31.955Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/the-project-gameplan/sites {"sites":[{"name":"projects/the-project-gameplan/sites/the-project-gameplan","defaultUrl":"https://the-project-gameplan.web.app","type":"DEFAULT_SITE"}]}
+[debug] [2024-04-16T16:57:31.956Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/the-project-gameplan/webApps/-/config [none]
+[debug] [2024-04-16T16:57:33.347Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/the-project-gameplan/webApps/-/config 200
+[debug] [2024-04-16T16:57:33.347Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/the-project-gameplan/webApps/-/config {"projectId":"the-project-gameplan","appId":"1:1060600103566:web:1322262655eff59c47ffdf","databaseURL":"https://the-project-gameplan-default-rtdb.asia-southeast1.firebasedatabase.app","storageBucket":"the-project-gameplan.appspot.com","locationId":"asia-southeast1","apiKey":"AIzaSyAA3j1F-HPOE8iVu1P-IHAsoSg9Ff5hbIA","authDomain":"the-project-gameplan.firebaseapp.com","messagingSenderId":"1060600103566","measurementId":"G-QRY63GX8DG"}
+[info] 
+   Thank you for trying our early preview of Next.js support on Firebase Hosting.
+   During the preview, support is best-effort and breaking changes can be expected. Proceed with caution.
+
+   Documentation: https://firebase.google.com/docs/hosting/frameworks/nextjs
+   File a bug: https://github.com/firebase/firebase-tools/issues/new?template=bug_report.md
+   Submit a feature request: https://github.com/firebase/firebase-tools/issues/new?template=feature_request.md
+
+   We'd love to learn from you. Express your interest in helping us shape the future of Firebase Hosting: https://goo.gle/41enW5X
+
+[debug] [2024-04-16T16:57:57.690Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/the-project-gameplan/sites/the-project-gameplan [none]
+[debug] [2024-04-16T16:57:58.491Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/the-project-gameplan/sites/the-project-gameplan 200
+[debug] [2024-04-16T16:57:58.492Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/the-project-gameplan/sites/the-project-gameplan {"name":"projects/the-project-gameplan/sites/the-project-gameplan","defaultUrl":"https://the-project-gameplan.web.app","type":"DEFAULT_SITE"}
+[info]    ▲ Next.js 14.0.4
+
+[info]    - Environments: .env.local
+
+   Creating an optimized production build ...
+
+[info] Failed to compile.
+
+
+[info] ./src/components/admin/players/dataDisplayPlayers.jsx
+Module not found: Can't resolve './EditPlayerModal'
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[info] 
+> Build failed because of webpack errors
+
+[debug] [2024-04-16T16:58:14.038Z] Error: ENOENT: no such file or directory, open 'C:\Users\juliu\Documents\Github\project-gameplan\.next\export-marker.json'
+[error] 
+[error] Error: An unexpected error has occurred.

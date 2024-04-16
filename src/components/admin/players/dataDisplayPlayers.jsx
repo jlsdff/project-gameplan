@@ -8,9 +8,7 @@ import React, {
 } from "react";
 import {
   Input,
-  Divider,
   Button,
-  Pagination,
   Modal,
   ModalContent,
   ModalHeader,
@@ -19,16 +17,13 @@ import {
   useDisclosure,
   Checkbox,
 } from "@nextui-org/react";
-import CustomTable from "../../ui/table/table";
 import DeleteIcon from "@/assets/deleteIcon";
 import EditIcon from "@/assets/editIcon";
 import SearchIcon from "@/assets/searchIcon";
 import DataDisplay from "../dataDisplay/dataDisplay";
 import ToolbarDataDisplay from "../dataDisplay/toolbarDataDisplay";
 import AddIcon from "@/assets/addIcon";
-import { newPlayer as newPlayerFirebase } from "@/helpers/players/newplayer";
 import { playerColumns } from "@/helpers/players/columns";
-import EditPlayerModal from "./EditPlayerModal";
 import {
   createPlayer,
   getPlayersByPage,
@@ -338,7 +333,7 @@ export default function DataDisplayPlayer() {
 
               <ModalBody>
                 <section className="flex flex-col gap-2">
-                  <div className="flex justify-center items-center gap-2">
+                  <div className="flex items-center justify-center gap-2">
                     <Input
                       value={newPlayer.firstname}
                       onValueChange={(value) =>
@@ -374,7 +369,7 @@ export default function DataDisplayPlayer() {
                       />
                     </div>
                     <div>
-                      <div className="flex gap-1 justify-center items-center">
+                      <div className="flex items-center justify-center gap-1">
                         <Input
                           value={newPlayer.birthplace}
                           onValueChange={(value) =>
