@@ -85,7 +85,7 @@ export default function NewTeam({ ...props }) {
         setLastSavedData(data);
       });
     }
-  }, []);
+  }, [props.id]);
 
   const onSearchPlayers = useCallback(async () => {
     teamReducer({
@@ -153,11 +153,11 @@ export default function NewTeam({ ...props }) {
         })
 
     }
-  }, [team]);
+  }, [team, lastSavedData, props.id]);
 
   const handleCancelButton = useCallback(() => {
     router.push("/admin/dashboard/teams");
-  }, []);
+  }, [router]);
 
   return (
     <section className="mx-8 my-4 ">

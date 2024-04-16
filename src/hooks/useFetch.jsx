@@ -19,7 +19,7 @@ export default function useFetch({ fetchFunction, dependencies }) {
     };
 
     fetchdata();
-  }, [dependencies]);
+  }, [dependencies, fetchFunction]);
 
   return { isFetching, data };
 }

@@ -41,7 +41,7 @@ export default function DataDisplayTeams() {
 
   useEffect(() => {
     fetchTeams();
-  }, [limitPerPage, currentPage]);
+  }, [limitPerPage, currentPage, fetchTeams]);
 
   const fetchTeams = useCallback(async () => {
     setTotalPage(Math.ceil((await getTeamCount()) / limitPerPage));
@@ -78,7 +78,7 @@ export default function DataDisplayTeams() {
     });
 
     setRows(rows);
-  }, [limitPerPage, currentPage]);
+  }, [limitPerPage, currentPage, editTeamHandler, deleteTeamHandler]);
 
   const renderCell = useCallback((item, key) => {
     switch (key) {
@@ -111,7 +111,7 @@ export default function DataDisplayTeams() {
 
   const editTeamHandler = useCallback((item, key) => {
     router.push(`/admin/dashboard/teams/${item.key}`);
-  }, []);
+  }, [router]);
 
   const deleteTeamHandler = useCallback(async (item, key) => {
     await deleteTeam(item.key)
@@ -126,7 +126,7 @@ export default function DataDisplayTeams() {
         console.error(err);
         alert("Error deleting team", "There was an error deleting the team");
       });
-  }, []);
+  }, [fetchTeams]);
 
   const searchTeamNameHandler = useCallback(async (value) => {
     await getTeamByName(value)
@@ -167,7 +167,7 @@ export default function DataDisplayTeams() {
         console.error(err);
         alert("Error searching team", "There was an error searching the team");
       });
-  }, []);
+  }, [deleteTeamHandler, editTeamHandler]);
 
   const selectedRowKeysHandler = useCallback((key) => {
     // TODO: Filter selectedRowKeys

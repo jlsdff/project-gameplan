@@ -10,7 +10,7 @@ export function RedirectLayer({ children, to }) {
     if(!window.localStorage.getItem("user")) {
       router.push(to);
     }
-  }, []);
+  }, [router, to]);
 
   return <>{children}</>;
 }

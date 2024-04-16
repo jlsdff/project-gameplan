@@ -60,7 +60,7 @@ export default function Editor({
         editorInstance.destroy();
       }
     };
-  }, [defaultData, tools, onChange]);
+  }, [defaultData, tools, onChange, editorInstance, onSave]);
 
   return <div ref={editorContainer} />;
 }

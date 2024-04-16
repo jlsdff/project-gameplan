@@ -29,7 +29,7 @@ export default function BlogContainer({
         <p className="line-clamp-3 md:line-clamp-2">{description}</p>
         <div className="flex items-center justify-start gap-2 mt-2">
           <p>{datePublished}</p>
-          <p>{tags.map(tag => <Chip>{tag}</Chip>)}</p>
+          <p>{tags.map((tag, index) => <Chip key={index}>{tag}</Chip>)}</p>
         </div>
       </div>
     </div>
