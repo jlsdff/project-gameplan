@@ -39,9 +39,6 @@ export default function DataDisplayTeams() {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const router = useRouter();
 
-  useEffect(() => {
-    fetchTeams();
-  }, [limitPerPage, currentPage, fetchTeams]);
 
   const fetchTeams = useCallback(async () => {
     setTotalPage(Math.ceil((await getTeamCount()) / limitPerPage));
@@ -79,6 +76,10 @@ export default function DataDisplayTeams() {
 
     setRows(rows);
   }, [limitPerPage, currentPage, editTeamHandler, deleteTeamHandler]);
+  
+  useEffect(() => {
+    fetchTeams();
+  }, [limitPerPage, currentPage, fetchTeams]);
 
   const renderCell = useCallback((item, key) => {
     switch (key) {
