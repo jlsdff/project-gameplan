@@ -18,7 +18,7 @@ export default function ImageCarousel() {
     <Carousel showThumbs={false} autoPlay interval={5000} infiniteLoop >
       {images.map((image, index) => (
         <div key={index}>
-          <img src={image.original} />
+          <img src={image.original} alt={`poster-${index}`} />
         </div>
       ))}
     </Carousel>
