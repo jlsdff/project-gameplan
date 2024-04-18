@@ -45,7 +45,7 @@ export default function Hero() {
             </Link>
           </p>
         </motion.div>
-        <div>
+        <div className="w-full md:w-1/2">
           <ImageCarousel  />
         </div>
       </div>

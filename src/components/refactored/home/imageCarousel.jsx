@@ -1,6 +1,6 @@
-"use client";
 import React from "react";
-import ReactImageGallery from "react-image-gallery";
+import { Carousel } from 'react-responsive-carousel';
+import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 
 export default function ImageCarousel() {
   const images = [
@@ -13,25 +13,14 @@ export default function ImageCarousel() {
         "https://firebasestorage.googleapis.com/v0/b/the-project-gameplan.appspot.com/o/images%2Fposter_2.png?alt=media&token=974c8c8b-aa61-4931-9a93-7773072415cb",
     },
   ];
-  
-  const renderItem = (item) => {
-    return (
-      <div className='custom-image-container'>
-        <img src={item.original} alt='' style={{ borderRadius: '10px', objectFit: 'cover' }} />
-      </div>
-    );
-  };
 
   return (
-    <ReactImageGallery
-      items={images}
-      autoPlay={true}
-      slideInterval={2000}
-      renderItem={renderItem}
-      showNav={false}
-      showThumbnails={false}
-      showFullscreenButton={false}
-      showPlayButton={false}
-    />
+    <Carousel showThumbs={false} autoPlay interval={5000} infiniteLoop >
+      {images.map((image, index) => (
+        <div key={index}>
+          <img src={image.original} />
+        </div>
+      ))}
+    </Carousel>
   );
 }
