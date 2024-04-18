@@ -5,39 +5,40 @@ import {
   TableHeader,
   TableColumn,
   TableBody,
+  TableRow,
   TableCell,
-} from "@nextui-org/table";
+  getKeyValue,
+} from "@nextui-org/react";
 
-export default function CustomTable({ data }) {
-
-
-  const columns = useMemo(() => {
-    const sampleData = {
-      firstname: "John",
-      lastname: "Doe",
-      middlename: "Y.",
-      birthdate: new Date("1990-01-01"),
-      birthplace: "Manila",
-      actions: "Edit | Delete",
-    };  
-    return Object.keys(sampleData).map((value, index) => {
-      return {
-        key: index,
-        name: value,
-      };
-    });
-  }, []);
-
+export default function CustomTable({
+  rows,
+  columns,
+  isSelectable,
+  tableLabel,
+  onRowClick,
+  onRowDelete,
+  onRowEdit,
+  onRowView,
+  isLoading,
+  renderCell
+}) {
   return (
-    <Table aria-label="Player Table" className="bg-transparent">
-      <TableHeader className="bg-primary-700">
-        {columns.map((column) => (
-          <TableColumn className="bg-primary-800" key={column.key}>
-            {column.name}
-          </TableColumn>
-        ))}
+    <Table
+      selectionMode={isSelectable ? "multiple" : "none"}
+      aria-label={tableLabel || "table for data display"}
+    >
+      <TableHeader columns={columns}>
+        {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
       </TableHeader>
-      <TableBody></TableBody>
+      <TableBody items={rows}>
+        {(item) => (
+          <TableRow key={item.key}>
+            {(columnKey) => (
+              <TableCell>{renderCell(item, columnKey)}</TableCell>
+            )}
+          </TableRow>
+        )}
+      </TableBody>
     </Table>
   );
 }

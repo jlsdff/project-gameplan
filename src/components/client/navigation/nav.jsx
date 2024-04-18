@@ -64,6 +64,9 @@ export default function TopNav() {
         <NavbarItem isActive={pathname === "/teams"}>
           <Link href="/teams" className="w-full" size="lg">Teams</Link>
         </NavbarItem>
+        <NavbarItem isActive={pathname === "/blogs"}>
+          <Link href="/blogs" className="w-full" size="lg">Blog</Link>
+        </NavbarItem>
       </NavbarMenu>
 
       <NavbarContent className="hidden md:flex " justify="end">
@@ -80,6 +83,11 @@ export default function TopNav() {
         <NavbarItem isActive={pathname === "/teams"}>
           <Link className="" href="/teams">
             Teams
+          </Link>
+        </NavbarItem>
+        <NavbarItem isActive={pathname === "/blogs"}>
+          <Link className="" href="/blogs">
+            Blog
           </Link>
         </NavbarItem>
       </NavbarContent>
