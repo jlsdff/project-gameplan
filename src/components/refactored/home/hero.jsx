@@ -4,6 +4,7 @@ import { josefinSans, montserrat } from "@/components/fonts";
 import { motion } from "framer-motion";
 import { Link } from "@nextui-org/react";
 import { Image } from "@nextui-org/react";
+import ImageCarousel from "./imageCarousel";
 
 export default function Hero() {
   return (
@@ -11,9 +12,9 @@ export default function Hero() {
       className="min-h-[90vh] flex justify-center items-center overflow-hidden relative"
       id="hero"
     > 
-      <div className="w-full px-8 py-4 sm:py-8 sm:px-16 flex justify-between items-center  flex-col lg:flex-row gap-10 z-10 ">
+      <div className="z-10 flex flex-col items-center justify-between w-full gap-10 px-8 py-4 sm:py-8 sm:px-16 lg:flex-row ">
         <motion.div
-          className=" z-20 order-2 md:order-1"
+          className="z-20 order-2 md:order-1"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.1 }}
@@ -23,29 +24,29 @@ export default function Hero() {
           >
             More Than a Game
             <br />
-            <span className="font-bold sm:font-black my-4">
+            <span className="my-4 font-bold sm:font-black">
               Project:Gameplan
             </span>
             <br />
             Where Passion Meets Performance
           </h1>
-          <p className="text-xs sm:text-base mt-4 text-center sm:text-left">
+          <p className="mt-4 text-xs text-center sm:text-base sm:text-left">
             Browse Now: &nbsp;
-            <Link className="text-xs sm:text-base font-bold" href="/players">
+            <Link className="text-xs font-bold sm:text-base" href="/players">
               Players
             </Link>{" "}
             &nbsp; | &nbsp;
-            <Link className="text-xs sm:text-base font-bold" href="/teams">
+            <Link className="text-xs font-bold sm:text-base" href="/teams">
               Teams
             </Link>{" "}
             &nbsp; | &nbsp;
-            <Link className="text-xs sm:text-base font-bold" href="/leagues">
+            <Link className="text-xs font-bold sm:text-base" href="/leagues">
               Leagues
             </Link>
           </p>
         </motion.div>
-        <div className="z-10 order-1 md:order-2">
-          <Image src="/greek-freek.svg" alt="greek freek"/>
+        <div>
+          <ImageCarousel  />
         </div>
       </div>
       <div className="absolute -z-10 -right-[100px] top-1/3 hidden lg:block">

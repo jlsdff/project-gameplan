@@ -5,7 +5,6 @@ import Hero from "@/components/refactored/home/hero";
 import MissionAndVision from "@/components/refactored/home/mission";
 import HowWeAchieveIt from "@/components/refactored/home/achieve";
 import OngoingLeague from "@/components/refactored/home/ongoingLeague";
-
 export const metadata = {
   title: "Project:Gameplan",
   description: "A basketball analytics platform for coaches and players",
@@ -16,7 +15,7 @@ export default function Home() {
     <main className="">
       <Hero />
       {/* <MissionAndVision /> */}
-      <OngoingLeague/>
+      <OngoingLeague />
       <HowWeAchieveIt />
       <Footer />
     </main>
