@@ -21,7 +21,7 @@ export default function PapawisSchedKings() {
           <ShareButtons url="https://www.projectgameplan.ph/blogs/papawis-sched-kings" />
           <Divider className="my-2" />
           <p className="text-sm leading-relaxed tracking-wide text-justify md:text-medium indent-8 ">
-          We are Project : Game Plan, an organization trying to unite basketball enthusiasts by creating amateur basketball events. As a nation, we hold a deep affection for basketball; it's almost a necessity for us. We would relish the opportunity to play the game we love even once a week! We've created a series where we highlight various organizations, groups, and communities, aiming to assist our fellow basketball-loving friends in finding new groups to play with.
+          We are Project : Game Plan, an organization trying to unite basketball enthusiasts by creating amateur basketball events. As a nation, we hold a deep affection for basketball; it&apos;s almost a necessity for us. We would relish the opportunity to play the game we love even once a week! We&apos;ve created a series where we highlight various organizations, groups, and communities, aiming to assist our fellow basketball-loving friends in finding new groups to play with.
 
 BASKETBOLEROS
 This group was created and organized by Mr. Mac Pe Benito in 2013. Currently, their group boasts 5.6k members, and their Facebook page has 6.8k followers. We recently conducted an interview with Sir Mac regarding the opportunities, struggles, and what it takes to organize a basketball group.
@@ -150,7 +150,7 @@ This group was created and organized by Mr. Mac Pe Benito in 2013. Currently, th
 <br />
 <br />
 
-🏀Want to host or organize your company's / alumni / friendly league ❓PM us for more details ❗📳
+🏀Want to host or organize your company&apos;s / alumni / friendly league ❓PM us for more details ❗📳
 🏀 We are also looking for sponsors who can help us make our events even better❗ PM us for more details ❗
         </p>
       </main>

@@ -1,3 +1,4 @@
+import { Image } from "@nextui-org/react";
 import React from "react";
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
@@ -18,7 +19,7 @@ export default function ImageCarousel() {
     <Carousel showThumbs={false} autoPlay interval={5000} infiniteLoop >
       {images.map((image, index) => (
         <div key={index}>
-          <img src={image.original} alt={`poster-${index}`} />
+          <Image src={image.original} alt={`poster-${index}`} />
         </div>
       ))}
     </Carousel>
