@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useReducer, useId } from "react";
+import React, { useCallback, useReducer, useId, useEffect } from "react";
 import {
   Input,
   ScrollShadow,
@@ -11,11 +11,12 @@ import {
   ModalBody,
   ModalFooter,
   Divider,
-  Image
+  Image,
 } from "@nextui-org/react";
-import { createBlog } from "@/utils/blogsAPI";
+import { createBlog, getBlogById, updateBlog } from "@/utils/blogsAPI";
 import Editor from "@/components/ui/editorjs/editorJs";
 import { useRouter, useSearchParams } from "next/navigation";
+import { updateLeague } from "@/utils/leagueAPI";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -41,44 +42,56 @@ const reducer = (state, action) => {
         ...state,
         content: action.value,
       };
-    case 'modal':
+    case "modal":
       return {
         ...state,
-        modal: action.value
-      }
-    case 'editorInstance':
+        modal: action.value,
+      };
+    case "editorInstance":
       return {
         ...state,
-        editorInstance: action.value
-      }
-    case 'validateTitle':
+        editorInstance: action.value,
+      };
+    case "validateTitle":
       return {
         ...state,
         title: {
           title: state.title,
           isInvalid: !state.title.isInvalid,
-          errorMessage: 'Title is required'
-        }
-      }
-    case 'validateThumbnail':
+          errorMessage: "Title is required",
+        },
+      };
+    case "validateThumbnail":
       return {
         ...state,
         thumbnail: {
           ...state.thumbnail,
           isInvalid: !state.thumbnail.isInvalid,
-          errorMessage: 'Thumbnail is required'
-        }
-      }
+          errorMessage: "Thumbnail is required",
+        },
+      };
+    case "setBlogData":
+      return {
+        ...state,
+        title: {
+          ...state.title,
+          titleInput: action.value.title,
+        },
+        thumbnail: {
+          file: action.value.thumbnail,
+        },
+        content: action.value.content,
+      };
   }
 };
 
 export default function NewBlog() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const blogId = searchParams.get('id')
-  const randomId = useId()
-  
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const blogId = searchParams.get("id");
+  const randomId = useId();
+
   const [blogReducer, blogDispatch] = useReducer(reducer, {
     title: {
       titleInput: "",
@@ -102,102 +115,163 @@ export default function NewBlog() {
 
   const validateBlog = useCallback(() => {
     if (!blogReducer.title.titleInput) {
-      blogDispatch({type: 'validateTitle'})
+      blogDispatch({ type: "validateTitle" });
       return false;
     }
-    if (!blogReducer.thumbnail.file[0]) {
-      blogDispatch({type: 'validateThumbnail'});
+    if (!blogReducer.thumbnail.file) {
+      blogDispatch({ type: "validateThumbnail" });
       return false;
     }
     return true;
-  }, [blogReducer.thumbnail, blogReducer.title])
+  }, [blogReducer.thumbnail, blogReducer.title]);
 
-  const handlePublishedButton = useCallback( (e) => {
-    e.preventDefault();
-    blogDispatch({type: "modal", value: {
-      header: "Publish Blog",
-      body: "Are you sure you want to publish this blog?",
-      onModalContinue: async () => {
-        console.log("Published")
+  const handlePublishedButton = useCallback(
+    (e) => {
+      e.preventDefault();
+      blogDispatch({
+        type: "modal",
+        value: {
+          header: "Publish Blog",
+          body: "Are you sure you want to publish this blog?",
+          onModalContinue: async () => {
+            console.log("Published");
 
-        if (!validateBlog()) return
-        
-        const blogData = await blogReducer.editorInstance.save()
-        blogReducer.thumbnail.file[0].name = `${randomId}-thumbnail`
-        const blog = {
-          title: blogReducer.title.titleInput,
-          content: blogData,
-          thumbnail: blogReducer.thumbnail.file[0],
-          status: 'published'
-        }
+            if (!validateBlog()) return;
 
-        createBlog(file, blog)
-          .then(res => {
-            alert('Blog created successfully')
-            router.push('/admin/dashboard/blogs')
-          })
-          .catch(error => alert(error))
-        
-      },
-      onModalCancel: () => {
-        console.log("Cancelled")
-      }
-    }})
-    onOpen()
-  },[blogReducer.editorInstance, blogReducer.thumbnail.file, blogReducer.title.titleInput, onOpen, randomId, router, validateBlog]);
+            const blogData = await blogReducer.editorInstance.save();
 
-  const handleDraftButton = useCallback((e) => {
-    e.preventDefault();
-    blogDispatch({
-      type: 'modal',
-      value: {
-        header: 'Save Draft',
-        body: 'Are you sure you want to save this blog as a draft?',
-        onModalContinue: () => {
-          console.log('Drafted')
+            const blog = {
+              title: blogReducer.title.titleInput,
+              content: blogData,
+              thumbnail: blogReducer.thumbnail.file,
+              status: "published",
+            };
 
-          if (!validateBlog()) return
-
-          const blogData = blogReducer.editorInstance.save()
-          blogReducer.thumbnail.file[0].name = `${blogReducer.title.titleInput}-thumbnail`
-          const blog = {
-            title: blogReducer.title.titleInput,
-            content: blogData,
-            thumbnail: blogReducer.thumbnail.file[0],
-            status: 'draft'
-          }
-
-          createBlog(blog)
-            .then( res => {
-              alert('Blog saved as draft successfully')
-              router.push('/admin/dashboard/blogs')}
-            ).catch( error => alert(error))
+            if (blogId) {
+              updateBlog(blogId, blog)  
+              .then((res) => {
+                alert("Blog updated successfully");
+                router.push("/admin/dashboard/blogs");
+              })
+              .catch((error) => alert(error));
+            } else {
+              createBlog(file, blog)
+                .then((res) => {
+                  alert("Blog created successfully");
+                  router.push("/admin/dashboard/blogs");
+                })
+                .catch((error) => alert(error));
+            }
+          },
+          onModalCancel: () => {
+            console.log("Cancelled");
+          },
         },
-        onModalCancel: () => {
-          console.log('Cancelled')
-        }
-      }
-    })
-    onOpen()
-  },[blogReducer.editorInstance, blogReducer.thumbnail.file, blogReducer.title.titleInput, onOpen, router, validateBlog])
+      });
+      onOpen();
+    },
+    [
+      blogReducer.editorInstance,
+      blogReducer.thumbnail.file,
+      blogReducer.title.titleInput,
+      onOpen,
+      router,
+      validateBlog,
+      blogId,
+    ]
+  );
 
-  const handleCancelBlogButton = useCallback(e => {
-    e.preventDefault()
-    blogDispatch({
-      type: 'modal',
-      value: {
-        header: 'Cancel Blog',
-        body: 'Are you sure you want to cancel this blog?',
-        onModalContinue: () => {
-          router.push('/admin/dashboard/blogs')
+  const handleDraftButton = useCallback(
+    (e) => {
+      e.preventDefault();
+      blogDispatch({
+        type: "modal",
+        value: {
+          header: "Save Draft",
+          body: "Are you sure you want to save this blog as a draft?",
+          onModalContinue: async () => {
+            if (!validateBlog()) return;
+
+            const blogData = await blogReducer.editorInstance.save();
+
+            const blog = {
+              title: blogReducer.title.titleInput,
+              content: blogData,
+              thumbnail: blogReducer.thumbnail.file,
+              status: "draft",
+            };
+            console.log(blog);
+            if (blogId) {
+              updateBlog(blogId, blog)
+              .then((res) => {
+                alert("Blog updated successfully");
+                router.push("/admin/dashboard/blogs");
+              })
+              .catch((error) => alert(error));
+            } else {
+              createBlog(blog)
+                .then((res) => {
+                  alert("Blog saved as draft successfully");
+                  router.push("/admin/dashboard/blogs");
+                })
+                .catch((error) => alert(error));
+            }
+            console.log("Drafted");
+          },
+          onModalCancel: () => {
+            console.log("Cancelled");
+          },
         },
-        onModalCancel: () => {
-          console.log('Cancelled')
-        }
-      }
-    })
-    onOpen()
-  },[onOpen, router])
+      });
+      onOpen();
+    },
+    [
+      blogReducer.editorInstance,
+      blogReducer.thumbnail.file,
+      blogReducer.title.titleInput,
+      onOpen,
+      router,
+      validateBlog,
+      blogId
+    ]
+  );
+
+  const handleCancelBlogButton = useCallback(
+    (e) => {
+      e.preventDefault();
+      blogDispatch({
+        type: "modal",
+        value: {
+          header: "Cancel Blog",
+          body: "Are you sure you want to cancel this blog?",
+          onModalContinue: () => {
+            router.push("/admin/dashboard/blogs");
+          },
+          onModalCancel: () => {
+            console.log("Cancelled");
+          },
+        },
+      });
+      onOpen();
+    },
+    [onOpen, router]
+  );
+
+  const fetchBlog = useCallback(async () => {
+    await getBlogById(blogId).then((res) => {
+      const blogData = res.data();
+      blogData.thumbnail = new File([blogData.thumbnail], "thumbnail", {
+        type: "image/png",
+      });
+      blogDispatch({ type: "setBlogData", value: blogData });
+    });
+  }, [blogId]);
+
+  useEffect(() => {
+    if (blogId) {
+      fetchBlog();
+    }
+  }, [blogId, fetchBlog]);
 
   return (
     <>
@@ -231,14 +305,14 @@ export default function NewBlog() {
                 blogDispatch({ type: "thumbnail", value: e.target.files[0] });
               }}
             />
-            {
-              blogReducer.thumbnail.isInvalid && (
-                <>
+            {blogReducer.thumbnail.isInvalid && (
+              <>
                 <br />
-                <small className="text-red-500">{blogReducer.thumbnail.errorMessage}</small>
-                </>
-              )
-            }
+                <small className="text-red-500">
+                  {blogReducer.thumbnail.errorMessage}
+                </small>
+              </>
+            )}
           </div>
           <Divider />
           <ScrollShadow
@@ -256,9 +330,9 @@ export default function NewBlog() {
           </ScrollShadow>
           <Divider />
           <div className="flex flex-col items-center justify-center gap-2 md:flex-row">
-            <Button onClick={ (e) => handlePublishedButton(e)}>Publish</Button>
-            <Button onClick={ (e) => handleDraftButton(e)}>Draft</Button>
-            <Button onClick={ (e) => handleCancelBlogButton(e)}>Cancel</Button>
+            <Button onClick={(e) => handlePublishedButton(e)}>Publish</Button>
+            <Button onClick={(e) => handleDraftButton(e)}>Draft</Button>
+            <Button onClick={(e) => handleCancelBlogButton(e)}>Cancel</Button>
           </div>
         </form>
       </main>
@@ -285,7 +359,7 @@ export default function NewBlog() {
                   color="primary"
                   onPress={() => {
                     blogReducer.modal.onModalContinue();
-                    onClose()
+                    onClose();
                   }}
                 >
                   Continue
