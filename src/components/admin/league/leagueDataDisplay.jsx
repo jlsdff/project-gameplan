@@ -155,7 +155,7 @@ export default function LeagueDataDisplay({ searchedLeagues }) {
           </div>
         );
     }
-  }, [ handleEditRow, handleDeleteRow]);
+  }, [fetchLeagues, handleEditRow, handleDeleteRow]);
 
   const fetchLeagues = useCallback(async () => {
     setIsFetchingData(true);
@@ -195,7 +195,7 @@ export default function LeagueDataDisplay({ searchedLeagues }) {
       return;
     }
     fetchLeagues();    
-  }, [limitPerPage, currentPage, searchedLeagues]);
+  }, [limitPerPage, currentPage, searchedLeagues, fetchLeagues]);
 
   return (
     <>

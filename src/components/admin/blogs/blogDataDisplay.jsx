@@ -1,9 +1,10 @@
 "use client";
-import React, { useCallback, useReducer } from "react";
+import React, { useCallback, useEffect, useReducer } from "react";
 import { Input, Button } from "@nextui-org/react";
 import SearchIcon from "@/assets/searchIcon";
 import AddIcon from "@/assets/addIcon";
 import { useRouter } from "next/navigation";
+import { getBlogCount } from "@/utils/countersAPI";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -15,15 +16,39 @@ const reducer = (state, action) => {
           searchInput: action.value,
         },
       };
+    case "blogs":
+      return {
+        ...state,
+        blogs: action.value,
+      };
+    case "limitPerPage":
+      return {
+        ...state,
+        limitPerPage: action.value,
+      };
+    case "currentPage":
+      return {
+        ...state,
+        currentPage: action.value,
+      };
+    case "totalPage":
+      return {
+        ...state,
+        totalPage: action.value,
+      };
   }
 };
 
 export default function BlogDataDisplay() {
-  const [blogReducer, blogDispatcch] = useReducer(reducer, {
+  const [blogReducer, blogDispatch] = useReducer(reducer, {
     search: {
       searchInput: "",
       isLoading: false,
     },
+    blogs: [],
+    limitPerPage: 10,
+    currentPage: 1,
+    totalPage: 1,
   });
   const router = useRouter();
 
@@ -37,7 +62,14 @@ export default function BlogDataDisplay() {
 
   const handleNewBlog = useCallback(() => {
     router.push("/admin/dashboard/blogs/new");
-  }, [router, blogReducer.search.searchInput, blogReducer.search.isLoading ]);
+  }, [router]);
+
+  const getBlogTotalCount = useCallback(async () => {
+    const count = await getBlogCount();
+    blogDispatch
+  }, []);
+
+  useEffect(() => {}, []);
 
   return (
     <>
@@ -48,7 +80,7 @@ export default function BlogDataDisplay() {
             label="Search Blogs"
             value={blogReducer.search.searchInput}
             onValueChange={(value) =>
-              blogDispatcch({ type: "searchInput", value })
+              blogDispatch({ type: "searchInput", value })
             }
           />
           <Button
@@ -77,6 +109,18 @@ export default function BlogDataDisplay() {
         >
           <AddIcon />
         </Button>
+      </div>
+
+      <div className="mt-4">
+        
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 mt-4 md:grid-cols-2 lg:grid-cols-3">
+        {/* Blog Data Display */}
+        <div className="min-h-[50px] bg-slate-500">col-1</div>
+        <div className="min-h-[50px] bg-slate-500">col-2</div>
+        <div className="min-h-[50px] bg-slate-500">col-3</div>
+        <div className="min-h-[50px] bg-slate-500 lg:col-span-3">col-4</div>
       </div>
     </>
   );
