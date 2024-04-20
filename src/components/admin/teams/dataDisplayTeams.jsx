@@ -39,6 +39,24 @@ export default function DataDisplayTeams() {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const router = useRouter();
 
+  const editTeamHandler = useCallback((item, key) => {
+    router.push(`/admin/dashboard/teams/${item.key}`);
+  }, []);
+
+  const deleteTeamHandler = useCallback(async (item, key) => {
+    await deleteTeam(item.key)
+      .then(() => {
+        alert(
+          "Team deleted successfully",
+          "Team has been deleted successfully"
+        );
+        fetchTeams();
+      })
+      .catch((err) => {
+        console.error(err);
+        alert("Error deleting team", "There was an error deleting the team");
+      });
+  },[]);
 
   const fetchTeams = useCallback(async () => {
     setTotalPage(Math.ceil((await getTeamCount()) / limitPerPage));
@@ -76,7 +94,9 @@ export default function DataDisplayTeams() {
 
     setRows(rows);
   }, [limitPerPage, currentPage, editTeamHandler, deleteTeamHandler]);
-  
+
+
+
   useEffect(() => {
     fetchTeams();
   }, [limitPerPage, currentPage, fetchTeams]);
@@ -109,25 +129,6 @@ export default function DataDisplayTeams() {
         });
     }
   }, []);
-
-  const editTeamHandler = useCallback((item, key) => {
-    router.push(`/admin/dashboard/teams/${item.key}`);
-  }, [router]);
-
-  const deleteTeamHandler = useCallback(async (item, key) => {
-    await deleteTeam(item.key)
-      .then(() => {
-        alert(
-          "Team deleted successfully",
-          "Team has been deleted successfully"
-        );
-        fetchTeams();
-      })
-      .catch((err) => {
-        console.error(err);
-        alert("Error deleting team", "There was an error deleting the team");
-      });
-  }, [fetchTeams]);
 
   const searchTeamNameHandler = useCallback(async (value) => {
     await getTeamByName(value)

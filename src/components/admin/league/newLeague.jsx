@@ -43,6 +43,8 @@ const reducer = (state, action) => {
       return { ...state, addedTeams: action.value };
     case "setLeagueData":
       return { ...state, ...action.value };
+    case "editorInstance":
+      return { ...state, editorInstance: action.value };
     default:
       return state;
   }
@@ -62,6 +64,7 @@ export default function NewLeague() {
     searchValue: "",
     searchResult: [],
     addedTeams: [],
+    editorInstance: null,
   });
 
   const router = useRouter();
@@ -69,6 +72,35 @@ export default function NewLeague() {
   const days = useMemo(
     () => ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
     []
+  );
+  
+  const fetchTeamsByIds = useCallback(
+    async (teamIds) => {
+      const teams = [];
+      teamIds.forEach(async (id) => {
+        const team = await getTeamById(id)
+          .then((res) => {
+            const teamData = {
+              id: res.id,
+              ...res.data(),
+            };
+            leagueDispatch({
+              type: "addedTeams",
+              value: [...leagueState.addedTeams, teamData],
+            });
+            return teamData;
+          })
+          .catch((error) => {
+            console.error(error);
+            alert("Failed to fetch team data");
+          });
+
+        teams.push(team);
+      });
+
+      return teams;
+    },
+    [leagueState.addedTeams]
   );
 
   useEffect(() => {
@@ -78,10 +110,9 @@ export default function NewLeague() {
         .then((res) => {
           let data = res.data();
           const teamIds = data.participatingTeams;
-          fetchTeamsByIds(teamIds)
-            .then(teams => {
-              data.addedTeams = teams;
-            })
+          fetchTeamsByIds(teamIds).then((teams) => {
+            data.addedTeams = teams;
+          });
           leagueDispatch({ type: "setLeagueData", value: data });
         })
         .catch((error) => {
@@ -90,31 +121,13 @@ export default function NewLeague() {
     }
   }, [fetchTeamsByIds, searchParams]);
 
-  const fetchTeamsByIds = useCallback(async (teamIds) => {
-    const teams = []
-    teamIds.forEach( async (id) => { 
-      
-      const team = await getTeamById(id)
-        .then(res => {
-          const teamData =  {
-            id: res.id,
-            ...res.data()
-          }
-          leagueDispatch({type: "addedTeams", value: [...leagueState.addedTeams, teamData]})
-          return teamData
-        })
-        .catch(error => {
-          console.error(error)
-          alert("Failed to fetch team data")
-        }) 
-
-      teams.push(team)
-    })
   
-    return teams;
-  }, [leagueState.addedTeams]);
 
-  const handleSaveButton = useCallback(() => {
+  const handleSaveButton = useCallback( async () => {
+
+    const leagueData = await leagueState.editorInstance.save().then( data => {
+      return data;
+    })
 
     const data = {
       title: leagueState.title,
@@ -123,12 +136,14 @@ export default function NewLeague() {
       timeTo: leagueState.timeTo,
       dateSchedule: leagueState.dateSchedule,
       startDate: leagueState.startDate,
-      leagueData: leagueState.leagueData,
       leagueImage: leagueState.leagueImage,
       participatingTeams: leagueState.addedTeams.map((team) => team.id),
+      leagueData,
     };
 
-    if(searchParams.has("id")) {
+    console.log(data)
+
+    if (searchParams.has("id")) {
       updateLeague(searchParams.get("id"), data)
         .then(() => {
           alert("League updated successfully");
@@ -162,7 +177,7 @@ export default function NewLeague() {
           console.error(error);
         });
     }
-  }, [leagueState, router, searchParams ]);
+  }, [leagueState, router, searchParams]);
 
   const handleCancelButton = useCallback(() => {
     router.push("/admin/dashboard/leagues");
@@ -306,7 +321,13 @@ export default function NewLeague() {
             hideScrollBar
             className="min-h-[50px] max-h-[400px] overflow-y-scroll"
           >
-            <Editor onChange={handleLeagueDataChange} defaultData={leagueState.leagueData} />
+            <Editor
+              defaultData={leagueState.leagueData}
+              editorInstance={leagueState.editorInstance}
+              setEditorInstance={(editor) => {
+                leagueDispatch({ type: "editorInstance", value: editor });
+              }}
+            />
           </ScrollShadow>
         </div>
       </form>

@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useReducer } from "react";
+import React, { useCallback, useReducer, useId } from "react";
 import {
   Input,
   ScrollShadow,
@@ -10,10 +10,11 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-  Divider
+  Divider,
+  Image
 } from "@nextui-org/react";
+import { createBlog } from "@/utils/blogsAPI";
 import Editor from "@/components/ui/editorjs/editorJs";
-import { createPortal } from "react-dom";
 import { useRouter, useSearchParams } from "next/navigation";
 
 const reducer = (state, action) => {
@@ -23,6 +24,7 @@ const reducer = (state, action) => {
         ...state,
         title: {
           ...state.title,
+          isInvalid: false,
           titleInput: action.value,
         },
       };
@@ -44,6 +46,29 @@ const reducer = (state, action) => {
         ...state,
         modal: action.value
       }
+    case 'editorInstance':
+      return {
+        ...state,
+        editorInstance: action.value
+      }
+    case 'validateTitle':
+      return {
+        ...state,
+        title: {
+          title: state.title,
+          isInvalid: !state.title.isInvalid,
+          errorMessage: 'Title is required'
+        }
+      }
+    case 'validateThumbnail':
+      return {
+        ...state,
+        thumbnail: {
+          ...state.thumbnail,
+          isInvalid: !state.thumbnail.isInvalid,
+          errorMessage: 'Thumbnail is required'
+        }
+      }
   }
 };
 
@@ -51,6 +76,8 @@ export default function NewBlog() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const router = useRouter()
   const searchParams = useSearchParams()
+  const blogId = searchParams.get('id')
+  const randomId = useId()
   
   const [blogReducer, blogDispatch] = useReducer(reducer, {
     title: {
@@ -70,22 +97,54 @@ export default function NewBlog() {
       onModalContinue: () => {},
       onModalCancel: () => {},
     },
+    editorInstance: null,
   });
 
-  const handlePublishedButton = useCallback((e) => {
+  const validateBlog = useCallback(() => {
+    if (!blogReducer.title.titleInput) {
+      blogDispatch({type: 'validateTitle'})
+      return false;
+    }
+    if (!blogReducer.thumbnail.file[0]) {
+      blogDispatch({type: 'validateThumbnail'});
+      return false;
+    }
+    return true;
+  }, [blogReducer.thumbnail, blogReducer.title])
+
+  const handlePublishedButton = useCallback( (e) => {
     e.preventDefault();
     blogDispatch({type: "modal", value: {
       header: "Publish Blog",
       body: "Are you sure you want to publish this blog?",
-      onModalContinue: () => {
+      onModalContinue: async () => {
         console.log("Published")
+
+        if (!validateBlog()) return
+        
+        const blogData = await blogReducer.editorInstance.save()
+        blogReducer.thumbnail.file[0].name = `${randomId}-thumbnail`
+        const blog = {
+          title: blogReducer.title.titleInput,
+          content: blogData,
+          thumbnail: blogReducer.thumbnail.file[0],
+          status: 'published'
+        }
+
+        createBlog(file, blog)
+          .then(res => {
+            alert('Blog created successfully')
+            router.push('/admin/dashboard/blogs')
+          })
+          .catch(error => alert(error))
+        
       },
       onModalCancel: () => {
         console.log("Cancelled")
       }
     }})
     onOpen()
-  },[onOpen]);
+  },[blogReducer.editorInstance, blogReducer.thumbnail.file, blogReducer.title.titleInput, onOpen, randomId, router, validateBlog]);
 
   const handleDraftButton = useCallback((e) => {
     e.preventDefault();
@@ -96,6 +155,23 @@ export default function NewBlog() {
         body: 'Are you sure you want to save this blog as a draft?',
         onModalContinue: () => {
           console.log('Drafted')
+
+          if (!validateBlog()) return
+
+          const blogData = blogReducer.editorInstance.save()
+          blogReducer.thumbnail.file[0].name = `${blogReducer.title.titleInput}-thumbnail`
+          const blog = {
+            title: blogReducer.title.titleInput,
+            content: blogData,
+            thumbnail: blogReducer.thumbnail.file[0],
+            status: 'draft'
+          }
+
+          createBlog(blog)
+            .then( res => {
+              alert('Blog saved as draft successfully')
+              router.push('/admin/dashboard/blogs')}
+            ).catch( error => alert(error))
         },
         onModalCancel: () => {
           console.log('Cancelled')
@@ -103,7 +179,7 @@ export default function NewBlog() {
       }
     })
     onOpen()
-  },[onOpen])
+  },[blogReducer.editorInstance, blogReducer.thumbnail.file, blogReducer.title.titleInput, onOpen, router, validateBlog])
 
   const handleCancelBlogButton = useCallback(e => {
     e.preventDefault()
@@ -140,6 +216,7 @@ export default function NewBlog() {
             placeholder="Enter blog title"
             size="lg"
             className="w-full"
+            errorMessage={blogReducer.title.errorMessage}
           />
           <div className="flex flex-col gap-2">
             <label htmlFor="thumbnail">Thumbnail</label>
@@ -148,10 +225,20 @@ export default function NewBlog() {
               accept="image/*"
               id="thumbnail"
               required
+              isInvalid={blogReducer.thumbnail.isInvalid}
+              errorMessage={blogReducer.thumbnail.errorMessage}
               onChange={(e) => {
                 blogDispatch({ type: "thumbnail", value: e.target.files[0] });
               }}
             />
+            {
+              blogReducer.thumbnail.isInvalid && (
+                <>
+                <br />
+                <small className="text-red-500">{blogReducer.thumbnail.errorMessage}</small>
+                </>
+              )
+            }
           </div>
           <Divider />
           <ScrollShadow
@@ -160,14 +247,15 @@ export default function NewBlog() {
             className="min-h-[50px] max-h-[400px] overflow-y-scroll "
           >
             <Editor
-              onChange={(data) =>
-                blogDispatch({ type: "content", value: data })
+              defaultData={blogReducer.content}
+              editorInstance={blogReducer.editorInstance}
+              setEditorInstance={(editor) =>
+                blogDispatch({ type: "editorInstance", value: editor })
               }
-
             />
           </ScrollShadow>
           <Divider />
-          <div className="flex flex-col gap-2 md:flex-row">
+          <div className="flex flex-col items-center justify-center gap-2 md:flex-row">
             <Button onClick={ (e) => handlePublishedButton(e)}>Publish</Button>
             <Button onClick={ (e) => handleDraftButton(e)}>Draft</Button>
             <Button onClick={ (e) => handleCancelBlogButton(e)}>Cancel</Button>

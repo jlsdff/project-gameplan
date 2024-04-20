@@ -19,39 +19,33 @@ const _defaultData = {
 };
 
 export default function Editor({
-  onSave,
-  onChange,
   defaultData = _defaultData,
   tools = EDITOR_JS_TOOLS,
+  editorInstance,
+  setEditorInstance,
 }) {
   const editorContainer = useRef(null);
-  const [editorInstance, setEditorInstance] = useState(null);
 
-  useEffect(() => {
-    if (editorContainer.current) {
+  const initializeEditor = useCallback(async () => {
       const editor = new EditorJS({
         holder: editorContainer.current,
         tools: tools,
-        data: defaultData,
-        onChange: async () => {
-          // if (onChange) {
-          //   const updatedData = await editor.save();
-          //   onChange(updatedData);
-          // }
-        },
-        onReady: () => {
-          console.log("Editor.js is ready to work!");
-        },
-        onSave: async () => {
-          const savedData = await editor.saver().save()
-            .then(outputData => {
-              onSave(outputData);
-            })
-          return savedData;
-        }
+        data: defaultData
       });
 
       setEditorInstance(editor);
+
+  },[])
+  
+
+  useEffect(() => {
+    
+    if (editorInstance){
+      editorInstance.isReady.then(() => {
+        editorInstance.render(defaultData);
+      });
+    }else {
+      initializeEditor();
     }
 
     // Cleanup on unmount
@@ -60,7 +54,8 @@ export default function Editor({
         editorInstance.destroy();
       }
     };
-  }, [defaultData, tools, onChange, editorInstance, onSave]);
+  }, [defaultData]);
+
 
   return <div ref={editorContainer} />;
 }

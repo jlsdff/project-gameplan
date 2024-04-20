@@ -67,7 +67,7 @@ export default function LeagueDataDisplay({ searchedLeagues }) {
       .catch((error) => {
         console.error(error);
       });
-  },[fetchLeagues]);
+  },[]);
 
   const renderCell = useCallback((item, key) => {
     switch (key) {
@@ -155,7 +155,7 @@ export default function LeagueDataDisplay({ searchedLeagues }) {
           </div>
         );
     }
-  }, [ handleEditRow, handleDeleteRow, fetchLeagues]);
+  }, [ handleEditRow, handleDeleteRow]);
 
   const fetchLeagues = useCallback(async () => {
     setIsFetchingData(true);
@@ -195,7 +195,7 @@ export default function LeagueDataDisplay({ searchedLeagues }) {
       return;
     }
     fetchLeagues();    
-  }, [limitPerPage, currentPage, fetchLeagues, searchedLeagues]);
+  }, [limitPerPage, currentPage, searchedLeagues]);
 
   return (
     <>
