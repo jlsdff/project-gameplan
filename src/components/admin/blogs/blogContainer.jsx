@@ -38,7 +38,7 @@ export default function BlogContainer({ blog, onEdit, onDelete }) {
       className: "text-primary-500",
       color: "",
       icon: <EditIcon />,
-      onClick: () => {onEdit(id); onOpen()},
+      onClick: () => {onEdit(id)},
     },
     {
       key: 'publish',

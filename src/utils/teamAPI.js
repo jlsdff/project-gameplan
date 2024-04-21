@@ -49,7 +49,6 @@ export async function getTeamByName(name){
 
 // POST FUNCTIONS
 export async function createTeam(team) {
-  console.log(team);
 
   // Check if teamName, teamAbbr, and teamLogo are not empty
   if(!team.teamName || !team.teamAbbr || !team.teamLogo) {
@@ -65,7 +64,7 @@ export async function createTeam(team) {
       return firestore
         .collection("teams")
         .doc()
-        .set({ ...team, teamLogo: res });
+        .set({ ...team, teamLogo: res, wins: 0, losses: 0 });
     })
     .catch((err) => {
       console.log(err);
