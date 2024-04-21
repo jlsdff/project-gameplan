@@ -97,7 +97,7 @@ export async function incrementBlog(){
     .doc("blogs")
     .update({ size: FieldValue.increment(1) });
 }
-
+ 
 export async function decrementBlog(){
   return await firestore
     .collection('counters')

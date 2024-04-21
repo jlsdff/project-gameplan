@@ -259,10 +259,10 @@ export default function NewBlog() {
 
   const fetchBlog = useCallback(async () => {
     await getBlogById(blogId).then((res) => {
-      const blogData = res.data();
-      blogData.thumbnail = new File([blogData.thumbnail], "thumbnail", {
-        type: "image/png",
-      });
+      const blogData = {
+        id: res.id,
+        ...res.data(),
+      };
       blogDispatch({ type: "setBlogData", value: blogData });
     });
   }, [blogId]);
