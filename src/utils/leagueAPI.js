@@ -48,6 +48,7 @@ export const getLeaguesByLikeTitle = async ( name ) => {
   return await firestore.collection("leagues")
     .where("title", ">=", name)
     .where("title", "<=", name + "\uf8ff")
+    .limit(5)
     .get();
 }
 

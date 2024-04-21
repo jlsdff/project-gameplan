@@ -194,7 +194,7 @@ export default function NewTeam({ ...props }) {
               onValueChange={(value) =>
                 teamReducer({ type: "teamName", value })
               }
-              className="my-2 md:my-0"
+              className="my-2 md:my-0 break-inside-avoid"
             />
             <Input
               label="Team ABBR"
@@ -202,9 +202,9 @@ export default function NewTeam({ ...props }) {
               onValueChange={(value) =>
                 teamReducer({ type: "teamAbbr", value })
               }
-              className="my-2 md:my-0"
+              className="my-2 md:my-0 break-inside-avoid"
             />
-            <Tooltip content="Team Logo">
+            <Tooltip content="Team Logo" className="h-full break-inside-avoid">
               <Input
                 type="file"
                 onChange={(e) => {
@@ -212,7 +212,7 @@ export default function NewTeam({ ...props }) {
                   teamReducer({ type: "teamLogo", value: file });
                 }}
                 accept="image/png, image/jpeg, image/jpg, image/svg"
-                className="my-2 md:my-0"
+                className="my-2  md:my-0"
               />
             </Tooltip>
           </div>
