@@ -29,7 +29,6 @@ export default function useTeamByName(
           console.log("Error fetching team")
           throw error;
         })
-      console.log(response)
       setTeamField( prev => {
         return {
           ...prev,

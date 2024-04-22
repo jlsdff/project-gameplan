@@ -10,10 +10,62 @@ import {
 } from "@nextui-org/react";
 import useFetchLeague from "./fetchLeague";
 import useTeamByName from "@/hooks/useTeamByName";
+import { getPlayerById } from "@/utils/playerAPI";
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "SET_MAIN_DATA":
+      return {
+        ...state,
+        mainData: action.payload,
+      };
+    case "PLAYERS":
+
+      const { teamSide, players } = action.payload;
+
+      if(teamSide === "teamA") {
+        return {
+          ...state,
+          players: {
+            ...state.players,
+            teamA: players,
+          }
+        }
+      }else if( teamSide === "teamB") {
+        return {
+          ...state,
+          players: {
+            ...state.players,
+            teamB: players,
+          }
+        }
+      } else {
+        return state;
+      }
+      
+
+    default:
+      return state;
+  }
+};
+
+const initialState = {
+  mainData: {},
+  players: {
+    teamA: [],
+    teamB: [],
+  },
+  stats: {
+    teamA: [],
+    teamB: [],
+  },
+};
 
 export default function NewGame() {
   const params = useSearchParams();
   const id = params.get("id");
+
+  const [mainData, setMainData] = useReducer(reducer, initialState);
 
   const [leagueField, setLeagueField] = useState({
     selectedKey: null,
@@ -69,6 +121,29 @@ export default function NewGame() {
     },
     [setLeagueField]
   );
+
+  const handlePlayerSelection = useCallback( async (teamSide, team)=> {
+    
+    const players = await team.players.map( async (player) => {
+      const playerData = await getPlayerById(player).then( res => {
+        return {
+          id: res.id,
+          ...res.data()
+        }
+      })
+      return playerData;
+    })
+
+    Promise.all(players).then( res => {
+      setMainData({
+        type: "PLAYERS",
+        payload: {
+          teamSide: teamSide,
+          players: res,
+        },
+      });
+    })
+  },[])
 
   return (
     <>
@@ -127,6 +202,11 @@ export default function NewGame() {
           onSelectionChange={(key) => {
             setTeamA((prev) => {
               const team = teamA.results.find((team) => team.id === key) || {};
+
+              if(team.id){
+                handlePlayerSelection("teamA", team)
+              }
+              
               return {
                 ...prev,
                 selectedValue: team.teamName || "",
@@ -161,6 +241,11 @@ export default function NewGame() {
           onSelectionChange={(key) => {
             setTeamB((prev) => {
               const team = teamB.results.find((team) => team.id === key) || {};
+
+              if(team.id) {
+                handlePlayerSelection("teamB", team)
+              }
+              
               return {
                 ...prev,
                 selectedValue: team.teamName || "",
@@ -192,11 +277,9 @@ export default function NewGame() {
           onValueChange={setGameNumber}
         />
       </div>
-        
-      <h2>Stats</h2>
-      <div>
 
-      </div>
+      <h2>Stats</h2>
+      <div></div>
     </>
   );
 }
