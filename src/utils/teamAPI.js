@@ -42,6 +42,7 @@ export async function getTeamByName(name){
   return await firestore.collection("teams")
     .where("teamName", ">=", name)
     .where("teamName", "<=", name + "\uf8ff")
+    .limit(10)
     .get();
   
 }

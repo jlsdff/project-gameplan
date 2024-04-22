@@ -32,8 +32,7 @@ export default function useFetchLeague(input, setLeagueField) {
     } finally {
       setIsLoading(false)
     }
-  },[input])
-
+  },[input, setLeagueField])
 
   useEffect(() => {
     if (input.length >= 5 ){
