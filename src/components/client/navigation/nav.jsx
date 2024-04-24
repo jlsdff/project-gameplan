@@ -49,7 +49,7 @@ export default function TopNav() {
         <NavbarBrand>
           <Link href="/">
           <h3 className={`${josefin_sans.className} text-primary font-bold `}>
-            THE PROJECT GAMEPLAN
+            PROJECT:GAMEPLAN
           </h3>
           </Link>
         </NavbarBrand>
@@ -59,10 +59,13 @@ export default function TopNav() {
           <Link href="/players" className="w-full" size="lg">Players</Link>
         </NavbarItem>
         <NavbarItem isActive={pathname === "/games"}>
-          <Link href="/games" className="w-full" size="lg">Games</Link>
+          <Link href="/leagues" className="w-full" size="lg">Leagues</Link>
         </NavbarItem>
         <NavbarItem isActive={pathname === "/teams"}>
           <Link href="/teams" className="w-full" size="lg">Teams</Link>
+        </NavbarItem>
+        <NavbarItem isActive={pathname === "/blogs"}>
+          <Link href="/blogs" className="w-full" size="lg">Blog</Link>
         </NavbarItem>
       </NavbarMenu>
 
@@ -73,13 +76,18 @@ export default function TopNav() {
           </Link>
         </NavbarItem>
         <NavbarItem isActive={pathname === "/games"}>
-          <Link className="" href="/games">
-            Games
+          <Link className="" href="/leagues">
+            Leagues
           </Link>
         </NavbarItem>
         <NavbarItem isActive={pathname === "/teams"}>
           <Link className="" href="/teams">
             Teams
+          </Link>
+        </NavbarItem>
+        <NavbarItem isActive={pathname === "/blogs"}>
+          <Link className="" href="/blogs">
+            Blog
           </Link>
         </NavbarItem>
       </NavbarContent>

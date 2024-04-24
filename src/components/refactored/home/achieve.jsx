@@ -14,7 +14,7 @@ export default function HowWeAchieveIt() {
       </h2>
       <div className="flex flex-col md:flex-row justify-between items-start">
         <div className=" h-full sm:max-h-[400px] -z-10 basis-1/4 sm:basis-1/2 shrink-0 flex justify-center items-center ">
-          <Image src="/basketball.svg" width={"auto"} />
+          <Image src="/basketball.svg" width={"auto"} alt="project gameplan logo"/>
         </div>
         <div className="min-h-[400px] flex flex-col justify-evenly items-center text-center md:text-left gap-4 mt-8 ">
           <motion.div
@@ -29,8 +29,8 @@ export default function HowWeAchieveIt() {
             </h3>
             <p className="text-sm sm:text-medium leading-normal">
               Dive into the stats that matter. Project GamePlan provides a
-              detailed look at teams and players' performance, offering in-depth
-              statistics, trends, and insights. Whether you're a stats
+              detailed look at teams and players&apos; performance, offering in-depth
+              statistics, trends, and insights. Whether you&apos;re a stats
               enthusiast or looking for key player metrics, our platform has you
               covered with the latest and most comprehensive data.
             </p>

@@ -1,24 +1,24 @@
 import React from "react";
 
 export default function AddIcon({
-  size = 24,
-  strokeWidth = 1.5,
-  width,
+  fill = "currentColor",
+  filled,
+  size,
   height,
+  width,
+  label,
   ...props
 }) {
   return (
     <svg
-      aria-hidden="true"
-      fill="none"
-      focusable="false"
-      height={height || size}
-      role="presentation"
-      viewBox="0 0 24 24"
-      width={width || size}
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 -960 960 960"
+      fill={filled ? fill : "currentColor"}
+      width={size || width || height || 24}
+      height={size || height || width || 24}
       {...props}
     >
-      <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+      <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
     </svg>
   );
 }
