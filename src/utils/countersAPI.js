@@ -83,3 +83,24 @@ export async function decrementLeague() {
     .doc("leagues")
     .update({ size: FieldValue.increment(-1) });
 }
+
+// BLOG COUNTER API
+
+export async function getBlogCount() {
+  const doc = await firestore.collection("counters").doc("blogs").get();
+  return doc.data().size;
+}
+
+export async function incrementBlog(){
+  return await firestore
+    .collection("counters")
+    .doc("blogs")
+    .update({ size: FieldValue.increment(1) });
+}
+ 
+export async function decrementBlog(){
+  return await firestore
+    .collection('counters')
+    .doc('blogs')
+    .update({ size: FieldValue.increment(-1) });
+}

@@ -15,47 +15,47 @@ const _defaultData = {
       },
     },
   ],
+  version: "2.29.1",
 };
 
 export default function Editor({
-  onSave,
-  onChange,
-  defaultData,
-  tools,
+  defaultData = _defaultData,
+  tools = EDITOR_JS_TOOLS,
+  editorInstance,
+  setEditorInstance,
 }) {
-  const ejInstance = useRef(null);
+  const editorContainer = useRef(null);
 
-  const myData = defaultData || _defaultData;
-  const myTools = tools || EDITOR_JS_TOOLS;
+  const initializeEditor = useCallback(async () => {
+      const editor = new EditorJS({
+        holder: editorContainer.current,
+        tools: tools,
+        data: defaultData
+      });
 
-  const initializeEditor = useCallback(() => {
-    const editor = new EditorJS({
-      holder: "editorjs",
-      tools: myTools,
-      onReady: () => {
-        ejInstance.current = editor;
-      },
-      onChange: () => {
-        ejInstance.current.saver.save().then((outputData) => {
-          onChange(outputData);
-        });
-      },
-      data: myData,
-    });
-  }, []);
+      setEditorInstance(editor);
+
+  },[])
+  
 
   useEffect(() => {
-    if (ejInstance.current === null) {
-      initializeEditor(); 
+    
+    if (editorInstance){
+      editorInstance.isReady.then(() => {
+        editorInstance.render(defaultData);
+      });
+    }else {
+      initializeEditor();
     }
 
+    // Cleanup on unmount
     return () => {
-      if (ejInstance.current) {
-        ejInstance?.current?.destroy();
-        ejInstance.current = null;
+      if (editorInstance) {
+        editorInstance.destroy();
       }
     };
-  }, []);
+  }, [defaultData]);
 
-  return <div className="p-2" id="editorjs"></div>;
+
+  return <div ref={editorContainer} />;
 }

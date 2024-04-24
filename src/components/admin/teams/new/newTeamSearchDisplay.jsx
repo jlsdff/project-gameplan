@@ -27,7 +27,7 @@ export default function NewTeamSearchDisplay({
         radius: "full",
       },
     ];
-  }, []);
+  }, [addPlayer]);
 
   if (loading) {
     return (

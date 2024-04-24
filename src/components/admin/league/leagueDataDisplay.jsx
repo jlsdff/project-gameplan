@@ -53,11 +53,11 @@ export default function LeagueDataDisplay({ searchedLeagues }) {
     const value = e.target.value;
     if (value == limitPerPage[0]) return;
     setLimitPerPage([value]);
-  }, []);
+  }, [limitPerPage]);
 
   const handleEditRow = useCallback(async (id) => {
     router.push(`/admin/dashboard/leagues/new?id=${id}`);
-  });
+  },[router]);
 
   const handleDeleteRow = useCallback(async (id) => {
     deleteLeague(id)
@@ -67,7 +67,7 @@ export default function LeagueDataDisplay({ searchedLeagues }) {
       .catch((error) => {
         console.error(error);
       });
-  });
+  },[]);
 
   const renderCell = useCallback((item, key) => {
     switch (key) {
@@ -155,7 +155,7 @@ export default function LeagueDataDisplay({ searchedLeagues }) {
           </div>
         );
     }
-  }, []);
+  }, [fetchLeagues, handleEditRow, handleDeleteRow]);
 
   const fetchLeagues = useCallback(async () => {
     setIsFetchingData(true);
@@ -184,7 +184,7 @@ export default function LeagueDataDisplay({ searchedLeagues }) {
 
     setRows(data);
     setIsFetchingData(false);
-  }, [limitPerPage, currentPage]);
+  }, [limitPerPage, currentPage, lastSnapshots]);
 
   useEffect(() => {
     
@@ -195,7 +195,7 @@ export default function LeagueDataDisplay({ searchedLeagues }) {
       return;
     }
     fetchLeagues();    
-  }, [limitPerPage, currentPage, fetchLeagues, searchedLeagues]);
+  }, [limitPerPage, currentPage, searchedLeagues, fetchLeagues]);
 
   return (
     <>

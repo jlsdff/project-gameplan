@@ -39,9 +39,24 @@ export default function DataDisplayTeams() {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const router = useRouter();
 
-  useEffect(() => {
-    fetchTeams();
-  }, [limitPerPage, currentPage]);
+  const editTeamHandler = useCallback((item, key) => {
+    router.push(`/admin/dashboard/teams/${item.key}`);
+  }, []);
+
+  const deleteTeamHandler = useCallback(async (item, key) => {
+    await deleteTeam(item.key)
+      .then(() => {
+        alert(
+          "Team deleted successfully",
+          "Team has been deleted successfully"
+        );
+        fetchTeams();
+      })
+      .catch((err) => {
+        console.error(err);
+        alert("Error deleting team", "There was an error deleting the team");
+      });
+  },[]);
 
   const fetchTeams = useCallback(async () => {
     setTotalPage(Math.ceil((await getTeamCount()) / limitPerPage));
@@ -78,7 +93,13 @@ export default function DataDisplayTeams() {
     });
 
     setRows(rows);
-  }, [limitPerPage, currentPage]);
+  }, [limitPerPage, currentPage, editTeamHandler, deleteTeamHandler]);
+
+
+
+  useEffect(() => {
+    fetchTeams();
+  }, [limitPerPage, currentPage, fetchTeams]);
 
   const renderCell = useCallback((item, key) => {
     switch (key) {
@@ -107,25 +128,6 @@ export default function DataDisplayTeams() {
           );
         });
     }
-  }, []);
-
-  const editTeamHandler = useCallback((item, key) => {
-    router.push(`/admin/dashboard/teams/${item.key}`);
-  }, []);
-
-  const deleteTeamHandler = useCallback(async (item, key) => {
-    await deleteTeam(item.key)
-      .then(() => {
-        alert(
-          "Team deleted successfully",
-          "Team has been deleted successfully"
-        );
-        fetchTeams();
-      })
-      .catch((err) => {
-        console.error(err);
-        alert("Error deleting team", "There was an error deleting the team");
-      });
   }, []);
 
   const searchTeamNameHandler = useCallback(async (value) => {
@@ -167,7 +169,7 @@ export default function DataDisplayTeams() {
         console.error(err);
         alert("Error searching team", "There was an error searching the team");
       });
-  }, []);
+  }, [deleteTeamHandler, editTeamHandler]);
 
   const selectedRowKeysHandler = useCallback((key) => {
     // TODO: Filter selectedRowKeys
