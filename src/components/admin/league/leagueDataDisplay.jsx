@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import {
   Select,
   SelectItem,
@@ -34,7 +34,6 @@ const totalRowsChoices = [
   { value: 10, label: "10" },
   { value: 20, label: "20" },
   { value: 50, label: "50" },
-  { value: 100, label: "100" },
 ];
 
 export default function LeagueDataDisplay({ searchedLeagues }) {
@@ -42,12 +41,42 @@ export default function LeagueDataDisplay({ searchedLeagues }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const [isFetchingData, setIsFetchingData] = useState(true);
-  const [lastSnapshots, setLastSnapshots] = useState({});
+  // const [lastSnapshots, setLastSnapshots] = useState({});
+  const lastSnapshots = useRef({});
 
   const [rows, setRows] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
   const router = useRouter();
+
+  const fetchLeagues = useCallback(async () => {
+    setIsFetchingData(true);
+  
+    const limit = Number.parseInt(limitPerPage[0]);
+    const current = currentPage;
+    const totalLeagues = await getLeagueSize();
+    setTotalPage(Math.ceil(totalLeagues / limit));
+  
+    const snapshot = await getLeaguesByPage(
+      current,
+      limit,
+      lastSnapshots.current[currentPage - 1]
+    );
+    const data = snapshot.docs.map((doc) => {
+      return {
+        id: doc.id,
+        ...doc.data(),
+      };
+    });
+  
+    lastSnapshots.current = {
+      ...lastSnapshots.current,
+      [currentPage]: snapshot.docs[snapshot.docs.length - 1] || null,
+    };
+  
+    setRows(data);
+    setIsFetchingData(false);
+  }, [limitPerPage, currentPage]);
 
   const handleLimitPerPageChange = useCallback((e) => {
     const value = e.target.value;
@@ -67,7 +96,8 @@ export default function LeagueDataDisplay({ searchedLeagues }) {
       .catch((error) => {
         console.error(error);
       });
-  },[]);
+  },[fetchLeagues]);
+
 
   const renderCell = useCallback((item, key) => {
     switch (key) {
@@ -157,35 +187,6 @@ export default function LeagueDataDisplay({ searchedLeagues }) {
     }
   }, [fetchLeagues, handleEditRow, handleDeleteRow]);
 
-  const fetchLeagues = useCallback(async () => {
-    setIsFetchingData(true);
-
-    const limit = Number.parseInt(limitPerPage[0]);
-    const current = currentPage;
-    const totalLeagues = await getLeagueSize();
-    setTotalPage(Math.ceil(totalLeagues / limit));
-
-    const snapshot = await getLeaguesByPage(
-      current,
-      limit,
-      lastSnapshots[currentPage - 1]
-    );
-    const data = snapshot.docs.map((doc) => {
-      return {
-        id: doc.id,
-        ...doc.data(),
-      };
-    });
-
-    setLastSnapshots((prev) => ({
-      ...prev,
-      [currentPage]: snapshot.docs[snapshot.docs.length - 1] || null,
-    }));
-
-    setRows(data);
-    setIsFetchingData(false);
-  }, [limitPerPage, currentPage, lastSnapshots]);
-
   useEffect(() => {
     
     if (searchedLeagues.length > 0) {
@@ -195,7 +196,8 @@ export default function LeagueDataDisplay({ searchedLeagues }) {
       return;
     }
     fetchLeagues();    
-  }, [limitPerPage, currentPage, searchedLeagues, fetchLeagues]);
+
+  }, [fetchLeagues, searchedLeagues]);
 
   return (
     <>
