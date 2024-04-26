@@ -7,10 +7,12 @@ import {
   AutocompleteItem,
   Input,
   TimeInput,
+  Button,
 } from "@nextui-org/react";
 import useFetchLeague from "./fetchLeague";
 import useTeamByName from "@/hooks/useTeamByName";
 import { getPlayerById } from "@/utils/playerAPI";
+import GameStats from "./gameStats";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -20,29 +22,106 @@ const reducer = (state, action) => {
         mainData: action.payload,
       };
     case "PLAYERS":
-
       const { teamSide, players } = action.payload;
 
-      if(teamSide === "teamA") {
+      if (teamSide === "teamA") {
         return {
           ...state,
           players: {
             ...state.players,
             teamA: players,
-          }
-        }
-      }else if( teamSide === "teamB") {
+          },
+          stats: {
+            teamB: [...state.stats.teamB],
+            teamA: players.map((player, index) => ({
+              id: player.id,
+              points: 0,
+              rebounds: 0,
+              assists: 0,
+              steals: 0,
+              blocks: 0,
+              turnovers: 0,
+              fouls: 0,
+              twoPointsMade: 0,
+              twoPointsAttempted: 0,
+              threePointsMade: 0,
+              threePointsAttempted: 0,
+              freeThrowsMade: 0,
+              freeThrowsAttempted: 0,
+            })),
+          },
+        };
+      } else if (teamSide === "teamB") {
         return {
           ...state,
           players: {
             ...state.players,
             teamB: players,
-          }
-        }
+          },
+          stats: {
+            teamA: [...state.stats.teamA],
+            teamB: players.map((player, index) => ({
+              id: player.id,
+              points: 0,
+              rebounds: 0,
+              assists: 0,
+              steals: 0,
+              blocks: 0,
+              turnovers: 0,
+              fouls: 0,
+              twoPointsMade: 0,
+              twoPointsAttempted: 0,
+              threePointsMade: 0,
+              threePointsAttempted: 0,
+              freeThrowsMade: 0,
+              freeThrowsAttempted: 0,
+            })),
+          },
+        };
       } else {
         return state;
       }
-      
+
+    case "STATS":
+
+      const { playerId, stats, teamSide: side } = action.payload;
+      console.log(action.payload)
+
+      if ( side === "teamA") {
+        return {
+          ...state,
+          stats: {
+            teamB: [...state.stats.teamB],
+            teamA: state.stats.teamA.map( player => {
+              if(player.id === playerId) {
+                return {
+                  ...player,
+                  ...stats
+                }
+              }
+              return player;
+            })
+          }
+        }
+      } else if( side === 'teamB') {
+        return {
+          ...state,
+          stats: {
+            teamA: [...state.stats.teamA],
+            teamB: state.stats.teamB.map( player => {
+              if(player.id === playerId) {
+                return {
+                  ...player,
+                  ...stats
+                }
+              }
+              return player;
+            })
+          }
+        }
+      }else {
+        return state;
+      }
 
     default:
       return state;
@@ -122,19 +201,18 @@ export default function NewGame() {
     [setLeagueField]
   );
 
-  const handlePlayerSelection = useCallback( async (teamSide, team)=> {
-    
-    const players = await team.players.map( async (player) => {
-      const playerData = await getPlayerById(player).then( res => {
+  const handlePlayerSelection = useCallback(async (teamSide, team) => {
+    const players = await team.players.map(async (player) => {
+      const playerData = await getPlayerById(player).then((res) => {
         return {
           id: res.id,
-          ...res.data()
-        }
-      })
+          ...res.data(),
+        };
+      });
       return playerData;
-    })
+    });
 
-    Promise.all(players).then( res => {
+    Promise.all(players).then((res) => {
       setMainData({
         type: "PLAYERS",
         payload: {
@@ -142,8 +220,8 @@ export default function NewGame() {
           players: res,
         },
       });
-    })
-  },[])
+    });
+  }, []);
 
   return (
     <>
@@ -203,10 +281,10 @@ export default function NewGame() {
             setTeamA((prev) => {
               const team = teamA.results.find((team) => team.id === key) || {};
 
-              if(team.id){
-                handlePlayerSelection("teamA", team)
+              if (team.id) {
+                handlePlayerSelection("teamA", team);
               }
-              
+
               return {
                 ...prev,
                 selectedValue: team.teamName || "",
@@ -242,10 +320,10 @@ export default function NewGame() {
             setTeamB((prev) => {
               const team = teamB.results.find((team) => team.id === key) || {};
 
-              if(team.id) {
-                handlePlayerSelection("teamB", team)
+              if (team.id) {
+                handlePlayerSelection("teamB", team);
               }
-              
+
               return {
                 ...prev,
                 selectedValue: team.teamName || "",
@@ -278,8 +356,28 @@ export default function NewGame() {
         />
       </div>
 
-      <h2>Stats</h2>
-      <div></div>
+      <h2 className="my-4 text-lg font-bold md:text-xl">Stats</h2>
+      <div>
+        <GameStats
+          teamA={{
+            teamData: teamA.selectedObj,
+            players: mainData.players.teamA,
+          }}
+          teamB={{
+            teamData: teamB.selectedObj,
+            players: mainData.players.teamB,
+          }}
+          setData={setMainData}
+        />
+      </div>
+      <div className="flex items-center justify-center">
+        <Button color="primary" variant="solid" size="md" className="mt-4">
+          Save Game
+        </Button>
+        <Button color="primary" variant="light" size="md" className="mt-4 ml-2">
+          Cancel
+        </Button>
+      </div>
     </>
   );
 }
