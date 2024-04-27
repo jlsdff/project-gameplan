@@ -42,5 +42,6 @@ export const analytics = () => {
 };
 
 export const FieldValue = firebase.firestore.FieldValue;
+export const Timestamp = firebase.firestore.Timestamp;
 
 export { auth, firestore, storage };

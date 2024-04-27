@@ -2,6 +2,10 @@ import "@/styles/globals.css";
 import { Providers } from "@/providers/provider";
 import { montserrat } from "@/components/fonts";
 
+export const metadata = {
+  title: "Project:Gameplan",
+  description: "Amateur Basketball League",
+};
 
 export default function RootLayout({ children }) {
   return (
