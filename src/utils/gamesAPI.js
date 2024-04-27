@@ -36,6 +36,7 @@ export const createGame = async (gameData) => {
       .collection("games")
       .doc(gameData.doc)
       .set({
+        doc: gameData.doc,
         number: +gameData.gameNumber,
         time: Timestamp.fromDate(
           new Date(

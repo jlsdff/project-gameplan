@@ -79,62 +79,62 @@ export default function StatsTable({ teamData, players, setData, mainData }) {
               <td className="px-2 py-4">{`${player.lastname}`}</td>
               <td className="px-2 py-4" >
                 <Input id="input-rebounds" type="number" onValueChange={(value)=>{ 
-                  handleInputChange({rebounds: value}, player.id)
+                  handleInputChange({ rebounds: +value }, player.id);
                 }} />
               </td>
               <td className="px-2 py-4">
                 <Input id="input-assist" type="number" onValueChange={(value)=> {
-                  handleInputChange({assists: value}, player.id)
+                  handleInputChange({assists: +value}, player.id)
                 }}/>
               </td>
               <td className="px-2 py-4">
                 <Input id="input-steals" type="number" onValueChange={(value) => {
-                  handleInputChange({steals: value}, player.id)
+                  handleInputChange({steals: +value}, player.id)
                 }} />
               </td>
               <td className="px-2 py-4">
                 <Input id="input-blocks" type="number" onValueChange={(value) => {
-                  handleInputChange({blocks: value}, player.id)
+                  handleInputChange({blocks: +value}, player.id)
                 }} />
               </td>
               <td className="px-2 py-4">
                 <Input id="input-turnovers" type="number" onValueChange={(value) => {
-                  handleInputChange({turnovers: value}, player.id)
+                  handleInputChange({turnovers: +value}, player.id)
                 }} />
               </td>
               <td className="px-2 py-4">
                 <Input id="input-fouls" type="number" onValueChange={(value) => {
-                  handleInputChange({fouls: value}, player.id)
+                  handleInputChange({fouls: +value}, player.id)
                 }} />
               </td>
               <td className="px-2 py-4">
                 <Input id="input-2made" type="number" onValueChange={(value) => {
-                  handleInputChange({twoPointsMade: value}, player.id)
+                  handleInputChange({twoPointsMade: +value}, player.id)
                 }} />
               </td>
               <td className="px-2 py-4">
                 <Input id="input-2attempt" type="number" onValueChange={(value) => {
-                  handleInputChange({twoPointsAttempted: value}, player.id)
+                  handleInputChange({twoPointsAttempted: +value}, player.id)
                 }} />
               </td>
               <td className="px-2 py-4">
                 <Input id="input-3made" type="number" onValueChange={(value) => {
-                  handleInputChange({threePointsMade: value}, player.id)
+                  handleInputChange({threePointsMade: +value}, player.id)
                 }} />
               </td>
               <td className="px-2 py-4">
                 <Input id="input-3attempt" type="number" onValueChange={(value) => {
-                  handleInputChange({threePointsAttempted: value}, player.id)
+                  handleInputChange({threePointsAttempted: +value}, player.id)
                 }} />
               </td>
               <td className="px-2 py-4">
                 <Input id="input-ftmade" type="number" onValueChange={(value) => {
-                  handleInputChange({freeThrowsMade: value}, player.id)
+                  handleInputChange({freeThrowsMade: +value}, player.id)
                 }} />
               </td>
               <td className="px-2 py-4">
                 <Input id="input-ftattempt" type="number" onValueChange={(value) => {
-                  handleInputChange({freeThrowsAttempted: value}, player.id)
+                  handleInputChange({freeThrowsAttempted: +value}, player.id)
                 }}/>
               </td>
             </tr>
