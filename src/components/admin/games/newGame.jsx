@@ -1,6 +1,6 @@
 "use client";
 import React, { useCallback, useReducer, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   Autocomplete,
   AutocompleteSection,
@@ -13,6 +13,8 @@ import useFetchLeague from "./fetchLeague";
 import useTeamByName from "@/hooks/useTeamByName";
 import { getPlayerById } from "@/utils/playerAPI";
 import GameStats from "./gameStats";
+import { getTeamTotalStats } from "@/helpers/getTotalPoints";
+import { createGame } from "@/utils/gamesAPI";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -35,7 +37,6 @@ const reducer = (state, action) => {
             teamB: [...state.stats.teamB],
             teamA: players.map((player, index) => ({
               id: player.id,
-              points: 0,
               rebounds: 0,
               assists: 0,
               steals: 0,
@@ -62,7 +63,6 @@ const reducer = (state, action) => {
             teamA: [...state.stats.teamA],
             teamB: players.map((player, index) => ({
               id: player.id,
-              points: 0,
               rebounds: 0,
               assists: 0,
               steals: 0,
@@ -83,43 +83,42 @@ const reducer = (state, action) => {
       }
 
     case "STATS":
-
       const { playerId, stats, teamSide: side } = action.payload;
-      console.log(action.payload)
+      console.log(action.payload);
 
-      if ( side === "teamA") {
+      if (side === "teamA") {
         return {
           ...state,
           stats: {
             teamB: [...state.stats.teamB],
-            teamA: state.stats.teamA.map( player => {
-              if(player.id === playerId) {
+            teamA: state.stats.teamA.map((player) => {
+              if (player.id === playerId) {
                 return {
                   ...player,
-                  ...stats
-                }
+                  ...stats,
+                };
               }
               return player;
-            })
-          }
-        }
-      } else if( side === 'teamB') {
+            }),
+          },
+        };
+      } else if (side === "teamB") {
         return {
           ...state,
           stats: {
             teamA: [...state.stats.teamA],
-            teamB: state.stats.teamB.map( player => {
-              if(player.id === playerId) {
+            teamB: state.stats.teamB.map((player) => {
+              if (player.id === playerId) {
                 return {
                   ...player,
-                  ...stats
-                }
+                  ...stats,
+                };
               }
               return player;
-            })
-          }
-        }
-      }else {
+            }),
+          },
+        };
+      } else {
         return state;
       }
 
@@ -143,7 +142,8 @@ const initialState = {
 export default function NewGame() {
   const params = useSearchParams();
   const id = params.get("id");
-
+  const router = useRouter();
+  
   const [mainData, setMainData] = useReducer(reducer, initialState);
 
   const [leagueField, setLeagueField] = useState({
@@ -222,6 +222,45 @@ export default function NewGame() {
       });
     });
   }, []);
+
+  const handleSaveButton = useCallback(() => {
+    const data = {
+      doc: `${leagueField.selectedObj.title
+        .toLowerCase()
+        .split(" ")
+        .join("-")}-${gameNumber}`,
+      league: leagueField.selectedObj,
+      teamA: teamA.selectedObj,
+      teamB: teamB.selectedObj,
+      gameTime,
+      gameNumber,
+      stats: mainData.stats,
+    };
+
+    const totalStats = {
+      teamAStats: getTeamTotalStats(mainData.stats.teamA),
+      teamBStats: getTeamTotalStats(mainData.stats.teamB),
+    };
+
+    console.log({...data, ...totalStats})
+    createGame({ ...data, ...totalStats })
+      .then(()=>{
+        alert("Game Saved")
+        // TODO: Redirect to games page
+      })
+      .catch((err) => {
+        alert("Error saving game");
+        console.error(err)
+      });
+
+  }, [
+    gameNumber,
+    gameTime,
+    leagueField.selectedObj,
+    mainData.stats,
+    teamA.selectedObj,
+    teamB.selectedObj,
+  ]);
 
   return (
     <>
@@ -359,6 +398,7 @@ export default function NewGame() {
       <h2 className="my-4 text-lg font-bold md:text-xl">Stats</h2>
       <div>
         <GameStats
+          mainData={mainData}
           teamA={{
             teamData: teamA.selectedObj,
             players: mainData.players.teamA,
@@ -371,7 +411,13 @@ export default function NewGame() {
         />
       </div>
       <div className="flex items-center justify-center">
-        <Button color="primary" variant="solid" size="md" className="mt-4">
+        <Button
+          color="primary"
+          variant="solid"
+          size="md"
+          className="mt-4"
+          onClick={handleSaveButton}
+        >
           Save Game
         </Button>
         <Button color="primary" variant="light" size="md" className="mt-4 ml-2">

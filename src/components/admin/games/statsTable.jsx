@@ -10,7 +10,7 @@ import {
 } from "@nextui-org/react";
 import React, { useCallback, useMemo } from "react";
 
-export default function StatsTable({ teamData, players, setData }) {
+export default function StatsTable({ teamData, players, setData, mainData }) {
 
   const { teamSide } = teamData;
   
@@ -84,7 +84,7 @@ export default function StatsTable({ teamData, players, setData }) {
               </td>
               <td className="px-2 py-4">
                 <Input id="input-assist" type="number" onValueChange={(value)=> {
-                  handleInputChange({assist: value}, player.id)
+                  handleInputChange({assists: value}, player.id)
                 }}/>
               </td>
               <td className="px-2 py-4">
