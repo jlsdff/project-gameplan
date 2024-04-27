@@ -143,7 +143,7 @@ export default function NewGame() {
   const params = useSearchParams();
   const id = params.get("id");
   const router = useRouter();
-  
+
   const [mainData, setMainData] = useReducer(reducer, initialState);
 
   const [leagueField, setLeagueField] = useState({
@@ -242,22 +242,22 @@ export default function NewGame() {
       teamBStats: getTeamTotalStats(mainData.stats.teamB),
     };
 
-    console.log({...data, ...totalStats})
+    console.log({ ...data, ...totalStats });
     createGame({ ...data, ...totalStats })
-      .then(()=>{
-        alert("Game Saved")
-        // TODO: Redirect to games page
+      .then(() => {
+        alert("Game Saved");
+        router.push("/admin/dashboard/games");
       })
       .catch((err) => {
         alert("Error saving game");
-        console.error(err)
+        console.error(err);
       });
-
   }, [
     gameNumber,
     gameTime,
     leagueField.selectedObj,
     mainData.stats,
+    router,
     teamA.selectedObj,
     teamB.selectedObj,
   ]);
