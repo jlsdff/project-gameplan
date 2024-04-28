@@ -122,6 +122,38 @@ const reducer = (state, action) => {
         return state;
       }
 
+    case 'REMOVE_PLAYER':
+
+      const { teamSide: teamside, id } = action.payload;
+
+      if (teamside === 'teamA') {
+        return {
+          ...state,
+          players: {
+            ...state.players,
+            teamA: state.players.teamA.filter(player => player.id !== id),
+          },
+          stats: {
+            ...state.stats,
+            teamA: state.stats.teamA.filter(player => player.id !== id)
+          }
+        }
+      } else if (teamside === 'teamB'){
+        return {
+          ...state,
+          players: {
+            ...state.players,
+            teamB: state.players.teamB.filter(player => player.id !== id),
+          },
+          stats: {
+            ...state.stats,
+            teamB: state.stats.teamB.filter(player => player.id !== id)
+          }
+        }
+      }else {
+        return state
+      }
+
     default:
       return state;
   }

@@ -7,17 +7,23 @@ import {
   TableBody,
   TableCell,
   Input,
+  Tooltip,
+  chip,
+  Chip,
 } from "@nextui-org/react";
 import React, { useCallback, useMemo } from "react";
+import XIcon from "@/assets/xIcon";
 
 export default function StatsTable({ teamData, players, setData, mainData }) {
-
   const { teamSide } = teamData;
-  
-  const handleInputChange = useCallback((stats, playerId) => {
-    setData({type: "STATS", payload: {playerId, stats, teamSide}})
-  },[setData, teamSide])
-  
+
+  const handleInputChange = useCallback(
+    (stats, playerId) => {
+      setData({ type: "STATS", payload: { playerId, stats, teamSide } });
+    },
+    [setData, teamSide]
+  );
+
   return (
     <Card className="w-full p-4 overflow-auto">
       <table className="min-w-full text-left whitespace-no-wrap table-auto">
@@ -75,67 +81,143 @@ export default function StatsTable({ teamData, players, setData, mainData }) {
         <tbody className="min-h-[100px]">
           {players.map((player) => (
             <tr key={player.id}>
-              <td className="px-2 py-4">{player.number}</td>
+              <td className="px-2 py-4">
+                  <Tooltip content="DNP?">
+                    <Chip
+                      className="cursor-pointer"
+                      color="primary"
+                      size="small"
+                      onClick={() => {
+                        setData({
+                          type: "REMOVE_PLAYER",
+                          payload: { id: player.id, teamSide },
+                        });
+                      }}
+                    >
+                      <span className="flex items-center justify-center">
+                        <XIcon className="fill-slate-400" />
+                        {player.number}
+                      </span>
+                    </Chip>
+                  </Tooltip>
+              </td>
               <td className="px-2 py-4">{`${player.lastname}`}</td>
-              <td className="px-2 py-4" >
-                <Input id="input-rebounds" type="number" onValueChange={(value)=>{ 
-                  handleInputChange({ rebounds: +value }, player.id);
-                }} />
+              <td className="px-2 py-4">
+                <Input
+                  id="input-rebounds"
+                  type="number"
+                  onValueChange={(value) => {
+                    handleInputChange({ rebounds: +value }, player.id);
+                  }}
+                />
               </td>
               <td className="px-2 py-4">
-                <Input id="input-assist" type="number" onValueChange={(value)=> {
-                  handleInputChange({assists: +value}, player.id)
-                }}/>
+                <Input
+                  id="input-assist"
+                  type="number"
+                  onValueChange={(value) => {
+                    handleInputChange({ assists: +value }, player.id);
+                  }}
+                />
               </td>
               <td className="px-2 py-4">
-                <Input id="input-steals" type="number" onValueChange={(value) => {
-                  handleInputChange({steals: +value}, player.id)
-                }} />
+                <Input
+                  id="input-steals"
+                  type="number"
+                  onValueChange={(value) => {
+                    handleInputChange({ steals: +value }, player.id);
+                  }}
+                />
               </td>
               <td className="px-2 py-4">
-                <Input id="input-blocks" type="number" onValueChange={(value) => {
-                  handleInputChange({blocks: +value}, player.id)
-                }} />
+                <Input
+                  id="input-blocks"
+                  type="number"
+                  onValueChange={(value) => {
+                    handleInputChange({ blocks: +value }, player.id);
+                  }}
+                />
               </td>
               <td className="px-2 py-4">
-                <Input id="input-turnovers" type="number" onValueChange={(value) => {
-                  handleInputChange({turnovers: +value}, player.id)
-                }} />
+                <Input
+                  id="input-turnovers"
+                  type="number"
+                  onValueChange={(value) => {
+                    handleInputChange({ turnovers: +value }, player.id);
+                  }}
+                />
               </td>
               <td className="px-2 py-4">
-                <Input id="input-fouls" type="number" onValueChange={(value) => {
-                  handleInputChange({fouls: +value}, player.id)
-                }} />
+                <Input
+                  id="input-fouls"
+                  type="number"
+                  onValueChange={(value) => {
+                    handleInputChange({ fouls: +value }, player.id);
+                  }}
+                />
               </td>
               <td className="px-2 py-4">
-                <Input id="input-2made" type="number" onValueChange={(value) => {
-                  handleInputChange({twoPointsMade: +value}, player.id)
-                }} />
+                <Input
+                  id="input-2made"
+                  type="number"
+                  onValueChange={(value) => {
+                    handleInputChange({ twoPointsMade: +value }, player.id);
+                  }}
+                />
               </td>
               <td className="px-2 py-4">
-                <Input id="input-2attempt" type="number" onValueChange={(value) => {
-                  handleInputChange({twoPointsAttempted: +value}, player.id)
-                }} />
+                <Input
+                  id="input-2attempt"
+                  type="number"
+                  onValueChange={(value) => {
+                    handleInputChange(
+                      { twoPointsAttempted: +value },
+                      player.id
+                    );
+                  }}
+                />
               </td>
               <td className="px-2 py-4">
-                <Input id="input-3made" type="number" onValueChange={(value) => {
-                  handleInputChange({threePointsMade: +value}, player.id)
-                }} />
+                <Input
+                  id="input-3made"
+                  type="number"
+                  onValueChange={(value) => {
+                    handleInputChange({ threePointsMade: +value }, player.id);
+                  }}
+                />
               </td>
               <td className="px-2 py-4">
-                <Input id="input-3attempt" type="number" onValueChange={(value) => {
-                  handleInputChange({threePointsAttempted: +value}, player.id)
-                }} />
+                <Input
+                  id="input-3attempt"
+                  type="number"
+                  onValueChange={(value) => {
+                    handleInputChange(
+                      { threePointsAttempted: +value },
+                      player.id
+                    );
+                  }}
+                />
               </td>
               <td className="px-2 py-4">
-                <Input id="input-ftmade" type="number" onValueChange={(value) => {
-                  handleInputChange({freeThrowsMade: +value}, player.id)
-                }} />
+                <Input
+                  id="input-ftmade"
+                  type="number"
+                  onValueChange={(value) => {
+                    handleInputChange({ freeThrowsMade: +value }, player.id);
+                  }}
+                />
               </td>
               <td className="px-2 py-4">
-                <Input id="input-ftattempt" type="number" onValueChange={(value) => {
-                  handleInputChange({freeThrowsAttempted: +value}, player.id)
-                }}/>
+                <Input
+                  id="input-ftattempt"
+                  type="number"
+                  onValueChange={(value) => {
+                    handleInputChange(
+                      { freeThrowsAttempted: +value },
+                      player.id
+                    );
+                  }}
+                />
               </td>
             </tr>
           ))}
