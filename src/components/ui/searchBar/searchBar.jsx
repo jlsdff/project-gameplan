@@ -1,29 +1,41 @@
-import React, { useState } from "react";
+"use client";
+import React, { useCallback, useState } from "react";
 import { Input, Button } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 import SearchIcon from "@/assets/searchIcon";
 
-export default function SearchBar({
+export default function SearchBarClient({
   label,
   placeholder,
-  onSearch,
+  classNames,
+  searchUrl,
   initialValue,
-  className,
-  ...props
+  inputProps,
+  buttonProps,
 }) {
+  const router = useRouter();
   const [search, setSearch] = useState(initialValue || "");
 
+  const onSubmit = useCallback(() => {
+    router.push(`${searchUrl}${search}`);
+  }, [search, router, searchUrl]);
+
   return (
-    <div className={`flex items-center justify-center gap-2 ${className}`}>
+    <div className={`flex items-center justify-center gap-2 ${classNames?.container || "" }`}>
       <Input
+        className={`w-full ${classNames?.input || ""}`}
         label={label || null}
         placeholder={placeholder || null}
         onValueChange={(value) => setSearch(value)}
         value={search}
+        {...inputProps}
       />
-      <Button 
+      <Button
+        className={`${classNames?.button || ""}`}
         isIconOnly
         isDisabled={!search}
-        onClick={() => onSearch(search)}
+        onClick={() => onSubmit(search)}
+        {...buttonProps}
       >
         <SearchIcon />
       </Button>

@@ -47,9 +47,9 @@ export default function Page() {
 
   return (
     <>
-      <section className="px-8 py-4 sm:py-8 sm:px-16  ">
-        <h1 className="text-xl sm:text-2xl mb-4 font-bold">Recent Games</h1>
-        <div className="flex gap-4 flex-wrap ">
+      <section className="px-8 py-4 sm:py-8 sm:px-16 ">
+        <h1 className="mb-4 text-xl font-bold sm:text-2xl">Recent Games</h1>
+        <div className="flex flex-wrap gap-4 ">
           {games.map((game, index) => (
             <GameBox key={index} {...game} />
           ))}

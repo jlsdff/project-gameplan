@@ -13,6 +13,7 @@ export default function GamesDataDisplay() {
   return (
     <>
       <h1 className="text-xl md:text-2xl">Recent Games</h1>
+      
       <div className="flex items-center justify-start gap-2">
         <Button variant="solid" color="primary" isIconOnly size="sm" onPress={()=>{
           router.push("/admin/dashboard/games/new")
@@ -34,6 +35,7 @@ export default function GamesDataDisplay() {
           ))}
         </Select>
       </div>
+
     </>
   );
 }
