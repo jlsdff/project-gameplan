@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React from "react";
 import {
   Table,
@@ -7,6 +7,7 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  Tooltip,
 } from "@nextui-org/react";
 import renderPlayerCell from "@/helpers/players/renderPlayerCell";
 import { useRouter } from "next/navigation";
@@ -17,11 +18,15 @@ export default function TableClient({ columns, items }) {
   const routeToPlayer = (id) => {
     router.push(`/players/${id}`);
   };
-
+  // items.map(item => console.log(item.gameRecords))
   return (
     <Table removeWrapper aria-label="Data Display Table for Players">
       <TableHeader columns={columns}>
-        {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
+        {(column) => (
+          <TableColumn key={column.key}>
+            <Tooltip content={column.description}>{column.label}</Tooltip>
+          </TableColumn>
+        )}
       </TableHeader>
       <TableBody items={items}>
         {(item) => (
@@ -31,7 +36,7 @@ export default function TableClient({ columns, items }) {
             onClick={() => routeToPlayer(item.id)}
           >
             {(columnKey) => (
-              <TableCell >{renderPlayerCell(item, columnKey)}</TableCell>
+              <TableCell>{renderPlayerCell(item, columnKey)}</TableCell>
             )}
           </TableRow>
         )}

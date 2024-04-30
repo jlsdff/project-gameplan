@@ -55,6 +55,8 @@ export async function createTeam(team) {
   if(!team.teamName || !team.teamAbbr || !team.teamLogo) {
     throw new Error("Please fill out all fields");
   }
+
+  
   
   return await uploadImage(team.teamLogo)
     .then((res) => {
@@ -75,6 +77,7 @@ export async function createTeam(team) {
 
 // PUT FUNCTIONS
 export async function updateTeam(id, team) {
+  
   return await firestore.collection("teams").doc(id).update(team, { merge: true });
 }
 

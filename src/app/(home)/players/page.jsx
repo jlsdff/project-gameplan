@@ -23,34 +23,14 @@ async function getData(params) {
 
     const proms = await getPlayersGameRecords(players).then((res) =>
       res.map((player) => {
-        const { gameRecords } = player;
-        console.log(gameRecords)
-        // return {
-        //   ...player,
-        //   ppg: ((gameRecords.reduce(
-        //     (acc, record) =>
-        //       acc +
-        //       record.twoPointsMade * 2 +
-        //       record.threePointsMade * 3 +
-        //       record.freeThrowsMade,
-        //     0
-        //   )) / gameRecords.length).toFixed(2),
-        //   apg: (
-        //     gameRecords.reduce((acc, record
-        //     ) => acc + record.assists, 0) / gameRecords.length
-        //   ).toFixed(2),
-        //   rpg: (
-        //     gameRecords.reduce((acc, record) => acc + record.rebounds, 0) /
-        //     gameRecords.length
-        //   ).toFixed(2),
-        // };
+        return {
+          ...player,
+        };
       })
     );
 
-    console.log(players);
-
     return {
-      players,
+      players: proms,
       playersCount: 1,
     };
   }
@@ -68,8 +48,16 @@ async function getData(params) {
     });
   });
 
+  const proms = await getPlayersGameRecords(players).then((res) =>
+    res.map((player) => {
+      return {
+        ...player,
+      };
+    })
+  );
+
   return {
-    players,
+    players: proms,
     playersCount,
   };
 }
@@ -81,22 +69,42 @@ export default async function Players({ searchParams }) {
     {
       key: "number",
       label: "#",
+      description: "Jersey Number",
     },
     {
       key: "player",
       label: "Player",
+      description: "Player Name",
     },
     {
       key: "PPG",
       label: "PPG",
+      description: "Points Per Game",
     },
     {
       key: "APG",
       label: "APG",
+      description: "Assists Per Game",
     },
     {
       key: "RPG",
       label: "RPG",
+      description: "Rebounds Per Game",
+    },
+    {
+      key: "SPG",
+      label: "SPG",
+      description: "Steals Per Game",
+    },
+    {
+      key: "BPG",
+      label: "BPG",
+      description: "Blocks Per Game",
+    },
+    {
+      key: "FG%",
+      label: "FG%",
+      description: "Field Goal Percentage",
     },
   ];
 
@@ -113,7 +121,9 @@ export default async function Players({ searchParams }) {
       </div>
       <Divider className="my-2" />
       {/* Table */}
-      <TableClient columns={columns} items={players} />
+      <div className="w-full overflow-x-scroll">
+        <TableClient columns={columns} items={players} />
+      </div>
       {/* Pagination */}
       <div className="flex items-center justify-center mt-2">
         <PaginationUI
