@@ -53,11 +53,11 @@ export const createGame = async (gameData) => {
         playerStats: gameData.stats,
         teamA: {
           id: gameData.teamA.id,
-          stats: gameData.teamAStats
+          stats: gameData.teamAStats,
         },
         teamB: {
           id: gameData.teamB.id,
-          stats: gameData.teamBStats
+          stats: gameData.teamBStats,
         },
       });
 
@@ -66,8 +66,26 @@ export const createGame = async (gameData) => {
       persistTeamAStats,
       persistTeamBStats,
       persisGame,
-    ])
+    ]);
   } catch (error) {
     console.error(error);
   }
+};
+
+export const getGameByDoc = async (doc) => {
+  return await firestore.collection("games").doc(doc).get()
+    .then(res => {
+      return {
+        id: res.id,
+        ...res.data()
+      }
+    })
+};
+
+export const getGamesByDocs = async (docs) => {
+  const games = docs.map(async (doc) => {
+    return await getGameByDoc(doc);
+  });
+
+  return await Promise.all(games);
 };

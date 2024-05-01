@@ -83,15 +83,17 @@ export async function getPlayerGamerecords(id) {
     .doc(id)
     .collection("gameRecords")
     .get()
-    .then((snap) => snap.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+    .then((snap) =>
+      snap.docs.map((doc) => ({ ...doc.data(), gameId: doc.id }))
+    );
 }
 
-export async function getPlayersGameRecords(players){
-  const promises = players.map(async(player) => {
+export async function getPlayersGameRecords(players) {
+  const promises = players.map(async (player) => {
     return {
       ...player,
-      gameRecords: await getPlayerGamerecords(player.id)
-    }
+      gameRecords: await getPlayerGamerecords(player.id),
+    };
   });
   return await Promise.all(promises);
 }
