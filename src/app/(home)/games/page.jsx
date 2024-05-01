@@ -43,6 +43,40 @@ export default function Page() {
       },
       url: "/games/3",
     },
+    {
+      teamA: {
+        name: "ONETECH",
+        score: 71,
+      },
+      teamB: {
+        name: "HOOPLIFE",
+        score: 61,
+      },
+      url: "/games/4",
+    },
+    {
+      teamA: {
+        name: "MAMBA",
+        score: 90,
+      },
+      teamB: {
+        name: "UNDERRATED",
+        score: 48,
+      },
+      url: "/games/5",
+    },
+    
+    {
+      teamA: {
+        name: "SWEESH",
+        score: 86,
+      },
+      teamB: {
+        name: "RC3 x MIDNIGHT HOOPS",
+        score: 72,
+      },
+      url: "/games/3",
+    },
   ];
 
   return (
