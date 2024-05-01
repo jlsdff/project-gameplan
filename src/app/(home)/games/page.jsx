@@ -43,13 +43,47 @@ export default function Page() {
       },
       url: "/games/3",
     },
+    {
+      teamA: {
+        name: "ONETECH",
+        score: 71,
+      },
+      teamB: {
+        name: "HOOPLIFE",
+        score: 61,
+      },
+      url: "/games/4",
+    },
+    {
+      teamA: {
+        name: "MAMBA",
+        score: 90,
+      },
+      teamB: {
+        name: "UNDERRATED",
+        score: 48,
+      },
+      url: "/games/5",
+    },
+    
+    {
+      teamA: {
+        name: "SWEESH",
+        score: 86,
+      },
+      teamB: {
+        name: "RC3 x MIDNIGHT HOOPS",
+        score: 72,
+      },
+      url: "/games/6",
+    },
   ];
 
   return (
     <>
-      <section className="px-8 py-4 sm:py-8 sm:px-16  ">
-        <h1 className="text-xl sm:text-2xl mb-4 font-bold">Recent Games</h1>
-        <div className="flex gap-4 flex-wrap ">
+      <section className="px-8 py-4 sm:py-8 sm:px-16 ">
+        <h1 className="mb-4 text-xl font-bold sm:text-2xl">Recent Games</h1>
+        <div className="flex flex-wrap gap-4 ">
           {games.map((game, index) => (
             <GameBox key={index} {...game} />
           ))}
