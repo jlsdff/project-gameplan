@@ -127,6 +127,7 @@ export default async function Players({ searchParams }) {
       {/* Pagination */}
       <div className="flex items-center justify-center mt-2">
         <PaginationUI
+          url="/players?page="
           totalPage={playersCount}
           currentPage={searchParams.page}
         />

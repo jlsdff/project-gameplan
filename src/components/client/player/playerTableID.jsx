@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useCallback, useMemo } from "react";
 import {
   Table,
   TableHeader,
@@ -20,20 +20,35 @@ export default function PlayerTableById({ games, playerId }) {
     return stats.find((stat) => stat.id === playerId);
   };
 
-  const findCurrentTeam = (game) => {
-    const teamAPlayers = game.teamA.data.players;
-    const teamBPlayers = game.teamB.data.players;
-    const currentTeam = teamAPlayers.find((player) => player === playerId)
-      ? { ...game.teamA.data, stats: game.teamA.stats }
-      : { ...game.teamB.data, stats: game.teamB.stats };
-    return {
-      currentTeam,
-      opposingTeam:
-        currentTeam === game.teamA
+  const findCurrentTeam = useCallback(
+    (game) => {
+      // const teamAPlayers = game.teamA.data.players;
+      // const teamBPlayers = game.teamB.data.players;
+      // const currentTeam = teamAPlayers.find((player) => player === playerId)
+      //   ? { ...game.teamA.data, stats: game.teamA.stats }
+      //   : { ...game.teamB.data, stats: game.teamB.stats };
+      // console.log("Current Team:",currentTeam)
+      // console.log("TEAM A", game.teamA)
+
+      const isTeamA = game.playerStats.teamA.some(
+        (playerStat) => playerStat.id === playerId
+      );
+
+      const currentTeam = isTeamA
+        ? {
+            ...game.teamA.data,
+            stats: game.teamA.stats,
+          }
+        : { ...game.teamB.data, stats: game.teamB.stats };
+      return {
+        currentTeam,
+        opposingTeam: isTeamA
           ? { ...game.teamB.data, stats: game.teamB.stats }
           : { ...game.teamA.data, stats: game.teamA.stats },
-    };
-  };
+      };
+    },
+    [playerId]
+  );
 
   const columns = [
     {
@@ -84,20 +99,21 @@ export default function PlayerTableById({ games, playerId }) {
   ];
 
   const toGame = (id) => {
-    router.push(`/games/${id}`)
+    router.push(`/games/${id}`);
   };
 
   const toTeam = (id) => {
-    router.push(`/teams/${id}`)
+    router.push(`/teams/${id}`);
   };
 
   const toLeague = (id) => {
-    router.push(`/leagues/${id}`)
+    router.push(`/leagues/${id}`);
   };
 
   const renderCell = (game, key) => {
     const currentStat = findPlayerStats(game);
     const { currentTeam, opposingTeam } = findCurrentTeam(game);
+    if (!currentTeam || !opposingTeam) return null;
     switch (key) {
       case "number":
         return <span>{game.number}</span>;
@@ -121,6 +137,7 @@ export default function PlayerTableById({ games, playerId }) {
         const fgp = ((totalMade / totalAttempts) * 100).toFixed(2);
         return <span>{`${fgp}%`}</span>;
       case "currentTeam":
+        console.log("Current Team:", currentTeam);
         return (
           <div
             className="flex items-center justify-start gap-2 cursor-pointer hover:underline"
@@ -131,6 +148,7 @@ export default function PlayerTableById({ games, playerId }) {
           >
             <User
               name={currentTeam.teamName}
+              description={currentTeam.teamAbbr}
               avatarProps={{
                 src: currentTeam.teamLogo,
                 showFallback: true,
@@ -152,7 +170,8 @@ export default function PlayerTableById({ games, playerId }) {
             className="flex items-center justify-start gap-2 cursor-pointer hover:underline"
             onClick={(e) => {
               e.stopPropagation();
-              toTeam(opposingTeam.id)}}
+              toTeam(opposingTeam.id);
+            }}
           >
             <User
               name={opposingTeam.teamName}
@@ -186,7 +205,7 @@ export default function PlayerTableById({ games, playerId }) {
           <span
             className="cursor-pointer hover:underline"
             onClick={(e) => {
-              e.stopPropagation()
+              e.stopPropagation();
               toLeague(game.leagueId);
             }}
           >

@@ -18,10 +18,15 @@ export default function SearchBarClient({
 
   const onSubmit = useCallback(() => {
     router.push(`${searchUrl}${search}`);
+    console.log(`${searchUrl}${search}`)
   }, [search, router, searchUrl]);
 
   return (
-    <div className={`flex items-center justify-center gap-2 ${classNames?.container || "" }`}>
+    <form
+      className={`flex items-center justify-center gap-2 ${
+        classNames?.container || ""
+      }`}
+    >
       <Input
         className={`w-full ${classNames?.input || ""}`}
         label={label || null}
@@ -34,11 +39,15 @@ export default function SearchBarClient({
         className={`${classNames?.button || ""}`}
         isIconOnly
         isDisabled={!search}
-        onClick={() => onSubmit(search)}
+        type="submit"
+        onClick={(e) => {
+          e.preventDefault();
+          onSubmit(search);
+        }}
         {...buttonProps}
       >
         <SearchIcon />
       </Button>
-    </div>
+    </form>
   );
 }

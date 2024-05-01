@@ -72,7 +72,6 @@ async function getPlayerData(params) {
     };
   });
   const gamesData = await Promise.all(gameCompleteData);
-  console.log(gamesData);
 
   return {
     ...player,
