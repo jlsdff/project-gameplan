@@ -269,7 +269,7 @@ export default async function Page({ params }) {
       </section>
       {/*  */}
       <section className="flex flex-col items-start justify-start gap-2 md:flex-row">
-        <div className="w-full mt-4 border-2 md:max-w-60 md:h-96 border-neutral-100">
+        <div className="w-full mt-4 md:max-w-60 md:h-96 ">
           <h2 className="text-xl font-bold">Players</h2>
           <ScrollShadow className="flex-col gap-2 mt-2 ">
             {team.players.map((player) => (
@@ -290,7 +290,7 @@ export default async function Page({ params }) {
         {/* RECENT GAMES */}
         <ScrollShadow
           id="recent-games"
-          className="w-full mt-4 overflow-x-scroll border-2 border-neutral-100 h-96"
+          className="w-full mt-4 overflow-x-scroll h-96"
         >
           <h2 className="text-xl font-bold">Recent Games</h2>
           <RecentGameTable games={team.games} teamId={id} />
