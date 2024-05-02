@@ -9,7 +9,6 @@ import PaginationUI from "@/components/ui/pagination";
 
 async function getTeams({ page, name }) {
   if (name) {
-    // TODO: get team by name
 
     const teams = await getTeamByName(name).then((snapshot) =>
       snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
