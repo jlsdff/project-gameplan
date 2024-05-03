@@ -18,6 +18,7 @@ import {
 } from "@nextui-org/react";
 import { getGamesByDocs } from "@/utils/gamesAPI";
 import PlayerTableById from "@/components/client/player/playerTableID";
+import Footer from "@/components/client/footer/Footer";
 
 async function getPlayerData(params) {
   const { id } = params;

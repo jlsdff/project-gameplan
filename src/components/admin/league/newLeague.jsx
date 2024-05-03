@@ -66,7 +66,7 @@ export default function NewLeague() {
     addedTeams: [],
     editorInstance: null,
   });
-
+  console.log(leagueState)
   const router = useRouter();
 
   const days = useMemo(
@@ -100,7 +100,7 @@ export default function NewLeague() {
 
       return teams;
     },
-    [leagueState.addedTeams]
+    []
   );
 
   useEffect(() => {
@@ -119,7 +119,7 @@ export default function NewLeague() {
           console.error(error);
         });
     }
-  }, [fetchTeamsByIds, searchParams]);
+  }, [searchParams]);
 
   
 

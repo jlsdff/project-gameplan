@@ -2,6 +2,7 @@ import React from "react";
 import { firestore } from "@/lib/firebase/firebase";
 import { Image, User, ScrollShadow, Divider, Link } from "@nextui-org/react";
 import RecentGameTable from "@/components/client/teams/recentGameTable";
+import Footer from "@/components/client/footer/Footer";
 
 async function getTeamData(params) {
   const { id } = params;

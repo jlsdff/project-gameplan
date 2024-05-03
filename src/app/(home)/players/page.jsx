@@ -9,6 +9,7 @@ import PaginationUI from "@/components/ui/pagination";
 import SearchBarClient from "@/components/ui/searchBar/searchBar";
 import TableClient from "@/components/client/player/tableClient";
 import { Divider } from "@nextui-org/react";
+import Footer from "@/components/client/footer/Footer";
 
 async function getData(params) {
   if (params.name) {

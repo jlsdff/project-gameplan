@@ -27,6 +27,7 @@ export default function Editor({
   const editorContainer = useRef(null);
 
   const initializeEditor = useCallback(async () => {
+
       const editor = new EditorJS({
         holder: editorContainer.current,
         tools: tools,
@@ -35,23 +36,22 @@ export default function Editor({
 
       setEditorInstance(editor);
 
-  },[])
+  },[defaultData, setEditorInstance, tools])
   
 
   useEffect(() => {
-    
-    if (editorInstance){
-      editorInstance.isReady.then(() => {
-        editorInstance.render(defaultData);
+    if (editorInstance && editorInstance.current){
+      editorInstance.current.isReady.then(() => {
+        editorInstance.current.render(defaultData);
       });
-    }else {
+    } else {
       initializeEditor();
     }
-
+  
     // Cleanup on unmount
     return () => {
-      if (editorInstance) {
-        editorInstance.destroy();
+      if (editorInstance && editorInstance.current) {
+        editorInstance.current.destroy();
       }
     };
   }, [defaultData]);

@@ -6,6 +6,7 @@ import { firestore } from "@/lib/firebase/firebase";
 import { getTeamsByPage, getTeamByName } from "@/utils/teamAPI";
 import { getTeamCount } from "@/utils/countersAPI";
 import PaginationUI from "@/components/ui/pagination";
+import Footer from "@/components/client/footer/Footer";
 
 async function getTeams({ page, name }) {
   if (name) {
