@@ -1,4 +1,4 @@
-import { firestore, Timestamp } from "@/lib/firebase/firebase";
+import { firestore, Timestamp, FieldValue } from "@/lib/firebase/firebase";
 
 export const createGame = async (gameData) => {
   const winner =
@@ -6,6 +6,7 @@ export const createGame = async (gameData) => {
       ? gameData.teamA.teamName
       : gameData.teamB.teamName;
   console.log(winner);
+  // TODO: Implement the logic to determine the winner of the game
   try {
     const playerStats = [...gameData.stats.teamA, ...gameData.stats.teamB];
 
@@ -60,7 +61,10 @@ export const createGame = async (gameData) => {
           stats: gameData.teamBStats,
         },
       });
-
+    firestore
+      .collection("counters")
+      .doc("leagues")
+      .update({ size: FieldValue.increment(1) });
     return await Promise.all([
       ...persistPlayerStats,
       persistTeamAStats,
@@ -73,13 +77,16 @@ export const createGame = async (gameData) => {
 };
 
 export const getGameByDoc = async (doc) => {
-  return await firestore.collection("games").doc(doc).get()
-    .then(res => {
+  return await firestore
+    .collection("games")
+    .doc(doc)
+    .get()
+    .then((res) => {
       return {
         id: res.id,
-        ...res.data()
-      }
-    })
+        ...res.data(),
+      };
+    });
 };
 
 export const getGamesByDocs = async (docs) => {
@@ -88,4 +95,26 @@ export const getGamesByDocs = async (docs) => {
   });
 
   return await Promise.all(games);
+};
+
+export const getGamesByPage = async (page, limit, orderBy = "time") => {
+  let lastDoc = null;
+
+  if (page > 0) {
+    const games = await firestore
+      .collection("games")
+      .orderBy(orderBy)
+      .limit(page * limit)
+      .get();
+
+    lastDoc = games.docs[games.docs.length - 1];
+  }
+
+  let query = firestore.collection("games").orderBy(orderBy).limit(limit);
+
+  if (lastDoc) {
+    query = query.startAfter(lastDoc);
+  }
+
+  return await query.get();
 };

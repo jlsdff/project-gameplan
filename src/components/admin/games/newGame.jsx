@@ -276,7 +276,8 @@ export default function NewGame() {
 
     console.log({ ...data, ...totalStats });
     createGame({ ...data, ...totalStats })
-      .then(() => {
+      .then((res) => {
+        console.log(res)
         alert("Game Saved");
         router.push("/admin/dashboard/games");
       })

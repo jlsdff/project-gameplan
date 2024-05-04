@@ -128,7 +128,7 @@ export default async function LeaguePage({ searchParams }) {
           <h1 key={league.id}>{league.title}</h1>
         ))} */}
         <div className="w-full ">
-          <h1 className="mb-2 text-2xl font-black sm:text-3xl">
+          <h1 className="mb-2 text-2xl font-black">
             Ongoing League{" "}
           </h1>
           {/* <LeaguesTable leagues={onGoingLeagues} /> */}
@@ -140,7 +140,7 @@ export default async function LeaguePage({ searchParams }) {
               />
             </div>
             <div className="flex flex-col justify-start gap-2">
-              <h2 className="text-xl font-bold sm:text-2xl text-primary">
+              <h2 className="text-xl font-bold text-primary">
                 {onGoingLeagues[0].title}
               </h2>
               <div className=" text-foreground">
@@ -159,7 +159,7 @@ export default async function LeaguePage({ searchParams }) {
           </Link>
         </div>
         <div>
-          <h2 className="mt-4 mb-2 text-2xl font-black sm:text-3xl">Recent Leagues</h2>
+          <h2 className="mt-4 mb-2 text-2xl font-black">Recent Leagues</h2>
           <div className="w-full overflow-x-auto">
           <LeaguesTable leagues={recentLeagues} />
           </div>

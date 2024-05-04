@@ -1,94 +1,93 @@
 import { Avatar, Link } from "@nextui-org/react";
 import React from "react";
-import GameBox from "@/components/temp/gameBox";
+import { firestore } from "@/lib/firebase/firebase";
+import { getGamesByPage } from "@/utils/gamesAPI";
+import GamesTable from "@/components/client/games/gamesTable";
+import GamePagination from "@/components/client/games/gamePagination";
 
 export const metadata = {
   title: "Games",
   description: "Recent games played by teams",
 };
 
-export default function Page() {
-  
-  const games = [
-    {
-      teamA: {
-        name: "SWEESH",
-        score: 109,
-      },
-      teamB: {
-        name: "MAMBA",
-        score: 85,
-      },
-      url: "/games/1",
-    },
-    {
-      teamA: {
-        name: "HOOPLIFE",
-        score: 75,
-      },
-      teamB: {
-        name: "RC3 x MIDNIGHT HOOPS",
-        score: 61,
-      },
-      url: "/games/2",
-    },
-    {
-      teamA: {
-        name: "ONETECH",
-        score: 89,
-      },
-      teamB: {
-        name: "UNDERRATED",
-        score: 63,
-      },
-      url: "/games/3",
-    },
-    {
-      teamA: {
-        name: "ONETECH",
-        score: 71,
-      },
-      teamB: {
-        name: "HOOPLIFE",
-        score: 61,
-      },
-      url: "/games/4",
-    },
-    {
-      teamA: {
-        name: "MAMBA",
-        score: 90,
-      },
-      teamB: {
-        name: "UNDERRATED",
-        score: 48,
-      },
-      url: "/games/5",
-    },
-    
-    {
-      teamA: {
-        name: "SWEESH",
-        score: 86,
-      },
-      teamB: {
-        name: "RC3 x MIDNIGHT HOOPS",
-        score: 72,
-      },
-      url: "/games/3",
-    },
-  ];
+const getData = async (searchParams) => {
+  const page = searchParams.page || 1;
+  const name = searchParams.name || null;
+
+  if (name) {
+    // Implement search by game name
+  }
+
+  let games = await getGamesByPage(page - 1, 5).then((snapshot) =>
+    snapshot.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+      time: doc.data().time.toDate(),
+    }))
+  );
+  let teams = games.map(async (game) => {
+    const teamA = await firestore
+      .collection("teams")
+      .doc(game.teamA.id)
+      .get()
+      .then((doc) => ({ id: doc.id, ...doc.data() }));
+
+    const teamB = await firestore
+      .collection("teams")
+      .doc(game.teamB.id)
+      .get()
+      .then((doc) => ({ id: doc.id, ...doc.data() }));
+
+    return {
+      ...game,
+      teamA: { ...game.teamA, data: teamA },
+      teamB: { ...game.teamB, data: teamB },
+    };
+  });
+  games = await Promise.all(teams);
+
+  const leagues = games.map(async (game) => {
+    return await firestore
+      .collection("leagues")
+      .doc(game.leagueId)
+      .get()
+      .then((doc) => ({ ...game, league: doc.data() }));
+  });
+
+  games = await Promise.all(leagues);
+  const count = await firestore
+    .collection("counters")
+    .doc("games")
+    .get()
+    .then((doc) => doc.data().size);
+
+  return [[...games], count];
+};
+
+export default async function Page({ searchParams }) {
+  const [games, count] = await getData(searchParams);
+  console.log(games);
 
   return (
-    <>
-      <section className="px-8 py-4 sm:py-8 sm:px-16 ">
-        <h1 className="mb-4 text-xl font-bold sm:text-2xl">Recent Games</h1>
-        <div className="flex flex-wrap gap-4 ">
-          {games.map((game, index) => (
-            <GameBox key={index} {...game} />
-          ))}
+    <main>
+      <div className="px-8 mt-4 mb-2 sm:px-16 sm:mt-8">
+        <h1 className="text-xl font-bold sm:text-2xl">Games</h1>
+      </div>
+
+      <section>
+        {/* Search bar */}
+        <div></div>
+        {/* Data Display for games */}
+        <div className="px-8 sm:px-16">
+          <GamesTable games={games} />
+        </div>
+        <div className="flex items-center justify-center my-2">
+          <GamePagination
+            total={Math.ceil(count / 5)}
+            initialPage={searchParams.page || 1}
+          />
         </div>
       </section>
-    </>
+    </main>
   );
 }
