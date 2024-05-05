@@ -140,17 +140,17 @@ export default async function LeaguePage({ searchParams }) {
               />
             </div>
             <div className="flex flex-col justify-start gap-2">
-              <h2 className="text-xl font-bold text-primary">
+              <h2 className="text-3xl font-bold sm:text-2xl text-primary">
                 {onGoingLeagues[0].title}
               </h2>
               <div className=" text-foreground">
                 <h3>
-                  <span className="font-semibold">Venue:</span>
+                  <span className="text-lg font-semibold">Venue:</span>
                   <br />
                   <span>{onGoingLeagues[0].venue}</span>
                 </h3>
                 <h3>
-                  <span className="font-semibold">Game Schedule:</span>
+                  <span className="text-lg font-semibold">Game Schedule:</span>
                   <br />
                   <span>{displayGameShedule(onGoingLeagues[0])}</span>
                 </h3>

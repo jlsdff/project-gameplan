@@ -131,8 +131,7 @@ export default function GameStats({ teamA, teamB }) {
               </span>
             </TableCell>
           </TableRow>
-        </TableBody>
-        <TableRow>
+          <TableRow>
           <TableCell className="text-center ">
             {`${teamA.stats.freeThrows.made}/${teamA.stats.freeThrows.attempt}`}{" "}
             <span className="font-semibold">
@@ -149,6 +148,7 @@ export default function GameStats({ teamA, teamB }) {
             </span>
           </TableCell>
         </TableRow>
+        </TableBody> 
       </Table>
     </>
   );
