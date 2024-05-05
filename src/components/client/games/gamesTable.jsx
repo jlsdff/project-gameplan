@@ -76,7 +76,10 @@ export default function GamesTable({ games }) {
               name={game.league.title}
               description={game.league.venue}
               avatarProps={{ src: game.league.leagueImage }}
-              onClick={() => {router.push(`/leagues/${game.league.id}`)}}
+              onClick={(e) => {
+                e.stopPropagation()
+                router.push(`/leagues/${game.leagueId}`)
+              }}
               className="cursor-pointer hover:underline"
             />
           </div>
