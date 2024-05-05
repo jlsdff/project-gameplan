@@ -77,6 +77,12 @@ export async function createTeam(team) {
 
 // PUT FUNCTIONS
 export async function updateTeam(id, team) {
+
+  if (team.teamLogo instanceof File){
+    const teamLogo = await uploadImage(team.teamLogo)
+    const updatedTeam = {...team, teamLogo}
+    return await firestore.collection('teams').doc(id).update(updatedTeam, { merge: true });
+  }
   
   return await firestore.collection("teams").doc(id).update(team, { merge: true });
 }
