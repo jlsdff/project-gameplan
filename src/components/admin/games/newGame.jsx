@@ -368,7 +368,7 @@ export default function NewGame() {
           }}
         >
           {(team) => (
-            <AutocompleteItem key={team.id}> {team.teamName}</AutocompleteItem>
+            <AutocompleteItem key={team.id}>{team.teamName}</AutocompleteItem>
           )}
         </Autocomplete>
 

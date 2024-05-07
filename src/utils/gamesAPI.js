@@ -63,7 +63,7 @@ export const createGame = async (gameData) => {
       });
     firestore
       .collection("counters")
-      .doc("leagues")
+      .doc("games")
       .update({ size: FieldValue.increment(1) });
     return await Promise.all([
       ...persistPlayerStats,

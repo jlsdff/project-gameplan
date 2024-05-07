@@ -37,7 +37,7 @@ export async function getTeamsByPage(page, limit, orderBy = "teamName") {
 }
 
 export async function getTeamByName(name){
-  name = name.replace(/\b\w/g, l => l.toUpperCase()); 
+  // name = name.replace(/\b\w/g, l => l.toUpperCase()); 
 
   return await firestore.collection("teams")
     .where("teamName", ">=", name)
@@ -52,10 +52,21 @@ export async function getTeamByName(name){
 export async function createTeam(team) {
 
   // Check if teamName, teamAbbr, and teamLogo are not empty
-  if(!team.teamName || !team.teamAbbr || !team.teamLogo) {
-    throw new Error("Please fill out all fields");
-  }
+  // if(!team.teamName || !team.teamAbbr || !team.teamLogo) {
+  //   throw new Error("Please fill out all fields");
+  // }
 
+  if(!team.teamLogo) {
+    const increment = await incrementTeam().catch((err) => {
+      console.error(err);
+      console.log("Error incrementing team counter");
+    });
+
+    return await firestore
+      .collection("teams")
+      .doc()
+      .set({ ...team, wins: 0, losses: 0 });
+  }
   
   
   return await uploadImage(team.teamLogo)

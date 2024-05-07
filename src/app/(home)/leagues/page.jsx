@@ -1,11 +1,8 @@
 import React from "react";
 import { Image, Link } from "@nextui-org/react";
-import SearchBarClient from "@/components/ui/searchBar/searchBar";
 import { firestore } from "@/lib/firebase/firebase";
 import { getLeaguesByLikeTitle } from "@/utils/leagueAPI";
 import LeaguesTable from "@/components/client/leagues/leaguesTable";
-import OngoingLeague from "@/components/refactored/home/ongoingLeague";
-import Footer from "@/components/client/footer/Footer";
 
 async function getData({ name }) {
   if (name) {

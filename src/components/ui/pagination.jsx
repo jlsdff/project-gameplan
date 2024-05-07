@@ -8,6 +8,6 @@ export default function PaginationUI({totalPage, currentPage, url}) {
   const router = useRouter()
   
   return (
-    <Pagination total={Math.ceil(totalPage / 5)} page={currentPage} onChange={value => router.push(`${url}${value}`)} />
+    <Pagination total={Math.ceil(totalPage / 5)} initialPage={currentPage} onChange={value => router.push(`${url}${value}`)} />
   )
 }

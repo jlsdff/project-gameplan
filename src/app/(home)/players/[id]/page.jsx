@@ -41,6 +41,7 @@ async function getPlayerData(params) {
   const records = await getPlayerGamerecords(id);
 
   const games = await getGamesByDocs(records.map((record) => record.gameId));
+  console.log(games)
   const gameCompleteData = games.map(async (game) => {
     const teamA = await firestore
       .collection("teams")

@@ -130,7 +130,7 @@ export default async function Players({ searchParams }) {
         <PaginationUI
           url="/players?page="
           totalPage={playersCount}
-          currentPage={searchParams.page}
+          currentPage={searchParams.page || 1}
         />
       </div>
     </section>
