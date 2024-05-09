@@ -15,7 +15,6 @@ import { getPlayerById } from "@/utils/playerAPI";
 import GameStats from "./gameStats";
 import { getTeamTotalStats } from "@/helpers/getTotalPoints";
 import { createGame } from "@/utils/gamesAPI";
-import TotalStats from "./totalStats";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -443,10 +442,6 @@ export default function NewGame() {
           }}
           setData={setMainData}
         />
-      </div>
-      <div className="my-4 space-y-2">
-        <TotalStats stats={mainData.stats.teamA} name={"TEAM A"} />
-        <TotalStats stats={mainData.stats.teamB} name={"TEAM B"} />
       </div>
       <div className="flex items-center justify-center">
         <Button
