@@ -82,7 +82,7 @@ export default function LeaguesTable({ leagues }) {
   };
 
   const toLeague = (id) => {
-    router.push("/leagues/" + id);
+    router.push(`/leagues?id=${id}`);
   };
 
   return (
@@ -93,7 +93,7 @@ export default function LeaguesTable({ leagues }) {
             <TableColumn key={column.key}>{column.title}</TableColumn>
           )}
         </TableHeader>
-        <TableBody items={items}>
+        <TableBody items={items} emptyContent="No Recent Leagues" >
           {(league) => (
             <TableRow
               className="cursor-pointer hover:bg-primary/5"

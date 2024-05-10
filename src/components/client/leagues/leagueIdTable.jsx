@@ -15,10 +15,9 @@ import { useRouter } from "next/navigation";
 export default function LeagueIdTable({ teams, games }) {
 
   const router = useRouter()
-
-  console.log(games)
-  const toGame = (id) => router.push(`/games/${id}`)
-  const toTeam = (id) => router.push(`/teams/${id}`)
+  
+  const toGame = (id) => router.push(`/games?id=${id}`)
+  const toTeam = (id) => router.push(`/teams?id=${id}`)
 
   const columns = [
     {
