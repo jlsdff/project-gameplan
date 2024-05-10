@@ -1,6 +1,7 @@
 {
   "hosting": {
     "source": ".",
+    "site": "test-site-3792c",
     "ignore": [
       "firebase.json",
       "**/.*",
