@@ -14,7 +14,7 @@ export default function GamePagination({ total, initialPage }) {
   
   return (
     <>
-      <Pagination color="primary" total={total} page={page} onChange={(value) => {handlePageChange(value)}} />
+      <Pagination color="primary" total={total} initialPage={page} onChange={(value) => {handlePageChange(value)}} />
     </>
   );
 }

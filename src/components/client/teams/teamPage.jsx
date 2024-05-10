@@ -322,7 +322,7 @@ export default function TeamPage({ id }) {
               className="w-full mt-4 overflow-x-scroll h-96"
             >
               <h2 className="text-xl font-bold">Recent Games</h2>
-              <RecentGameTable games={team.games} teamId={id} />
+              <RecentGameTable games={team.games} teamId={id} loading={loading} />
             </ScrollShadow>
           </section>
         </main>

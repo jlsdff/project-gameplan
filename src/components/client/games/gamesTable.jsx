@@ -9,10 +9,11 @@ import {
   TableCell,
   User,
   Pagination,
+  Spinner
 } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 
-export default function GamesTable({ games }) {
+export default function GamesTable({ games, loading }) {
   const router = useRouter();
 
   const columns = [
@@ -45,7 +46,7 @@ export default function GamesTable({ games }) {
           avatarProps={{ src: current.data.teamLogo }}
           onClick={(e) => {
             e.stopPropagation();
-            router.push(`/teams/${current.id}`);
+            router.push(`/teams?id=${current.id}`);
           }}
         />
         <div>
@@ -78,7 +79,7 @@ export default function GamesTable({ games }) {
               avatarProps={{ src: game.league.leagueImage }}
               onClick={(e) => {
                 e.stopPropagation()
-                router.push(`/leagues/${game.leagueId}`)
+                router.push(`/leagues?id=${game.leagueId}`)
               }}
               className="cursor-pointer hover:underline"
             />
@@ -96,7 +97,7 @@ export default function GamesTable({ games }) {
     }
   };
 
-  const toGame = (id) => router.push(`/games/${id}`)
+  const toGame = (id) => router.push(`/games?id=${id}`)
 
   return (
     <>
@@ -104,7 +105,7 @@ export default function GamesTable({ games }) {
         <TableHeader columns={columns}>
           {(col) => <TableColumn key={col.key}>{col.title}</TableColumn>}
         </TableHeader>
-        <TableBody items={games}>
+        <TableBody items={games} emptyContent="No Recorded Games" isLoading={loading} loadingContent={<Spinner label="Fetching games..."/>} >
           {(game) => (
             <TableRow className="cursor-pointer hover:bg-primary/5" key={game.id} onClick={() => toGame(game.id)}>
               {(key) => <TableCell>{renderCell(game, key)}</TableCell>}

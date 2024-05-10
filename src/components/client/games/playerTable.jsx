@@ -64,7 +64,7 @@ export default function PlayerTable({ stats }) {
     },
   ];
 
-  const toPlayer = (id) => router.push(`/players/${id}`);
+  const toPlayer = (id) => router.push(`/players?id=${id}`);
 
   const renderCell = (stat, key) => {
     switch (key) {

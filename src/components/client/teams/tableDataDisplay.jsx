@@ -8,10 +8,11 @@ import {
   TableRow,
   TableCell,
   User,
+  Spinner
 } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 
-export default function TableDataDisplay({ columns, items }) {
+export default function TableDataDisplay({ columns, items, loading }) {
 
   const router = useRouter()
   
@@ -101,7 +102,7 @@ export default function TableDataDisplay({ columns, items }) {
             <TableColumn key={column.key}>{column.title}</TableColumn>
           )}
         </TableHeader>
-        <TableBody items={items}>
+        <TableBody items={items} emptyContent="No Team Records" isLoading={loading} loadingContent={<Spinner label="Please Wait..."/>} >
           {(item) => (
             <TableRow onClick={()=>{toTeam(item.id)}} key={item.id} className="cursor-pointer hover:bg-primary-900/5">
               {(columnKey) => (

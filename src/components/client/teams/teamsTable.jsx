@@ -131,7 +131,7 @@ export default function TeamsTable({ name, page }) {
               initialValue={name || ""}
             />
             <div className="w-full my-4 overflow-x-auto">
-              <TableDataDisplay columns={columns} items={teams} />
+              <TableDataDisplay columns={columns} items={teams} loading={loading} />
             </div>
             <div className="flex items-center justify-center">
               <PaginationUI

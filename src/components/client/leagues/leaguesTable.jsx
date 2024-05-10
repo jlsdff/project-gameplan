@@ -9,10 +9,11 @@ import {
   TableRow,
   TableCell,
   Pagination,
+  Spinner,
 } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 
-export default function LeaguesTable({ leagues }) {
+export default function LeaguesTable({ leagues, loading }) {
   console.log(leagues);
   const router = useRouter();
   const [page, setPage] = useState(1);
@@ -93,7 +94,7 @@ export default function LeaguesTable({ leagues }) {
             <TableColumn key={column.key}>{column.title}</TableColumn>
           )}
         </TableHeader>
-        <TableBody items={items} emptyContent="No Recent Leagues" >
+        <TableBody items={items} emptyContent="No Recent Leagues" isLoading={loading} loadingContent={<Spinner label="Loading..."/>} >
           {(league) => (
             <TableRow
               className="cursor-pointer hover:bg-primary/5"

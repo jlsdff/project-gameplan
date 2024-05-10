@@ -237,7 +237,7 @@ export default function LeaguesDisplay({ page }) {
             <div>
               <h2 className="mt-4 mb-2 text-2xl font-black">Recent Leagues</h2>
               <div className="w-full overflow-x-auto">
-                <LeaguesTable leagues={recentLeagues.current} />
+                <LeaguesTable leagues={recentLeagues.current} loading={loading} />
               </div>
             </div>
           </section>

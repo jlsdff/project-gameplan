@@ -8,10 +8,11 @@ import {
   TableRow,
   TableCell,
   User,
+  Spinner,
 } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 
-export default function RecentGameTable({ games, teamId }) {
+export default function RecentGameTable({ games, teamId, loading }) {
   const router = useRouter();
   const columns = [
     {
@@ -163,7 +164,7 @@ export default function RecentGameTable({ games, teamId }) {
       <TableHeader columns={columns}>
         {(column) => <TableColumn key={column.key}>{column.title}</TableColumn>}
       </TableHeader>
-      <TableBody items={games}>
+      <TableBody items={games} isLoading={loading} loadingContent={<Spinner label="Please Wait..."/>} emptyContent="No Games Recorded">
         {(game) => (
           <TableRow
             key={game.id}
