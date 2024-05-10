@@ -8,15 +8,16 @@ import {
   TableRow,
   TableCell,
   Tooltip,
+  Spinner,
 } from "@nextui-org/react";
 import renderPlayerCell from "@/helpers/players/renderPlayerCell";
 import { useRouter } from "next/navigation";
 
-export default function TableClient({ columns, items }) {
+export default function TableClient({ columns, items, loading }) {
   const router = useRouter();
 
   const routeToPlayer = (id) => {
-    router.push(`/players/${id}`);
+    router.push(`/players?id=${id}`);
   };
   // items.map(item => console.log(item.gameRecords))
   return (
@@ -28,7 +29,12 @@ export default function TableClient({ columns, items }) {
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody items={items}>
+      <TableBody
+        items={items}
+        emptyContent="No players to display."
+        loadingState={loading}
+        loadingContent={<Spinner label="Fetching Players..." />}
+      >
         {(item) => (
           <TableRow
             className="cursor-pointer hover:bg-primary-900/5"

@@ -99,15 +99,15 @@ export default function PlayerTableById({ games, playerId }) {
   ];
 
   const toGame = (id) => {
-    router.push(`/games/${id}`);
+    router.push(`/games?id=${id}`);
   };
 
   const toTeam = (id) => {
-    router.push(`/teams/${id}`);
+    router.push(`/teams?id=${id}`);
   };
 
   const toLeague = (id) => {
-    router.push(`/leagues/${id}`);
+    router.push(`/leagues?id=${id}`);
   };
 
   const renderCell = (game, key) => {
