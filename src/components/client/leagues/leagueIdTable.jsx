@@ -90,7 +90,7 @@ export default function LeagueIdTable({ teams, games }) {
         <TableHeader columns={columns}>
           {(col) => <TableColumn key={col.key}>{col.title}</TableColumn>}
         </TableHeader>
-        <TableBody items={games}>
+        <TableBody items={games.sort((a,b) => a.number - b.number)}>
           {(game) => (
             <TableRow key={game.id} className="cursor-pointer hover:bg-primary-500/5" onClick={()=>toGame(game.id)}>
               {(key) => (

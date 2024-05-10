@@ -20,10 +20,10 @@ export const getAPG = (stats) => {
   if (!stats.length) return 0;
 
   return (
-    stats.reduce((acc, curr) => {
+    (stats.reduce((acc, curr) => {
       return acc + curr.assists;
     }, 0) /
-    stats.length.toLocaleString(undefined, {
+    stats.length).toLocaleString(undefined, {
       minimumFractionDigits: 0,
       maximumFractionDigits: 2,
     })

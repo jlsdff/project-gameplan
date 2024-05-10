@@ -5,12 +5,15 @@ import { useRouter } from "next/navigation";
 
 export default function PaginationUI({ totalPage, currentPage, url }) {
   const router = useRouter();
+  const total = Math.ceil(totalPage / 5);
 
   return (
     <Pagination
-      total={Math.ceil(totalPage / 5)}
-      initialPage={currentPage}
+      total={total}
+      initialPage={parseInt(currentPage, 10)}
+      isCompact
       onChange={(value) => router.push(`${url}${value}`)}
+      showControls
       color="primary"
     />
   );

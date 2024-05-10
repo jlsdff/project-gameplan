@@ -8,7 +8,7 @@ export default function renderPlayerCell(player, key) {
       return (
         <User
           className=" min-w-3.5"
-          name={`${player.lastname}, ${player.firstname || ""}`}
+          name={player.firstname ? `${player.lastname}, ${player.firstname}` : player.lastname}
           description={player.positions.join(" | ")}
           avatar={{
             src: player.avatar || null,

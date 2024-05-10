@@ -102,7 +102,7 @@ export default function GamesDisplay({ page, name }) {
             <div className="flex items-center justify-center my-2">
               <GamePagination
                 total={Math.ceil(count / 5)}
-                initialPage={page}
+                initialPage={page || 1}
               />
             </div>
           </section>

@@ -18,7 +18,7 @@ export default function PlayersPage() {
 
   return (
     <>
-      <PlayersTable page={page || 1} name={name} />
+      <PlayersTable page={page || "1"} name={name} />
     </>
   );
 }

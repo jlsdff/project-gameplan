@@ -135,7 +135,7 @@ export default function TeamsTable({ name, page }) {
             </div>
             <div className="flex items-center justify-center">
               <PaginationUI
-                currentPage={page || 0}
+                currentPage={page || 1}
                 totalPage={count}
                 url="/teams?page="
               />
