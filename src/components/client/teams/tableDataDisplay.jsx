@@ -90,7 +90,7 @@ export default function TableDataDisplay({ columns, items }) {
   };
 
   const toTeam = (id) => {
-    router.push(`/teams/${id}`)
+    router.push(`/teams?id=${id}`)
   }
 
   return (

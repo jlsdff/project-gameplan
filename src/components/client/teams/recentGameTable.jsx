@@ -142,7 +142,7 @@ export default function RecentGameTable({ games, teamId }) {
               className="cursor-pointer hover:underline"
               onClick={(e)=> {
                 e.stopPropagation();
-                router.push(`/teams/${opposingTeam.id}`);
+                router.push(`/teams?id=${opposingTeam.id}`);
               }}
               name={opposingTeam.teamName}
               description={opposingTeam.teamAbbr}
@@ -168,7 +168,7 @@ export default function RecentGameTable({ games, teamId }) {
           <TableRow
             key={game.id}
             className="cursor-pointer hover:bg-primary-500/5"
-            onClick={() => router.push(`/games/${game.id}`)}
+            onClick={() => router.push(`/games?id=${game.id}`)}
           >
             {(key) => <TableCell>{renderCell(game, key)}</TableCell>}
           </TableRow>
