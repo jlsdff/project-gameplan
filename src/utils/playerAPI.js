@@ -43,12 +43,15 @@ export async function getPlayerById(id) {
 }
 
 export async function getPlayerByLikeName(name) {
-  
+  // Capitalize first letter of name for search
+  name = name.replace(/\b\w/g, (l) => l.toUpperCase());
+
   const firstNameQuery = await firestore
     .collection("players")
     .orderBy("firstname")
     .where("firstname", ">=", name)
     .where("firstname", "<=", name + "\uf8ff")
+    .limit(10)
     .get();
 
   const lastNameQuery = await firestore
@@ -56,22 +59,43 @@ export async function getPlayerByLikeName(name) {
     .orderBy("lastname")
     .where("lastname", ">=", name)
     .where("lastname", "<=", name + "\uf8ff")
+    .limit(10)
     .get();
 
-  const results = []
+  const results = [];
 
-  firstNameQuery.forEach(doc => {
+  firstNameQuery.forEach((doc) => {
     results.push(doc);
-  })
+  });
 
-  lastNameQuery.forEach( doc => {
-    if(!results.some( result => result.id === doc.id)) {
+  lastNameQuery.forEach((doc) => {
+    if (!results.some((result) => result.id === doc.id)) {
       results.push(doc);
     }
-  })
+  });
 
   return results;
+}
 
+export async function getPlayerGamerecords(id) {
+  return await firestore
+    .collection("players")
+    .doc(id)
+    .collection("gameRecords")
+    .get()
+    .then((snap) =>
+      snap.docs.map((doc) => ({ ...doc.data(), gameId: doc.id }))
+    );
+}
+
+export async function getPlayersGameRecords(players) {
+  const promises = players.map(async (player) => {
+    return {
+      ...player,
+      gameRecords: await getPlayerGamerecords(player.id),
+    };
+  });
+  return await Promise.all(promises);
 }
 
 // UPDATE PLAYERS

@@ -43,10 +43,10 @@ export default function useTeamByName(
   },[input, setTeamField])
 
   useEffect(() => {
-    if (input?.length >= 5){
+    if (input?.length >= 2){
       fetchTeam()
     }
-  }, [fetchTeam, input?.length])
+  }, [input])
   
   return {
     isLoading,

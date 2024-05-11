@@ -2,9 +2,7 @@
 import React, { useCallback, useEffect, useState, useReducer } from "react";
 import { Input, Button, Tooltip } from "@nextui-org/react";
 import SearchIcon from "@/assets/searchIcon";
-import DeleteIcon from "@/assets/deleteIcon";
 import XIcon from "@/assets/xIcon";
-import SearchBar from "@/components/ui/searchBar/searchBar";
 import NewTeamSearchDisplay from "./newTeamSearchDisplay";
 import { getPlayerByLikeName, getPlayerById } from "@/utils/playerAPI";
 import { createTeam, getTeamById, updateTeam } from "@/utils/teamAPI";
@@ -212,7 +210,7 @@ export default function NewTeam({ ...props }) {
                   teamReducer({ type: "teamLogo", value: file });
                 }}
                 accept="image/png, image/jpeg, image/jpg, image/svg"
-                className="my-2  md:my-0"
+                className="my-2 md:my-0"
               />
             </Tooltip>
           </div>

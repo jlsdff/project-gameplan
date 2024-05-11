@@ -15,6 +15,7 @@ import { getPlayerById } from "@/utils/playerAPI";
 import GameStats from "./gameStats";
 import { getTeamTotalStats } from "@/helpers/getTotalPoints";
 import { createGame } from "@/utils/gamesAPI";
+import TotalStats from "./totalStats";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -122,6 +123,38 @@ const reducer = (state, action) => {
         return state;
       }
 
+    case 'REMOVE_PLAYER':
+
+      const { teamSide: teamside, id } = action.payload;
+
+      if (teamside === 'teamA') {
+        return {
+          ...state,
+          players: {
+            ...state.players,
+            teamA: state.players.teamA.filter(player => player.id !== id),
+          },
+          stats: {
+            ...state.stats,
+            teamA: state.stats.teamA.filter(player => player.id !== id)
+          }
+        }
+      } else if (teamside === 'teamB'){
+        return {
+          ...state,
+          players: {
+            ...state.players,
+            teamB: state.players.teamB.filter(player => player.id !== id),
+          },
+          stats: {
+            ...state.stats,
+            teamB: state.stats.teamB.filter(player => player.id !== id)
+          }
+        }
+      }else {
+        return state
+      }
+
     default:
       return state;
   }
@@ -143,7 +176,7 @@ export default function NewGame() {
   const params = useSearchParams();
   const id = params.get("id");
   const router = useRouter();
-  
+
   const [mainData, setMainData] = useReducer(reducer, initialState);
 
   const [leagueField, setLeagueField] = useState({
@@ -242,22 +275,23 @@ export default function NewGame() {
       teamBStats: getTeamTotalStats(mainData.stats.teamB),
     };
 
-    console.log({...data, ...totalStats})
+    console.log({ ...data, ...totalStats });
     createGame({ ...data, ...totalStats })
-      .then(()=>{
-        alert("Game Saved")
-        // TODO: Redirect to games page
+      .then((res) => {
+        console.log(res)
+        alert("Game Saved");
+        router.push("/admin/dashboard/games");
       })
       .catch((err) => {
         alert("Error saving game");
-        console.error(err)
+        console.error(err);
       });
-
   }, [
     gameNumber,
     gameTime,
     leagueField.selectedObj,
     mainData.stats,
+    router,
     teamA.selectedObj,
     teamB.selectedObj,
   ]);
@@ -335,7 +369,7 @@ export default function NewGame() {
           }}
         >
           {(team) => (
-            <AutocompleteItem key={team.id}> {team.teamName}</AutocompleteItem>
+            <AutocompleteItem key={team.id}>{team.teamName}</AutocompleteItem>
           )}
         </Autocomplete>
 
@@ -409,6 +443,10 @@ export default function NewGame() {
           }}
           setData={setMainData}
         />
+      </div>
+      <div className="my-4 space-y-2">
+        <TotalStats stats={mainData.stats.teamA} name={"TEAM A"} />
+        <TotalStats stats={mainData.stats.teamB} name={"TEAM B"} />
       </div>
       <div className="flex items-center justify-center">
         <Button

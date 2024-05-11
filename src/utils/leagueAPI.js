@@ -42,12 +42,13 @@ export const getLeagueById = async (id) => {
   return await firestore.collection("leagues").doc(id).get();
 };
 
-export const getLeaguesByLikeTitle = async ( name ) => {
+export const getLeaguesByLikeTitle = async ( name, orderBy="createdAt" ) => {
   name = name.replace(/\b\w/g, l => l.toUpperCase()); 
 
   return await firestore.collection("leagues")
     .where("title", ">=", name)
     .where("title", "<=", name + "\uf8ff")
+    .orderBy(orderBy)
     .limit(5)
     .get();
 }
