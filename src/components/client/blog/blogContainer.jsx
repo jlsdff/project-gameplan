@@ -22,7 +22,7 @@ export default function BlogContainer({
       onClick={handleNavigation}
     >
       <div className="flex-shrink-0">
-        <Image src={url} alt={alt} className="w-full md:w-48 " />
+        <Image src={url} alt={alt} className="object-cover md:w-48 " />
       </div>
       <div className="flex-grow overflow-auto ">
         <h2 className="mb-4 text-lg font-bold md:text-xl">{title}</h2>
