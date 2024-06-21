@@ -181,6 +181,15 @@ export default function PapawisSchedKings() {
             ❗
           </p>
         </div>
+
+        <div className="mb-3">
+          <p className="text-sm leading-relaxed tracking-wide text-justify indent-8 md:text-medium">
+            🏀Want to host or organize your company's / alumni / friendly league
+            ❓PM us for more details ❗📳 🏀 We are also looking for sponsors
+            who can help us make our events even better❗ PM us for more details
+            ❗
+          </p>
+        </div>
       </main>
       <Footer />
     </>
