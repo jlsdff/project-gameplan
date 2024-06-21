@@ -21,17 +21,25 @@ export default function PapawisSchedKings() {
           <ShareButtons url="https://www.projectgameplan.ph/blogs/papawis-sched-kings" />
           <Divider className="my-2" />
           <p className="text-sm leading-relaxed tracking-wide text-justify md:text-medium indent-8 ">
-          We are Project : Game Plan, an organization trying to unite basketball enthusiasts by creating amateur basketball events. As a nation, we hold a deep affection for basketball; it&apos;s almost a necessity for us. We would relish the opportunity to play the game we love even once a week! We&apos;ve created a series where we highlight various organizations, groups, and communities, aiming to assist our fellow basketball-loving friends in finding new groups to play with.
-
-BASKETBOLEROS
-This group was created and organized by Mr. Mac Pe Benito in 2013. Currently, their group boasts 5.6k members, and their Facebook page has 6.8k followers. We recently conducted an interview with Sir Mac regarding the opportunities, struggles, and what it takes to organize a basketball group.
+            We are Project : Game Plan, an organization trying to unite
+            basketball enthusiasts by creating amateur basketball events. As a
+            nation, we hold a deep affection for basketball; it&apos;s almost a
+            necessity for us. We would relish the opportunity to play the game
+            we love even once a week! We&apos;ve created a series where we
+            highlight various organizations, groups, and communities, aiming to
+            assist our fellow basketball-loving friends in finding new groups to
+            play with. BASKETBOLEROS This group was created and organized by Mr.
+            Mac Pe Benito in 2013. Currently, their group boasts 5.6k members,
+            and their Facebook page has 6.8k followers. We recently conducted an
+            interview with Sir Mac regarding the opportunities, struggles, and
+            what it takes to organize a basketball group.
           </p>
           <br />
           <p className="text-sm leading-relaxed tracking-wide text-justify md:text-medium indent-8 ">
             Meet the Basketboleros, a tight-knit basketball community formed in
             2013 out of a passion for the game. With a growing roster of players
-            and a commitment to camaraderie, they&apos;ve become more than just a
-            sports group—they&apos;re a network of friends and connections.
+            and a commitment to camaraderie, they&apos;ve become more than just
+            a sports group—they&apos;re a network of friends and connections.
             Organizing regular games and events, they welcome collaborations
             with other clubs and leagues, fostering a spirit of support and
             community within the basketball scene.
@@ -140,18 +148,45 @@ This group was created and organized by Mr. Mac Pe Benito in 2013. Currently, th
           </p>
         </div>
         <p className="text-sm leading-relaxed tracking-wide text-justify md:text-medium indent-8 ">
-        You can join the <Link className="font-bold" target="_blank" href="https://www.facebook.com/groups/763267087560373/">
-         Basketboleros group here.
-        </Link> You can follow them at their <Link className="font-bold" target="_blank" href="https://www.facebook.com/basketboleros">page for more details.</Link> Like and follow <Link className="font-bold" target="_blank" href="https://www.facebook.com/ProjectGamePlan">our fb page for more info.</Link> Follow our IG Account <Link
-              target="_blank" className="font-bold"
-              href="https://www.instagram.com/projectgameplan/"
-            > here.
-            </Link>
-<br />
-<br />
-
-🏀Want to host or organize your company&apos;s / alumni / friendly league ❓PM us for more details ❗📳
-🏀 We are also looking for sponsors who can help us make our events even better❗ PM us for more details ❗
+          You can join the{" "}
+          <Link
+            className="font-bold"
+            target="_blank"
+            href="https://www.facebook.com/groups/763267087560373/"
+          >
+            Basketboleros group here.
+          </Link>{" "}
+          You can follow them at their{" "}
+          <Link
+            className="font-bold"
+            target="_blank"
+            href="https://www.facebook.com/basketboleros"
+          >
+            page for more details.
+          </Link>{" "}
+          Like and follow{" "}
+          <Link
+            className="font-bold"
+            target="_blank"
+            href="https://www.facebook.com/ProjectGamePlan"
+          >
+            our fb page for more info.
+          </Link>{" "}
+          Follow our IG Account{" "}
+          <Link
+            target="_blank"
+            className="font-bold"
+            href="https://www.instagram.com/projectgameplan/"
+          >
+            {" "}
+            here.
+          </Link>
+          <br />
+          <br />
+          🏀Want to host or organize your company&apos;s / alumni / friendly
+          league ❓PM us for more details ❗📳 🏀 We are also looking for
+          sponsors who can help us make our events even better❗ PM us for more
+          details ❗
         </p>
       </main>
       <Footer />
