@@ -154,7 +154,19 @@ export default function PapawisSchedKings() {
 
         <div className="mb-3">
           <p className="text-sm leading-relaxed tracking-wide text-justify indent-8 md:text-medium">
-            Like and follow Project : Game Plan’s fb and IG page for more info.
+            Like and follow Project : Game Plan’s <Link
+              className="font-bold"
+              target="_blank"
+              href="https://www.facebook.com/ProjectGamePlan"
+            >
+              Facebook
+            </Link> and <Link
+              className="font-bold"
+              target="_blank"
+              href="https://www.instagram.com/projectgameplan"
+            >
+              Instagram
+            </Link> page for more info.
             FB Link, IG Link
           </p>
         </div>
