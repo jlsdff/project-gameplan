@@ -13,7 +13,7 @@ export default function PapawisSchedKings() {
     <>
       <main className="flex flex-col w-full gap-4 px-8 mx-auto mb-8 md:px-16 md:w-2/3">
         <div className="flex items-center justify-center">
-          <Image className="w-full" src="/blog-2.png" alt="Basketboleros" />
+          <Image className="mx-auto" src="/blog-2.png" alt="Basketboleros" />
         </div>
         <div id="intro">
           <h1 className="mb-2 text-2xl font-bold md:text-4xl">
@@ -154,20 +154,31 @@ export default function PapawisSchedKings() {
 
         <div className="mb-3">
           <p className="text-sm leading-relaxed tracking-wide text-justify indent-8 md:text-medium">
-            Like and follow Project : Game Plan’s <Link
+            Like and follow Project : Game Plan’s{" "}
+            <Link
               className="font-bold"
               target="_blank"
               href="https://www.facebook.com/ProjectGamePlan"
             >
               Facebook
-            </Link> and <Link
+            </Link>{" "}
+            and{" "}
+            <Link
               className="font-bold"
               target="_blank"
               href="https://www.instagram.com/projectgameplan"
             >
               Instagram
-            </Link> page for more info.
-            FB Link, IG Link
+            </Link>{" "}
+            page for more info.
+          </p>
+        </div>
+        <div className="mb-3">
+          <p className="text-sm leading-relaxed tracking-wide text-justify indent-8 md:text-medium">
+            🏀Want to host or organize your company&apos;s / alumni / friendly league
+            ❓PM us for more details ❗📳 🏀 We are also looking for sponsors
+            who can help us make our events even better❗ PM us for more details
+            ❗
           </p>
         </div>
 
