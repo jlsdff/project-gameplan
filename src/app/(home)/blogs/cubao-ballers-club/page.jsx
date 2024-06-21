@@ -13,7 +13,7 @@ export default function PapawisSchedKings() {
     <>
       <main className="flex flex-col w-full gap-4 px-8 mx-auto mb-8 md:px-16 md:w-2/3">
         <div className="flex items-center justify-center">
-          <Image className="w-full" src="/blog-2.png" alt="Basketboleros" />
+          <Image className="mx-auto" src="/blog-2.png" alt="Basketboleros" />
         </div>
         <div id="intro">
           <h1 className="mb-2 text-2xl font-bold md:text-4xl">
