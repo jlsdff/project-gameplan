@@ -14,6 +14,7 @@ export default function TeamsTable({ name, page }) {
   const [loading, setLoading] = useState(true);
 
   const columns = [
+    
     {
       key: "team",
       title: "Team",
@@ -117,7 +118,7 @@ export default function TeamsTable({ name, page }) {
   return (
     <>
       {!teams ? (
-        <main className="w-screen h-screen flex justify-center items-center">
+        <main className="flex items-center justify-center w-screen h-screen">
           <Spinner label="Loading..." />
         </main>
       ) : (
