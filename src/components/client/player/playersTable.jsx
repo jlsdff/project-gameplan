@@ -86,7 +86,7 @@ export default function PlayersTable({page, name}) {
 
     const playersCount = await getPlayerCount();
 
-    const players = await getPlayersByPage(page - 1, 5).then((data) => {
+    const players = await getPlayersByPage(page - 1, 10).then((data) => {
       return data.docs.map((doc) => {
         return {
           id: doc.id,

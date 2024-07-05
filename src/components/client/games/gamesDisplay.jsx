@@ -16,7 +16,7 @@ export default function GamesDisplay({ page, name }) {
       // Implement search by game name
     }
 
-    let games = await getGamesByPage(page - 1, 5).then((snapshot) =>
+    let games = await getGamesByPage(page - 1, 10).then((snapshot) =>
       snapshot.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
@@ -83,7 +83,7 @@ export default function GamesDisplay({ page, name }) {
   return (
     <>
       {!games ? (
-        <main className="flex justify-center items-center w-screen h-screen">
+        <main className="flex items-center justify-center w-screen h-screen">
           <Spinner label="Loading..." color="primary" />
         </main>
       ) : (

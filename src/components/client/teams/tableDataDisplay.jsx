@@ -59,6 +59,16 @@ export default function TableDataDisplay({ columns, items, loading }) {
     });
   };
 
+  const getWinstreak = (games) => {
+    // TODO: Implement Winning Streak
+    const streak = 0;
+    console.log(games)
+    games.forEach(game => {
+      
+    })
+    
+  }
+
   const renderCell = (item, key) => {
     switch (key) {
       case "team":
@@ -85,6 +95,9 @@ export default function TableDataDisplay({ columns, items, loading }) {
         return <span>{getRPG(item.games)}</span>;
       case "fgp":
         return <span>{getFGP(item.games) + "%"}</span>;
+      case "winstreak":
+        getWinstreak(item.games)
+        return <span>{item.winStreak || 0}</span>;
       default:
         return <span>{item[key]}</span>;
     }

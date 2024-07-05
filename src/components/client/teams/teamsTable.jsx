@@ -39,6 +39,10 @@ export default function TeamsTable({ name, page }) {
       key: "rpg",
       title: "RPG",
     },
+    // {
+    //   key: "winstreak",
+    //   title: "Winstreak",
+    // },
     {
       key: "fgp",
       title: "FG%",
@@ -48,7 +52,7 @@ export default function TeamsTable({ name, page }) {
   // { data, count: await getTeamCount() }
   const fetchData = useCallback(async () => {
     if (name) {
-      const teams = await getTeamByName(name).then((snapshot) =>
+      const teams = await getTeamByName(name.toUpperCase()).then((snapshot) =>
         snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
       );
 
@@ -70,7 +74,7 @@ export default function TeamsTable({ name, page }) {
     }
 
     const currentPage = page || 0;
-    const teamsData = await getTeamsByPage(currentPage - 1, 5).then(
+    const teamsData = await getTeamsByPage(currentPage - 1, 10).then(
       (snapshot) => snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
     );
 

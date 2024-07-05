@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 export default function PaginationUI({ totalPage, currentPage, url }) {
   const router = useRouter();
-  const total = Math.ceil(totalPage / 5);
+  const total = Math.ceil(totalPage / 10);
 
   return (
     <Pagination
