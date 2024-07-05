@@ -7,7 +7,7 @@ import UnderMaintainance from "@/components/ui/underMaintainance";
 
 export default async function Home() {
   return (
-    <UnderMaintainance />
-    // <TeamsPage />
+    // <UnderMaintainance />
+    <TeamsPage />
   );
 }

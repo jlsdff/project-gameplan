@@ -1,12 +1,18 @@
 import { firestore, Timestamp, FieldValue } from "@/lib/firebase/firebase";
 
 export const createGame = async (gameData) => {
-  const winner =
+  const winloss =
     gameData.teamAStats.points > gameData.teamBStats.points
-      ? gameData.teamA.teamName
-      : gameData.teamB.teamName;
-  console.log(winner);
-  // TODO: Implement the logic to determine the winner of the game
+      ? {winner: gameData.teamA.id, loser: gameData.teamB.id}
+      : {winner: gameData.teamB.id, loser: gameData.teamA.id};
+  firestore
+    .collection("teams")
+    .doc(winloss.winner)
+    .update({ wins: FieldValue.increment(1) }, {merge: true});
+  firestore
+    .collection("teams")
+    .doc(winloss.loser)
+    .update({ losses: FieldValue.increment(1) }, {merge: true});
   try {
     const playerStats = [...gameData.stats.teamA, ...gameData.stats.teamB];
 

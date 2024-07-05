@@ -10,7 +10,7 @@ export const metadata = {
 export default async function Page({ searchParams }) {
 
   return (
-    <UnderMaintainance />
-    // <GamesPage />
+    // <UnderMaintainance />
+    <GamesPage />
   );
 }
