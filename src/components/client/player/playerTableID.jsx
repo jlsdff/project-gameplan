@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 
 export default function PlayerTableById({ games, playerId }) {
   const router = useRouter();
-
+  
   const findPlayerStats = (game) => {
     const stats = [...game.playerStats.teamA, ...game.playerStats.teamB];
     return stats.find((stat) => stat.id === playerId);
@@ -51,11 +51,12 @@ export default function PlayerTableById({ games, playerId }) {
   );
 
   const columns = [
-    {
-      key: "number",
-      title: "#",
-      description: "Game Number",
-    },
+    // TODO: tentative: Replace with league
+    // {
+    //   key: "number",
+    //   title: "#",
+    //   description: "Game Number",
+    // },
     {
       key: "points",
       title: "PTS",
@@ -87,9 +88,9 @@ export default function PlayerTableById({ games, playerId }) {
       description: "Opposing Team",
     },
     {
-      key: "time",
-      title: "Time",
-      description: "Game Time",
+      key: "date",
+      title: "Date",
+      description: "Game Date",
     },
     {
       key: "league",
@@ -117,6 +118,16 @@ export default function PlayerTableById({ games, playerId }) {
     switch (key) {
       case "number":
         return <span>{game.number}</span>;
+      case "date":
+        const date = game.date.toDate().toLocaleDateString("en-US", {
+          weekday: "short",
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        });
+        return (
+          <span>{date}</span>
+        )
       case "points":
         const points =
           currentStat.twoPointsMade * 2 +

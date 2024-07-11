@@ -27,6 +27,7 @@
     "@editorjs/simple-image": "^1.6.0",
     "@editorjs/table": "^2.3.0",
     "@editorjs/warning": "^1.4.0",
+    "@nextui-org/date-input": "^2.1.1",
     "@nextui-org/react": "^2.2.9",
     "firebase": "^10.7.1",
     "framer-motion": "^10.16.16",

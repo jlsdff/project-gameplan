@@ -30,9 +30,9 @@ export default function GamesTable({ games, loading }) {
       title: "League",
     },
     {
-      key: "time",
-      title: "Time",
-    },
+      key: "date",
+      title: "Date",
+    }
   ];
 
   const renderTeam = (current, opposing) => {
@@ -91,6 +91,18 @@ export default function GamesTable({ games, loading }) {
             {game.time.toLocaleTimeString("en-US", {
               hour: "2-digit",
               minute: "2-digit",
+            })}
+          </span>
+        );
+      case "date":
+        const date = game.date.toDate();
+        return (
+          <span>
+            {date.toLocaleDateString("en-US", {
+              weekday: "short",
+              month: "short",
+              day: "numeric",
+              year: "numeric",
             })}
           </span>
         );

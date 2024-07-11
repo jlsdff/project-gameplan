@@ -1,6 +1,11 @@
 import { firestore, Timestamp, FieldValue } from "@/lib/firebase/firebase";
 
 export const createGame = async (gameData) => {
+
+  const { month , day, year } = gameData.gameTime;
+  const date = new Date(year, month, day);
+  gameData.gameTime = Timestamp.fromDate(date);
+
   const winloss =
     gameData.teamAStats.points > gameData.teamBStats.points
       ? {winner: gameData.teamA.id, loser: gameData.teamB.id}
@@ -45,17 +50,8 @@ export const createGame = async (gameData) => {
       .set({
         doc: gameData.doc,
         number: +gameData.gameNumber,
-        time: Timestamp.fromDate(
-          new Date(
-            2022,
-            1,
-            1,
-            gameData.gameTime.hour,
-            gameData.gameTime.minute,
-            gameData.gameTime.second,
-            gameData.gameTime.millisecond
-          )
-        ),
+        time: null,
+        date: gameData.gameTime,
         leagueId: gameData.league.id,
         playerStats: gameData.stats,
         teamA: {
@@ -103,20 +99,20 @@ export const getGamesByDocs = async (docs) => {
   return await Promise.all(games);
 };
 
-export const getGamesByPage = async (page, limit, orderBy = "time") => {
+export const getGamesByPage = async (page, limit, orderBy = "date") => {
   let lastDoc = null;
 
   if (page > 0) {
     const games = await firestore
       .collection("games")
-      .orderBy(orderBy)
+      .orderBy(orderBy, "desc")
       .limit(page * limit)
       .get();
 
     lastDoc = games.docs[games.docs.length - 1];
   }
 
-  let query = firestore.collection("games").orderBy(orderBy).limit(limit);
+  let query = firestore.collection("games").orderBy(orderBy, "desc").limit(limit);
 
   if (lastDoc) {
     query = query.startAfter(lastDoc);

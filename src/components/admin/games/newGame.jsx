@@ -8,6 +8,7 @@ import {
   Input,
   TimeInput,
   Button,
+  DateInput
 } from "@nextui-org/react";
 import useFetchLeague from "./fetchLeague";
 import useTeamByName from "@/hooks/useTeamByName";
@@ -203,12 +204,7 @@ export default function NewGame() {
     results: [],
   });
 
-  const [gameTime, setGameTime] = useState({
-    hour: 0,
-    minute: 0,
-    second: 0,
-    millisecond: 0,
-  });
+  const [gameTime, setGameTime] = useState();
 
   const [gameNumber, setGameNumber] = useState(0);
 
@@ -280,7 +276,7 @@ export default function NewGame() {
       .then((res) => {
         console.log(res)
         alert("Game Saved");
-        router.push("/admin/dashboard/games");
+        // router.push("/admin/dashboard/games");
       })
       .catch((err) => {
         alert("Error saving game");
@@ -414,7 +410,7 @@ export default function NewGame() {
       </div>
 
       <div className="flex flex-col gap-2 mt-4 md:flex-row">
-        <TimeInput
+        <DateInput
           label="Game Time"
           size="sm"
           value={gameTime}

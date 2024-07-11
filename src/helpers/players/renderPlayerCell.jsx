@@ -5,10 +5,17 @@ export default function renderPlayerCell(player, key) {
     case "number":
       return <span>{player.number}</span>;
     case "player":
+
+      let firstname = player.firstname ? player.firstname.split(" "): null;
+
+      if(firstname) {
+        firstname = firstname.map((name) => name.charAt(0).toUpperCase()).join(' ')
+      } 
+        
       return (
         <User
           className=" min-w-3.5"
-          name={player.firstname ? `${player.lastname}, ${player.firstname}` : player.lastname}
+          name={player.firstname ? `${player.lastname}, ${firstname}` : player.lastname}
           description={player.positions.join(" | ")}
           avatar={{
             src: player.avatar || null,
