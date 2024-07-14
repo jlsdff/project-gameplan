@@ -276,7 +276,7 @@ export default function NewGame() {
       .then((res) => {
         console.log(res)
         alert("Game Saved");
-        // router.push("/admin/dashboard/games");
+        router.push("/admin/dashboard/games");
       })
       .catch((err) => {
         alert("Error saving game");

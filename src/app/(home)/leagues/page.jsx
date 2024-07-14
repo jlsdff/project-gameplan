@@ -5,8 +5,8 @@ import UnderMaintainance from "@/components/ui/underMaintainance";
 export default async function LeaguePage() {
   return (
     <>
-    <UnderMaintainance />
-    {/* <LeaguesPage /> */}
+    {/* <UnderMaintainance /> */}
+    <LeaguesPage />
     </>
   );
 }

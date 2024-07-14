@@ -50,7 +50,7 @@ export const createGame = async (gameData) => {
       .set({
         doc: gameData.doc,
         number: +gameData.gameNumber,
-        time: null,
+        time: gameData.gameTime,
         date: gameData.gameTime,
         leagueId: gameData.league.id,
         playerStats: gameData.stats,

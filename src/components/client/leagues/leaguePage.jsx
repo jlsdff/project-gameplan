@@ -9,7 +9,6 @@ export default function LeaguePage({ id }) {
   const [loading, setLoading] = useState(true);
 
   const fetchData = useCallback(async () => {
-
     let league = await firestore
       .collection("leagues")
       .doc(id)
@@ -99,7 +98,7 @@ export default function LeaguePage({ id }) {
     try {
       fetchData()
         .then((res) => {
-          console.log(res)
+          console.log(res);
           setLeague(res);
         })
         .catch((error) => {
@@ -175,7 +174,7 @@ export default function LeaguePage({ id }) {
   return (
     <>
       {!league ? (
-        <main className="w-screen h-screen flex justify-center items-center">
+        <main className="flex items-center justify-center w-screen h-screen">
           <Spinner label="Loading..." />
         </main>
       ) : (
@@ -199,7 +198,9 @@ export default function LeaguePage({ id }) {
                     })}
                   </span>{" "}
                 </h2>
-                <h2>Game Schedule: {displaySchedule()}</h2>
+                {league.dateSchedule.length > 0 && (
+                  <h2>Game Schedule: {displaySchedule()}</h2>
+                )}
                 <div className="my-4">
                   {league.leagueData.blocks.map((block, index) =>
                     renderLeagueData(block)
