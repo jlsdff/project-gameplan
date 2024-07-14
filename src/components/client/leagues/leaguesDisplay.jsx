@@ -1,5 +1,11 @@
 "use client";
-import React, { useCallback, useState, useEffect, useRef, useMemo } from "react";
+import React, {
+  useCallback,
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+} from "react";
 import { Image, Link, Spinner } from "@nextui-org/react";
 import { firestore } from "@/lib/firebase/firebase";
 import { getLeaguesByLikeTitle } from "@/utils/leagueAPI";
@@ -12,7 +18,7 @@ export default function LeaguesDisplay({ page }) {
   // const recentLeagues = useRef([]);
 
   const onGoingLeagues = useMemo(() => {
-    if(leagues.length > 0) {
+    if (leagues.length > 0) {
       return leagues.filter((league) => {
         const today = new Date();
         const startDate = new Date(league.startDate);
@@ -20,23 +26,23 @@ export default function LeaguesDisplay({ page }) {
         if (today > startDate && league.status !== "Finished") {
           return league;
         }
-      })
+      });
     } else {
-      return []
+      return [];
     }
-  }, [leagues])
+  }, [leagues]);
 
   const recentLeagues = useMemo(() => {
-    if(leagues.length > 0){
-      return leagues.filter(league => {
-        if(league.status === "Finished"){
+    if (leagues.length > 0) {
+      return leagues.filter((league) => {
+        if (league.status === "Finished") {
           return league;
         }
-      })
+      });
     } else {
-      return []
+      return [];
     }
-  }, [leagues])
+  }, [leagues]);
 
   // return { ...league, games: game }
   const fetchData = useCallback(async () => {
@@ -139,46 +145,47 @@ export default function LeaguesDisplay({ page }) {
       ) : (
         <main className="min-h-screen px-8 py-4 sm:py-8 sm:px-16">
           <section>
-            {
-              (onGoingLeagues.length > 0) && (
-                <div className="w-full ">
-              <h1 className="mb-2 text-2xl font-black">Ongoing League </h1>
-              {/* <LeaguesTable leagues={onGoingLeagues} /> */}
-              <Link
-                href={`/leagues?id=${onGoingLeagues[0].id}`}
-                className="flex flex-col items-start justify-start gap-3 py-2 cursor-pointer sm:flex-row hover:underline "
-              >
-                <div className="w-full sm:max-w-sm">
-                  <Image
-                    src={onGoingLeagues[0].leagueImage}
-                    alt={onGoingLeagues[0].title}
-                  />
-                </div>
-                <div className="flex flex-col justify-start gap-2">
-                  <h2 className="text-3xl font-bold sm:text-2xl text-primary">
-                    {onGoingLeagues[0].title}
-                  </h2>
-                  <div className=" text-foreground">
-                    <h3>
-                      <span className="text-lg font-semibold">Venue:</span>
-                      <br />
-                      <span>{onGoingLeagues[0].venue}</span>
-                    </h3>
-                    <h3>
-                      <span className="text-lg font-semibold">
-                        Game Schedule:
-                      </span>
-                      <br />
-                      <span>
-                        {displayGameShedule(onGoingLeagues[0])}
-                      </span>
-                    </h3>
+            {onGoingLeagues.length > 0 && (
+              <div className="w-full ">
+                <h1 className="mb-2 text-2xl font-black">Ongoing League </h1>
+                {/* <LeaguesTable leagues={onGoingLeagues} /> */}
+                <Link
+                  href={`/leagues?id=${onGoingLeagues[0].id}`}
+                  className="flex flex-col items-start justify-start gap-3 py-2 cursor-pointer sm:flex-row hover:underline "
+                >
+                  <div className="w-full sm:max-w-sm">
+                    <Image
+                      src={onGoingLeagues[0].leagueImage}
+                      alt={onGoingLeagues[0].title}
+                    />
                   </div>
-                </div>
-              </Link>
-            </div>
-              )
-            }
+                  <div className="flex flex-col justify-start gap-2">
+                    <h2 className="text-3xl font-bold sm:text-2xl text-primary">
+                      {onGoingLeagues[0].title || ""}
+                    </h2>
+                    <div className=" text-foreground">
+                      {onGoingLeagues[0].venue && (
+                        <h3>
+                          <span className="text-lg font-semibold">Venue:</span>
+                          <br />
+                          <span>{onGoingLeagues[0].venue}</span>
+                        </h3>
+                      )}
+                      {
+                        onGoingLeagues[0].gameSchedule && (
+                        <h3>
+                          <span className="text-lg font-semibold">
+                            Game Schedule:
+                          </span>
+                          <br />
+                          <span>{displayGameShedule(onGoingLeagues[0])}</span>
+                        </h3>
+                      )}
+                    </div>
+                  </div>
+                </Link>
+              </div>
+            )}
             <div>
               <h2 className="mt-4 mb-2 text-2xl font-black">Recent Leagues</h2>
               <div className="w-full overflow-x-auto">

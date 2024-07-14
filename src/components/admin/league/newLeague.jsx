@@ -157,12 +157,12 @@ export default function NewLeague() {
     // Verify if all required fields are filled
     if (
       data.title === "" ||
-      data.venue === "" ||
-      data.timeFrom === "" ||
-      data.timeTo === "" ||
-      data.dateSchedule.length === 0 ||
-      data.participatingTeams.length === 0 ||
-      Object.keys(data.leagueData).length === 0 ||
+      // data.venue === "" ||
+      // data.timeFrom === "" ||
+      // data.timeTo === "" ||
+      // data.dateSchedule.length === 0 ||
+      // data.participatingTeams.length === 0 ||
+      // Object.keys(data.leagueData).length === 0 ||
       data.startDate === ""
     ) {
       alert("Please fill out all required fields");
