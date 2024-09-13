@@ -18,11 +18,6 @@ export default function PlayersTable({page, name}) {
 
   const columns = useMemo(()=>[
     {
-      key: "number",
-      label: "#",
-      description: "Jersey Number",
-    },
-    {
       key: "player",
       label: "Player",
       description: "Player Name",
@@ -51,11 +46,6 @@ export default function PlayersTable({page, name}) {
       key: "BPG",
       label: "BPG",
       description: "Blocks Per Game",
-    },
-    {
-      key: "FG%",
-      label: "FG%",
-      description: "Field Goal Percentage",
     },
   ],[])
 
