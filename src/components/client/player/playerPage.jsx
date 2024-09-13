@@ -17,6 +17,7 @@ import {
 } from "@/helpers/players/statsHelpers";
 import { getGamesByDocs } from "@/utils/gamesAPI";
 import PlayerTableById from "@/components/client/player/playerTableID";
+import { timestampToDate } from "@/helpers/timestampToDate";
 
 async function getPlayerData(params) {
   const { id } = params;
@@ -39,7 +40,7 @@ async function getPlayerData(params) {
   const records = await getPlayerGamerecords(id);
 
   const games = await getGamesByDocs(records.map((record) => record.gameId));
-  console.log(games);
+
   const gameCompleteData = games.map(async (game) => {
     const teamA = await firestore
       .collection("teams")
@@ -76,7 +77,11 @@ async function getPlayerData(params) {
   return {
     ...player,
     gameRecords: records,
-    games: gamesData,
+    games: gamesData.sort((a, b) => {
+      const aDate = a.date.toDate(); 
+      const bDate = b.date.toDate();  
+      return bDate.getTime() - aDate.getTime(); 
+    }),
   };
 }
 
@@ -118,29 +123,13 @@ export default function PlayerPage({ id }) {
     }
   }, [fetchData]);
 
-  // const name = player.firstname
-  //   ? `${player.lastname}, ${player.firstname}`
-  //   : `${player.lastname}`;
   const name = player
     ? `${player.lastname}, ${player.firstname}`
     : "Loading...";
-  // player = {
-  //   ...player,
-  //   ppg: getPPG(player.gameRecords),
-  //   apg: getAPG(player.gameRecords),
-  //   rpg: getRPG(player.gameRecords),
-  //   bpg: getBPG(player.gameRecords),
-  //   spg: getSPG(player.gameRecords),
-  //   fgp: getFGP(player.gameRecords),
-  //   twoPG: get2PG(player.gameRecords),
-  //   threePG: get3PG(player.gameRecords),
-  //   ftp: getFTP(player.gameRecords),
-  // };
-
   return (
     <>
       {!player ? (
-        <main className="h-screen w-full flex justify-center items-center">
+        <main className="flex items-center justify-center w-full h-screen">
           <Spinner label="Loading..." />
         </main>
       ) : (

@@ -22,14 +22,6 @@ export default function PlayerTableById({ games, playerId }) {
 
   const findCurrentTeam = useCallback(
     (game) => {
-      // const teamAPlayers = game.teamA.data.players;
-      // const teamBPlayers = game.teamB.data.players;
-      // const currentTeam = teamAPlayers.find((player) => player === playerId)
-      //   ? { ...game.teamA.data, stats: game.teamA.stats }
-      //   : { ...game.teamB.data, stats: game.teamB.stats };
-      // console.log("Current Team:",currentTeam)
-      // console.log("TEAM A", game.teamA)
-
       const isTeamA = game.playerStats.teamA.some(
         (playerStat) => playerStat.id === playerId
       );
@@ -51,12 +43,6 @@ export default function PlayerTableById({ games, playerId }) {
   );
 
   const columns = [
-    // TODO: tentative: Replace with league
-    // {
-    //   key: "number",
-    //   title: "#",
-    //   description: "Game Number",
-    // },
     {
       key: "points",
       title: "PTS",
@@ -73,9 +59,14 @@ export default function PlayerTableById({ games, playerId }) {
       description: "Rebounds",
     },
     {
-      key: "FGP",
-      title: "FG%",
-      description: "Field Goal Percentage",
+      key: "steals",
+      title: "STL",
+      description: "Steals",
+    },
+    {
+      key: "blocks",
+      title: "BLK",
+      description: "Blocks",
     },
     {
       key: "currentTeam",
@@ -140,13 +131,12 @@ export default function PlayerTableById({ games, playerId }) {
       case "rebounds":
         const rebounds = currentStat.rebounds;
         return <span>{rebounds}</span>;
-      case "FGP":
-        const totalAttempts =
-          currentStat.twoPointsAttempted + currentStat.threePointsAttempted;
-        const totalMade =
-          currentStat.twoPointsMade + currentStat.threePointsMade;
-        const fgp = ((totalMade / totalAttempts) * 100).toFixed(2);
-        return <span>{`${fgp}%`}</span>;
+      case "steals":
+        const steals = currentStat.steals || 0;
+        return <span>{steals}</span>;
+      case "blocks": 
+        const blocks = currentStat.blocks || 0;
+        return <span>{blocks}</span>;
       case "currentTeam":
         console.log("Current Team:", currentTeam);
         return (
@@ -223,6 +213,10 @@ export default function PlayerTableById({ games, playerId }) {
             {game.league.title}
           </span>
         );
+      default:
+        return (
+          <span></span>
+        )
     }
   };
 
