@@ -56,6 +56,8 @@ export default function LeaguesTable({ leagues, loading }) {
         return <span>{league.title}</span>;
       case "schedule":
         const schedule = league.dateSchedule.join(",");
+        console.log(schedule)
+        if(!schedule) return <span></span>
         const start = new Date();
         start.setHours(league.timeFrom.split(":")[0]);
         start.setMinutes(league.timeFrom.split(":")[1]);
