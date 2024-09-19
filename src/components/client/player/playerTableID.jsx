@@ -13,6 +13,7 @@ import {
 import { useRouter } from "next/navigation";
 
 export default function PlayerTableById({ games, playerId }) {
+  console.log("games:", games)
   const router = useRouter();
   
   const findPlayerStats = (game) => {
@@ -104,6 +105,9 @@ export default function PlayerTableById({ games, playerId }) {
 
   const renderCell = (game, key) => {
     const currentStat = findPlayerStats(game);
+    if(!currentStat) {
+      console.log(game)
+    };
     const { currentTeam, opposingTeam } = findCurrentTeam(game);
     if (!currentTeam || !opposingTeam) return null;
     switch (key) {
@@ -121,10 +125,10 @@ export default function PlayerTableById({ games, playerId }) {
         )
       case "points":
         const points =
-          currentStat.twoPointsMade * 2 +
-          currentStat.threePointsMade * 3 +
+          (currentStat.twoPointsMade *  2) +
+          (currentStat.threePointsMade * 3) +
           currentStat.freeThrowsMade;
-        return <span>{points}</span>;
+        return <span>{points || 0}</span>;
       case "assists":
         const assists = currentStat.assists;
         return <span>{assists}</span>;
@@ -138,7 +142,6 @@ export default function PlayerTableById({ games, playerId }) {
         const blocks = currentStat.blocks || 0;
         return <span>{blocks}</span>;
       case "currentTeam":
-        console.log("Current Team:", currentTeam);
         return (
           <div
             className="flex items-center justify-start gap-2 cursor-pointer hover:underline"

@@ -30,7 +30,7 @@ if (firebase.apps.length === 0) {
 }
 
 const auth = app.auth();
-const firestore = app.firestore();
+const firestore = app.firestore()
 const storage = app.storage();
 
 export const analytics = () => {
