@@ -1,4 +1,8 @@
 import { firestore, FieldValue } from "@/lib/firebase/firebase";
+import { getDoc, collection, increment, setDoc, doc
+ } from "firebase/firestore";
+
+const db = firestore;
 
 // PLAYER COUNTER API
 export async function incrementPlayer() {
@@ -23,8 +27,9 @@ export async function resetPlayer() {
 }
 
 export async function getPlayerCount() {
-  const doc = await firestore.collection("counters").doc("players").get();
-  return doc.data().size;
+  const playerCollection = collection(db, "counters")
+  const playerDoc = await getDoc(doc(playerCollection, "players"))
+  return playerDoc.data().size;
 }
 
 // TEAM COUNTER API

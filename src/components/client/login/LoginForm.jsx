@@ -66,7 +66,7 @@ export default function LoginForm() {
     const { email, password } = state;
 
     const res = await signIn(email.value, password.value);
-
+    console.log(res)
     if (res.status === "success") {
       router.push("/admin/dashboard");
     } else {
@@ -80,7 +80,7 @@ export default function LoginForm() {
   }
 
   return (
-    <section className="max-w-96 w-96 rounded-lg border-2 border-neutral-100/50 p-4  ">
+    <section className="p-4 border-2 rounded-lg max-w-96 w-96 border-neutral-100/50 ">
       <h1 className="text-2xl font-bold text-center">Admin Login</h1>
       <div className="flex flex-col gap-2 mt-4 ">
         <div className="w-full ">
@@ -111,7 +111,7 @@ export default function LoginForm() {
         </div>
         <div className="flex justify-between mb-3">
           <Checkbox size="sm">
-            <span className=" text-opacity-40 ">Remember me?</span>
+            <span className=" text-opacity-40">Remember me?</span>
           </Checkbox>
 
           <Link href="#" className="text-sm text-blue-400 decoration-solid ">
@@ -119,7 +119,7 @@ export default function LoginForm() {
           </Link>
         </div>
         {state.error.hasError && (
-          <div className="text-danger text-sm text-center">
+          <div className="text-sm text-center text-danger">
             {state.error.message}
           </div>
         )}

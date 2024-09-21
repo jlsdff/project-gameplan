@@ -1,45 +1,56 @@
 import { firestore } from "@/lib/firebase/firebase";
+import {
+  collection,
+  setDoc,
+  Timestamp,
+  doc,
+  query,
+  startAfter,
+  getDoc,
+  limit,
+  orderBy as sort,
+  getDocs,
+  updateDoc,
+  deleteDoc,
+} from "firebase/firestore";
+const db = firestore;
 
 // CREATE PLAYERS
 export async function createPlayer(player) {
   player.createdAt = new Date().toISOString();
   player.updatedAt = new Date().toISOString();
 
-  return await firestore.collection("players").add(player);
+  const playerCollection = collection(db, "players");
+
+  await setDoc(doc(playerCollection), player);
 }
 
 // READ PLAYERS
-export async function getPlayersByPage(page, limit, orderBy = "lastname") {
-  let lastDoc = null;
+// limit = 10
+// page = 1
+export async function getPlayersByPage(
+  page,
+  limitPerPage,
+  sortBy = "lastname"
+) {
 
-  if (page > 0) {
-    const snapshot = await firestore
-      .collection("players")
-      .orderBy(orderBy, "asc")
-      .limit(page * limit)
-      .get();
-
-    lastDoc = snapshot.docs[snapshot.docs.length - 1];
-  }
-
-  let query = firestore
-    .collection("players")
-    .orderBy(orderBy, "asc")
-    .limit(limit);
-
-  if (lastDoc) {
-    query = query.startAfter(lastDoc);
-  }
-
-  return await query.get();
+  const playersCollection = collection(db, "players");
+  const res = await getDocs(query(
+    playersCollection,
+    sort(sortBy),
+    limit(limitPerPage),
+    startAfter(page * limitPerPage)
+  ))
+  console.log(page+2, res)
+  return res
 }
 
 export async function getAllPlayers() {
-  return await firestore.collection("players").get();
+  return await collection(db, "players").get();
 }
 
 export async function getPlayerById(id) {
-  return await firestore.collection("players").doc(id).get();
+  return await getDoc(doc(collection(db, "players"), id));
 }
 
 export async function getPlayerByLikeName(name) {
@@ -78,14 +89,10 @@ export async function getPlayerByLikeName(name) {
 }
 
 export async function getPlayerGamerecords(id) {
-  return await firestore
-    .collection("players")
-    .doc(id)
-    .collection("gameRecords")
-    .get()
-    .then((snap) =>
-      snap.docs.map((doc) => ({ ...doc.data(), gameId: doc.id }))
-    );
+  const playersCollection = collection(db, "players");
+  const playerDoc = doc(playersCollection, id);
+  const playerRecords = await getDocs(collection(playerDoc, "gameRecords")).then((snap) => snap.docs.map(doc => ({...doc.data, gameId: doc.id})));
+  return playerRecords
 }
 
 export async function getPlayersGameRecords(players) {
@@ -102,13 +109,11 @@ export async function getPlayersGameRecords(players) {
 export async function updatePlayer(id, data) {
   data.updatedAt = new Date().toISOString();
 
-  return await firestore
-    .collection("players")
-    .doc(id)
-    .update(data, { merge: true });
+  return await updateDoc(doc(collection(db, "players"), id), data);
 }
 
 // DELETE PLAYERS
 export async function deletePlayer(id) {
-  return await firestore.collection("players").doc(id).delete();
+  // return await firestore.collection("players").doc(id).delete();
+  return await deleteDoc(doc(collection(db, "players"), id))
 }
