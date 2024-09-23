@@ -114,5 +114,7 @@ export default function renderPlayerCell(player, key) {
           }) + "%"}
         </span>
       )
+    case "currentTeam":
+      return <span>{}</span>;
   }
 }

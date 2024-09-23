@@ -59,10 +59,10 @@ export const getBPG = (stats) => {
 export const getSPG = (stats) => {
   if (!stats.length) return 0;
 
-  return stats
+  return (stats
     .reduce((acc, curr) => {
       return acc + curr.steals;
-    }, 0)
+    }, 0) / stats.length)
     .toLocaleString(undefined, {
       minimumFractionDigits: 0,
       maximumFractionDigits: 2,

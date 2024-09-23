@@ -130,9 +130,9 @@ export default function LeaguesDisplay({ page }) {
   };
 
   const displayGameShedule = (game) => {
-    const dateSchedule = game.dateSchedule.join(", ");
-    const timeFrom = timeToDate(game.timeFrom);
-    const timeTo = timeToDate(game.timeTo);
+    const dateSchedule = game.dateSchedule.join(", ") ||  ""; 
+    const timeFrom = timeToDate(game.timeFrom) || "";
+    const timeTo = timeToDate(game.timeTo) || "";
     return `${dateSchedule} | ${timeFrom} - ${timeTo}`;
   };
 
