@@ -17,6 +17,12 @@ export default function PlayerTableById({ games, playerId }) {
   
   const findPlayerStats = (game) => {
     const stats = [...game.playerStats.teamA, ...game.playerStats.teamB];
+
+    const playerStat = stats.find((stat) => stat.id === playerId);
+    if(!playerStat) {
+      console.log("unknown player: ",playerId)
+      console.log("game: ",game)
+    }
     return stats.find((stat) => stat.id === playerId);
   };
 
@@ -148,7 +154,6 @@ export default function PlayerTableById({ games, playerId }) {
         const fgp = ((totalMade / totalAttempts) * 100).toFixed(2);
         return <span>{`${fgp}%`}</span>;
       case "currentTeam":
-        console.log("Current Team:", currentTeam);
         return (
           <div
             className="flex items-center justify-start gap-2 cursor-pointer hover:underline"
