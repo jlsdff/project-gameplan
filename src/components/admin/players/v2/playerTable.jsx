@@ -1,26 +1,24 @@
 import React, {useContext, useMemo} from "react"
-import { Table, Pagination} from "@nextui-org/react"
+import { Table, TableBody, TableColumn, TableHeader, TableRow, TableCell, getKeyValue } from "@nextui-org/react"
 import { PlayersContext } from "./playersProvider"
 
 export default function AdminPlayersTable(){
 
   const playerContext = useContext(PlayersContext)
 
-  if(playerContext.players.length === 0 || !playerContext.players) {
-    return <div> Loading... </div>
-  } else {
-    // console.log(playerContext.players.docs.map(doc => doc.data()))
-  }
+  const players = useMemo(() => {
+    return playerContext.players.map( doc => ({id: doc.id, ...doc.data(), actions: "actions"}))
+  }, [playerContext.players])
 
   
   const columns = [
     {
-      key: "firstname",
-      label: "First Name"
-    },
-    {
       key: "lastname",
       label: "Last Name"
+    },
+    {
+      key: "firstname",
+      label: "First Name"
     },
     {
       key: "actions",
@@ -31,12 +29,24 @@ export default function AdminPlayersTable(){
   
   return (
     <section className="mt-4">
-      <div>
-        {
-          playerContext.players && 
-          playerContext.players.map(doc => <p key={doc.id}>{doc.data().lastname}</p>)
-        }
-      </div>
+        <Table
+          aria-label="Players Table"
+        >
+          <TableHeader 
+            columns={columns}
+          >
+            { column => <TableColumn key={column.key}>{column.label}</TableColumn>}
+          </TableHeader>
+          <TableBody items={players || []}>
+            {
+              item => (
+                <TableRow key={item.key}>
+                  { key => <TableCell key={key}>{getKeyValue(item, key)}</TableCell>}
+                </TableRow>
+              )
+            }
+          </TableBody>
+        </Table>
     </section>
   )
 }
