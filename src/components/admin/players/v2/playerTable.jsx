@@ -40,7 +40,7 @@ export default function AdminPlayersTable(){
           <TableBody items={players || []}>
             {
               item => (
-                <TableRow key={item.key}>
+                <TableRow key={item.id}>
                   { key => <TableCell key={key}>{getKeyValue(item, key)}</TableCell>}
                 </TableRow>
               )

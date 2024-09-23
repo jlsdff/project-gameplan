@@ -9,8 +9,7 @@ import React, {
 } from "react";
 import PlayerAPI from "@/utils/v2/playerAPI";
 import { useRouter, useSearchParams } from "next/navigation";
-
-
+import { useDisclosure } from "@nextui-org/react";
 
 export const PlayersContext = createContext({
   searchInput: "",

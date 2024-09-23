@@ -6,35 +6,34 @@ import AdminPlayerPagination from "./adminPlayerPagination";
 import AdminPlayersTable from "./playerTable";
 import { Button } from "@nextui-org/react";
 import { useSearchParams } from "next/navigation";
+import PlayerModalProvider from "./playerModalProvider";
+import { PlayerModalContext } from "./playerModalProvider";
 
 export default function AdminPlayer() {
-  const playerContext = useContext(PlayersContext);
-
+  // const playerContext = useContext(PlayersContext);
+  // const modalContext = useContext(PlayerModalContext);
 
   return (
-    <PlayersProvider>
-      {/* SEARCH BAR */}
-      <AdminPlayerSearchBar />
-      {/* TABLE */}
-      <AdminPlayersTable />
-      {/* PAGINATION */}
-      {/* <AdminPlayerPagination /> */}
-      <LoadMoreButton/>
-    </PlayersProvider>
+    <PlayerModalProvider>
+      <PlayersProvider>
+        <AdminPlayerSearchBar />
+        <AdminPlayersTable />
+        <LoadMoreButton />
+      </PlayersProvider>
+    </PlayerModalProvider>
   );
 }
 
 function LoadMoreButton() {
-  
-  const params = useSearchParams()
+  const params = useSearchParams();
   const playerContext = useContext(PlayersContext);
   const handleLoadMore = useCallback(() => {
-    playerContext.fetchPlayers()
+    playerContext.fetchPlayers();
     // console.log(playerContext.players)
   }, [playerContext]);
 
-  if(params.get("name")) return null
-  
+  if (params.get("name")) return null;
+
   return (
     <section className="flex justify-center mt-4">
       <Button onClick={handleLoadMore} isLoading={playerContext.isFetching}>
