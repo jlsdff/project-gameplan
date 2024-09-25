@@ -18,6 +18,12 @@ export default function PlayerTableById({ games, playerId }) {
   
   const findPlayerStats = (game) => {
     const stats = [...game.playerStats.teamA, ...game.playerStats.teamB];
+
+    const playerStat = stats.find((stat) => stat.id === playerId);
+    if(!playerStat) {
+      console.log("unknown player: ",playerId)
+      console.log("game: ",game)
+    }
     return stats.find((stat) => stat.id === playerId);
   };
 
