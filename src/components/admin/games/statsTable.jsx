@@ -101,7 +101,7 @@ export default function StatsTable({ teamData, players, setData, mainData }) {
                     </Chip>
                   </Tooltip>
               </td>
-              <td className="px-2 py-4">{`${player.lastname}`}</td>
+              <td className="px-2 py-4">{`${player.lastname}, ${player.firstname || ""}`}</td>
               <td className="px-2 py-4">
                 <Input
                   id="input-rebounds"
