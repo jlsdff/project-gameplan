@@ -20,6 +20,7 @@ export default function AdminPlayerSearchBar() {
 
   const newPlayer = () => {
     modalContext.setType("New Player")
+    modalContext.dispatchPlayer({type: "reset"})
     modalContext.onOpen();
   };
 

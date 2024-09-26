@@ -3,6 +3,8 @@ import { Table, TableBody, TableColumn, TableHeader, TableRow, TableCell, getKey
 import { PlayersContext } from "./playersProvider"
 import PlayerAPI from "@/utils/v2/playerAPI"
 import { PlayerModalContext } from "./playerModalProvider"
+import EditIcon from "@/assets/editIcon"
+import DeleteIcon from "@/assets/deleteIcon"
 
 export default function AdminPlayersTable(){
 
@@ -17,7 +19,7 @@ export default function AdminPlayersTable(){
   const columns = [
     {
       key: "player",
-      label: "player"
+      label: "Player"
     },
     {
       key: "actions",
@@ -51,9 +53,9 @@ export default function AdminPlayersTable(){
         )
       case "actions": 
         return (
-          <div>
-            <Button onPress={() => editPlayer(item)}>Edit</Button>
-            <Button onPress={() => deletePlayer(item)}>Delete</Button>
+          <div className="space-x-4">
+            <Button isIconOnly onPress={() => editPlayer(item)}><EditIcon/></Button>
+            <Button isIconOnly onPress={() => deletePlayer(item)}><DeleteIcon/></Button>
           </div>
         )
       default:
