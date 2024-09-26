@@ -4,7 +4,7 @@ import { Input, Button, Tooltip } from "@nextui-org/react";
 import SearchIcon from "@/assets/searchIcon";
 import AddIcon from "@/assets/addIcon";
 import { useRouter } from "next/navigation";
-import { PlayerModalContext } from "./playerModalProvider";
+import { PlayerModalContext } from "./modal/playerModalProvider";
 
 export default function AdminPlayerSearchBar() {
 
@@ -20,9 +20,21 @@ export default function AdminPlayerSearchBar() {
 
   const newPlayer = () => {
     modalContext.setType("New Player")
+    modalContext.setSize('5xl')
     modalContext.dispatchPlayer({type: "reset"})
     modalContext.onOpen();
   };
+
+  const importPlayers = () => {
+    modalContext.setType("Import Players")
+    modalContext.dispatchPlayer({type: "reset"})
+    modalContext.setSize('full')
+    modalContext.onOpen();
+  }
+
+  const exportPlayers = () => {
+    console.log("Export Player Button")
+  }
 
   return (
     <section className="flex items-center gap-3">
@@ -43,13 +55,13 @@ export default function AdminPlayerSearchBar() {
         </Button>
       </Tooltip>
       <Tooltip content="Batch import">
-        <Button>
+        <Button onPress={importPlayers}>
           Import
         </Button>
       </Tooltip>
       
       <Tooltip content="Download All Players">
-        <Button>
+        <Button onPress={exportPlayers}>
           Export
         </Button>
       </Tooltip>

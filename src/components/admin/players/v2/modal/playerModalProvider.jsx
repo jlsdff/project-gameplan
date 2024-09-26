@@ -10,7 +10,7 @@ import {
   ModalFooter,
   image,
 } from "@nextui-org/react";
-import PlayerModalBody, { DeletePlayerModalBody } from "./modalBody";
+import PlayerModalBody, { DeletePlayerModalBody, ImportPlayerModalBody } from "./modalBody";
 import PlayerAPI from "@/utils/v2/playerAPI";
 
 export const PlayerModalContext = createContext({
@@ -69,6 +69,7 @@ const reducer = (state, action) => {
 export default function PlayerModalProvider({ children }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [type, setType] = useState("New Player");
+  const [size, setSize] = useState("5xl")
   const [player, dispatchPlayer] = useReducer(reducer, {
     firstname: "",
     lastname: "",
@@ -90,12 +91,14 @@ export default function PlayerModalProvider({ children }) {
     type,
     setType,
     player,
+    setSize,
+    size,
     dispatchPlayer,
   };
 
   return (
     <PlayerModalContext.Provider value={value}>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="5xl">
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} size={size}>
         <ModalContent>
           {(onClose) => (
             <>
@@ -119,8 +122,10 @@ function displayHeader(type) {
       return "Edit Player";
     case "Delete Player":
       return "Delete Player";
+    case "Import Players":
+      return "Import Players";
     default:
-      return "Add New Player";
+      return "";
   }
 }
 
@@ -132,6 +137,8 @@ function displayBody(type) {
       return <PlayerModalBody />;
     case "Delete Player":
       return <DeletePlayerModalBody />;
+    case "Import Players":
+      return <ImportPlayerModalBody/>
     default:
       return "Add New Player";
   }
@@ -246,6 +253,9 @@ function displayFooter(type, onClose, player) {
           </Button>
         </div>
       );
+    
+    case "Import Players":
+      return ""
     default:
       return <Button onPress={onClose}>Close</Button>;
   }

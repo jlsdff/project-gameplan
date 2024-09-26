@@ -2,7 +2,7 @@ import React, {useCallback, useContext, useMemo} from "react"
 import { Table, TableBody, TableColumn, TableHeader, TableRow, TableCell, getKeyValue, User, Button } from "@nextui-org/react"
 import { PlayersContext } from "./playersProvider"
 import PlayerAPI from "@/utils/v2/playerAPI"
-import { PlayerModalContext } from "./playerModalProvider"
+import { PlayerModalContext } from "./modal/playerModalProvider"
 import EditIcon from "@/assets/editIcon"
 import DeleteIcon from "@/assets/deleteIcon"
 
@@ -29,12 +29,14 @@ export default function AdminPlayersTable(){
 
   const editPlayer = useCallback((player) => {
     modalContext.setType("Edit Player")
+    modalContext.setSize('5xl')
     modalContext.dispatchPlayer({type: "set", value: player})
     modalContext.onOpen()
   }, [modalContext])
 
   const deletePlayer = useCallback( player => {
     modalContext.setType("Delete Player")
+    modalContext.setSize('5xl')
     modalContext.dispatchPlayer({type: "set", value: player})
     modalContext.onOpen()
   }, [modalContext])

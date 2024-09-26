@@ -20,6 +20,7 @@ import {
 } from "firebase/firestore";
 
 class PlayerAPI {
+
   static db = firestore;
 
   constructor({ firstname, lastname, number, imageUrl, profileSettings }) {
@@ -184,6 +185,26 @@ class PlayerAPI {
       return `${lastname}`;
     }
   }
+
+  // GET GAME RECORDS OF PLAYER BY ID
+  // @param id: string
+  static async getGameRecords(id){
+    const playerDoc = doc(this.db, 'players', id);
+    const docs = await getDocs(collection(playerDoc, 'gameRecords'));
+    return docs;
+  }
+
+  static async averageStats(data) {
+
+
+
+  }
+
+  static downloadTemplate(){
+    
+  }
+
+
 }
 
 export default PlayerAPI;

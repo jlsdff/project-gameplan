@@ -6,8 +6,8 @@ import AdminPlayerPagination from "./adminPlayerPagination";
 import AdminPlayersTable from "./playerTable";
 import { Button } from "@nextui-org/react";
 import { useSearchParams } from "next/navigation";
-import PlayerModalProvider from "./playerModalProvider";
-import { PlayerModalContext } from "./playerModalProvider";
+import PlayerModalProvider from "./modal/playerModalProvider";
+import { PlayerModalContext } from "./modal/playerModalProvider";
 
 export default function AdminPlayer() {
   // const playerContext = useContext(PlayersContext);
