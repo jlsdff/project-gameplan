@@ -10,7 +10,7 @@ import {
   ModalFooter,
   image,
 } from "@nextui-org/react";
-import PlayerModalBody from "./modalBody";
+import PlayerModalBody, { DeletePlayerModalBody } from "./modalBody";
 import PlayerAPI from "@/utils/v2/playerAPI";
 
 export const PlayerModalContext = createContext({
@@ -41,7 +41,25 @@ const reducer = (state, action) => {
     case "imageUrl":
       return { ...state, imageUrl: action.value };
     case "isFullNameVisible":
-      return {...state, profileSettings: { ...state.profileSettings, isFullNameVisible: action.value}}
+      return {
+        ...state,
+        profileSettings: {
+          ...state.profileSettings,
+          isFullNameVisible: action.value,
+        },
+      };
+    case "reset":
+      return {
+        firstname: "",
+        lastname: "",
+        number: "",
+        imageUrl: "",
+        profileSettings: {
+          isFullNameVisible: false,
+        },
+      };
+    case "set":
+      return { ...state, ...action.value };
     default:
       console.log("Invalid action type", action);
       return state;
@@ -58,13 +76,12 @@ export default function PlayerModalProvider({ children }) {
     imageUrl: "",
     profileSettings: {
       isFullNameVisible: false,
-    }
+    },
   });
 
   const displayInput = (text) => {
-    console.log(text)
-  }
-
+    console.log(text);
+  };
 
   const value = {
     isOpen,
@@ -112,16 +129,16 @@ function displayBody(type) {
     case "New Player":
       return <PlayerModalBody />;
     case "Edit Player":
-      return "Edit Player";
+      return <PlayerModalBody />;
     case "Delete Player":
-      return "Delete Player";
+      return <DeletePlayerModalBody /> ;
     default:
       return "Add New Player";
   }
 }
 
 function displayFooter(type, onClose, player) {
-  
+
   const newPlayer = async () => {
     const isValid = PlayerAPI.isPlayerCredsValid(player);
 
@@ -130,32 +147,96 @@ function displayFooter(type, onClose, player) {
       return;
     }
 
-    await PlayerAPI.createPlayer(player)
-      .then(doc => {
-        console.log("Player created successfully", doc);
-      })
+    await PlayerAPI.createPlayer(player).then((doc) => {
+      console.log("Player created successfully", doc);
+    });
   };
 
-  const editPlayer = () => {};
+  const editPlayer = async () => {
+    const isValid = PlayerAPI.isPlayerCredsValid(player);
 
-  const deletePlayer = () => {};
+    if (!isValid) {
+      alert("Invalid player credentials");
+      return;
+    }
+
+    await PlayerAPI.updatePlayer(player.id, player).then((doc) => {
+      console.log("Player updated successfully", doc);
+      alert("Player updated successfully");
+      onClose()
+    });
+  };
+
+  const deletePlayer = async () => {
+    await PlayerAPI.deletePlayer(player.id)
+      .then( () => {
+        alert("Player deleted successfully")
+        onClose()
+      })
+  };
 
   switch (type) {
     case "New Player":
       return (
         <div className="flex gap-2">
-          <Button color="primary" onPress={() => {
-            newPlayer()
-          }}>Submit</Button>
-          <Button variant="ghost" onPress={() => {
-            onClose()
-          }}>Cancel</Button>
+          <Button
+            color="primary"
+            onPress={() => {
+              newPlayer();
+            }}
+          >
+            Submit
+          </Button>
+          <Button
+            variant="ghost"
+            onPress={() => {
+              onClose();
+            }}
+          >
+            Cancel
+          </Button>
         </div>
       );
     case "Edit Player":
-      return "Edit Player";
+      return (
+        <div className="flex gap-2">
+          <Button
+            color="primary"
+            onPress={() => {
+              editPlayer();
+            }}
+          >
+            Submit
+          </Button>
+          <Button
+            variant="ghost"
+            onPress={() => {
+              onClose();
+            }}
+          >
+            Cancel
+          </Button>
+        </div>
+      );
     case "Delete Player":
-      return "Delete Player";
+      return <div className="flex gap-2">
+      <Button
+        color="primary"
+        onPress={() => {
+          deletePlayer();
+        }}
+      >
+        Yes
+      </Button>
+      <Button
+        variant="ghost"
+        onPress={() => {
+          onClose();
+        }}
+      >
+        No
+      </Button>
+    </div>;
     default:
       return <Button onPress={onClose}>Close</Button>;
   }

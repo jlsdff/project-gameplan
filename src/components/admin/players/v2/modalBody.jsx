@@ -1,6 +1,7 @@
 import React, {useContext} from "react";
-import { Checkbox, Input } from "@nextui-org/react";
+import { Checkbox, Input, User } from "@nextui-org/react";
 import { PlayerModalContext } from "./playerModalProvider";
+import PlayerAPI from "@/utils/v2/playerAPI";
 
 export default function PlayerModalBody({ data, onChange }) {
 
@@ -48,4 +49,26 @@ export default function PlayerModalBody({ data, onChange }) {
     </div>
     </>
   );
+}
+
+export function DeletePlayerModalBody() {
+
+  const playerContext = useContext(PlayerModalContext)
+  const {player, dispatchPlayer} = playerContext
+
+
+  return (
+    <div>
+      <h3 className="text-red-500" >
+       Are you sure you want to delete this player?
+      </h3>
+      <User 
+        className="mt-4"
+        name={PlayerAPI.displayName(player, true)}
+        avatarProps={{
+          src: player.imageUrl || ""
+        }}
+      />
+    </div>
+  )
 }

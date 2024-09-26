@@ -12,6 +12,8 @@ import {
   endAt,
   where,
   addDoc,
+  setDoc,
+  deleteDoc
 } from "firebase/firestore";
 
 class PlayerAPI {
@@ -53,9 +55,26 @@ class PlayerAPI {
     return true
   }
 
-  static async updatePlayer(id, player) {}
+  static async updatePlayer(id, player) {
+    const playerRef = doc(this.db, "players", id)
 
-  static async deletePlayer(id) {}
+    const isValid = this.isPlayerCredsValid(player)
+
+    if (!isValid) {
+      return null
+    }    
+
+    const updatedPlayer = await setDoc(playerRef, player)
+    return updatedPlayer
+
+    
+  }
+
+  static async deletePlayer(id) {
+    const playerRef = doc(this.db, "players", id)
+    const deletedPlayer = await deleteDoc(playerRef, {isDeleted: true})
+    return deletedPlayer
+  }
 
   static async countPlayers() {
     const playerCount = doc(this.db, "counters", "players");
@@ -116,18 +135,42 @@ class PlayerAPI {
   }
 
   static async getPlayerByName(name) {
+    const nameFormatted = name.charAt(0).toUpperCase() + name.slice(1);
     const playersRef = collection(this.db, "players");
     const q = query(
       playersRef,
       orderBy("lastname"),
-      where("lastname", "==", name),
-      where("lastname", "<=", name),
-      where("lastname", ">=", name)
+      where("lastname", "==", nameFormatted),
+      where("lastname", "<=", nameFormatted),
+      where("lastname", ">=", nameFormatted)
     );
 
     const querySnapshot = await getDocs(q);
     return querySnapshot;
   }
+
+  static displayName(player, fullname = false) {
+
+    const { firstname, lastname, profileSettings } = player;
+
+    if (fullname) {
+      return `${lastname}, ${firstname}`;
+    }
+
+    if( profileSettings?.isFullNameVisible ) {
+      return `${lastname}, ${firstname}`;
+    }
+
+    // return `${lastname}, ${firstname.charAt(0)}`;
+
+    if(firstname) {
+      return `${lastname}, ${firstname.charAt(0)}`;
+    } else {
+      return `${lastname}`;
+    }
+    
+  }
+  
 }
 
 export default PlayerAPI;

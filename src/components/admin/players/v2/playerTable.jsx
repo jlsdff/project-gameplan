@@ -1,10 +1,13 @@
-import React, {useContext, useMemo} from "react"
-import { Table, TableBody, TableColumn, TableHeader, TableRow, TableCell, getKeyValue } from "@nextui-org/react"
+import React, {useCallback, useContext, useMemo} from "react"
+import { Table, TableBody, TableColumn, TableHeader, TableRow, TableCell, getKeyValue, User, Button } from "@nextui-org/react"
 import { PlayersContext } from "./playersProvider"
+import PlayerAPI from "@/utils/v2/playerAPI"
+import { PlayerModalContext } from "./playerModalProvider"
 
 export default function AdminPlayersTable(){
 
   const playerContext = useContext(PlayersContext)
+  const modalContext = useContext(PlayerModalContext)
 
   const players = useMemo(() => {
     return playerContext.players.map( doc => ({id: doc.id, ...doc.data(), actions: "actions"}))
@@ -13,20 +16,52 @@ export default function AdminPlayersTable(){
   
   const columns = [
     {
-      key: "lastname",
-      label: "Last Name"
-    },
-    {
-      key: "firstname",
-      label: "First Name"
+      key: "player",
+      label: "player"
     },
     {
       key: "actions",
       label: "Actions"
     },
   ]
+
+  const editPlayer = useCallback((player) => {
+    modalContext.setType("Edit Player")
+    modalContext.dispatchPlayer({type: "set", value: player})
+    modalContext.onOpen()
+  }, [modalContext])
+
+  const deletePlayer = useCallback( player => {
+    modalContext.setType("Delete Player")
+    modalContext.dispatchPlayer({type: "set", value: player})
+    modalContext.onOpen()
+  }, [modalContext])
   
-  
+  const renderCell = useCallback((item, key) => {
+    switch(key) {
+
+      case "player":
+        return (
+          <User 
+            name={PlayerAPI.displayName(item, true)}
+            avatarProps={{
+              src: item.imageUrl || ""
+            }}
+          />
+        )
+      case "actions": 
+        return (
+          <div>
+            <Button onPress={() => editPlayer(item)}>Edit</Button>
+            <Button onPress={() => deletePlayer(item)}>Delete</Button>
+          </div>
+        )
+      default:
+        return getKeyValue(item, key)
+    }
+  }
+  , [])
+
   return (
     <section className="mt-4">
         <Table
@@ -41,7 +76,7 @@ export default function AdminPlayersTable(){
             {
               item => (
                 <TableRow key={item.id}>
-                  { key => <TableCell key={key}>{getKeyValue(item, key)}</TableCell>}
+                  { key => <TableCell key={key}>{renderCell(item, key)}</TableCell>}
                 </TableRow>
               )
             }
