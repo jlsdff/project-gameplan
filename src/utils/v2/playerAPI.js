@@ -11,14 +11,47 @@ import {
   startAfter,
   endAt,
   where,
+  addDoc,
 } from "firebase/firestore";
 
 class PlayerAPI {
   static db = firestore;
 
-  constructor() {}
+  constructor({firstname, lastname, number, imageUrl, profileSettings}) {
+    this.firstname = firstname
+    this.lastname = lastname
+    this.number = number
+    this.imageUrl = imageUrl
+    this.profileSettings = profileSettings
+  }
 
-  static async createPlayer(player) {}
+  static async createPlayer(player) {
+    const playersRef = collection(this.db, "players");
+
+    const isValid = this.isPlayerCredsValid(player)
+
+    if (!isValid) {
+      return null
+    }    
+
+    const newPlayer = await addDoc(playersRef, player);
+    return newPlayer;
+  }
+
+  static isPlayerCredsValid(player) {
+
+    const imageUrlRegex = /(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png)/g
+
+    if (!player.lastname) {
+      return false;
+    }
+
+    if (player.imageUrl && !player.imageUrl.match(imageUrlRegex)) {
+      return false;
+    }
+    
+    return true
+  }
 
   static async updatePlayer(id, player) {}
 

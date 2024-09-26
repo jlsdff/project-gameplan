@@ -11,6 +11,7 @@ import {
   image,
 } from "@nextui-org/react";
 import PlayerModalBody from "./modalBody";
+import PlayerAPI from "@/utils/v2/playerAPI";
 
 export const PlayerModalContext = createContext({
   isOpen: false,
@@ -50,7 +51,6 @@ const reducer = (state, action) => {
 export default function PlayerModalProvider({ children }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [type, setType] = useState("New Player");
-  // const [data, setData] = useState({});
   const [player, dispatchPlayer] = useReducer(reducer, {
     firstname: "",
     lastname: "",
@@ -84,7 +84,7 @@ export default function PlayerModalProvider({ children }) {
             <>
               <ModalHeader>{displayHeader(type)}</ModalHeader>
               <ModalBody>{displayBody(type)}</ModalBody>
-              <ModalFooter>{displayFooter(type, onClose)}</ModalFooter>
+              <ModalFooter>{displayFooter(type, onClose, player)}</ModalFooter>
             </>
           )}
         </ModalContent>
@@ -120,8 +120,21 @@ function displayBody(type) {
   }
 }
 
-function displayFooter(type, onClose, data) {
-  const newPlayer = () => {};
+function displayFooter(type, onClose, player) {
+  
+  const newPlayer = async () => {
+    const isValid = PlayerAPI.isPlayerCredsValid(player);
+
+    if (!isValid) {
+      alert("Invalid player credentials");
+      return;
+    }
+
+    await PlayerAPI.createPlayer(player)
+      .then(doc => {
+        console.log("Player created successfully", doc);
+      })
+  };
 
   const editPlayer = () => {};
 
