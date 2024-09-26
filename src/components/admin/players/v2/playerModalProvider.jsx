@@ -131,7 +131,7 @@ function displayBody(type) {
     case "Edit Player":
       return <PlayerModalBody />;
     case "Delete Player":
-      return <DeletePlayerModalBody /> ;
+      return <DeletePlayerModalBody />;
     default:
       return "Add New Player";
   }
@@ -147,9 +147,13 @@ function displayFooter(type, onClose, player) {
       return;
     }
 
-    await PlayerAPI.createPlayer(player).then((doc) => {
-      console.log("Player created successfully", doc);
-    });
+    await PlayerAPI.createPlayer(player).then( () => {
+      console.log("Player created successfully");
+      onClose()
+    })
+    .catch( err => {
+      console.error("Error creating player", err)
+    })
   };
 
   const editPlayer = async () => {
@@ -163,16 +167,19 @@ function displayFooter(type, onClose, player) {
     await PlayerAPI.updatePlayer(player.id, player).then((doc) => {
       console.log("Player updated successfully", doc);
       alert("Player updated successfully");
-      onClose()
+      onClose();
     });
   };
 
   const deletePlayer = async () => {
-    await PlayerAPI.deletePlayer(player.id)
-      .then( () => {
-        alert("Player deleted successfully")
-        onClose()
-      })
+    await PlayerAPI.deletePlayer(player.id).then((res) => {
+      alert(
+        !res
+          ? "Player has games. Cannot delete."
+          : "Player deleted successfully"
+      );
+      onClose();
+    });
   };
 
   switch (type) {
@@ -219,24 +226,26 @@ function displayFooter(type, onClose, player) {
         </div>
       );
     case "Delete Player":
-      return <div className="flex gap-2">
-      <Button
-        color="primary"
-        onPress={() => {
-          deletePlayer();
-        }}
-      >
-        Yes
-      </Button>
-      <Button
-        variant="ghost"
-        onPress={() => {
-          onClose();
-        }}
-      >
-        No
-      </Button>
-    </div>;
+      return (
+        <div className="flex gap-2">
+          <Button
+            color="primary"
+            onPress={() => {
+              deletePlayer();
+            }}
+          >
+            Yes
+          </Button>
+          <Button
+            variant="ghost"
+            onPress={() => {
+              onClose();
+            }}
+          >
+            No
+          </Button>
+        </div>
+      );
     default:
       return <Button onPress={onClose}>Close</Button>;
   }

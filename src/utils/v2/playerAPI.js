@@ -13,36 +13,40 @@ import {
   where,
   addDoc,
   setDoc,
-  deleteDoc
+  deleteDoc,
+  writeBatch,
+  increment,
+  updateDoc,
 } from "firebase/firestore";
 
 class PlayerAPI {
   static db = firestore;
 
-  constructor({firstname, lastname, number, imageUrl, profileSettings}) {
-    this.firstname = firstname
-    this.lastname = lastname
-    this.number = number
-    this.imageUrl = imageUrl
-    this.profileSettings = profileSettings
+  constructor({ firstname, lastname, number, imageUrl, profileSettings }) {
+    this.firstname = firstname;
+    this.lastname = lastname;
+    this.number = number;
+    this.imageUrl = imageUrl;
+    this.profileSettings = profileSettings;
   }
 
   static async createPlayer(player) {
-    const playersRef = collection(this.db, "players");
+    if (!this.isPlayerCredsValid(player)) {
+      return null;
+    }
 
-    const isValid = this.isPlayerCredsValid(player)
+    const batch = writeBatch(this.db);
+    const playerRef = doc(collection(this.db, "players"));
+    const playerCountRef = doc(this.db, "counters", "players");
 
-    if (!isValid) {
-      return null
-    }    
+    batch.set(playerRef, player);
+    batch.update(playerCountRef, { count: increment(1) });
 
-    const newPlayer = await addDoc(playersRef, player);
-    return newPlayer;
+    await batch.commit();
   }
 
   static isPlayerCredsValid(player) {
-
-    const imageUrlRegex = /(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png)/g
+    const imageUrlRegex = /(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png)/g;
 
     if (!player.lastname) {
       return false;
@@ -51,29 +55,41 @@ class PlayerAPI {
     if (player.imageUrl && !player.imageUrl.match(imageUrlRegex)) {
       return false;
     }
-    
-    return true
+
+    return true;
   }
 
   static async updatePlayer(id, player) {
-    const playerRef = doc(this.db, "players", id)
+    const playerRef = doc(this.db, "players", id);
 
-    const isValid = this.isPlayerCredsValid(player)
+    const isValid = this.isPlayerCredsValid(player);
 
     if (!isValid) {
-      return null
-    }    
+      return null;
+    }
 
-    const updatedPlayer = await setDoc(playerRef, player)
-    return updatedPlayer
-
-    
+    const updatedPlayer = await setDoc(playerRef, player);
+    return updatedPlayer;
   }
 
   static async deletePlayer(id) {
-    const playerRef = doc(this.db, "players", id)
-    const deletedPlayer = await deleteDoc(playerRef, {isDeleted: true})
-    return deletedPlayer
+    // Delete only if player doesnt have any games
+    const playerRef = collection(this.db, `players/${id}/gameRecords`);
+    const q = query(playerRef, "gameRecords", limit(1));
+    const hasGames = await getDocs(q);
+    console.log(hasGames.empty);
+
+    if (!hasGames.empty) {
+      console.error("Player has games. Cannot delete.");
+      return null;
+    }
+    const decrementPlayer = updateDoc(
+      doc(this.db, "counters", "players"),
+      { size: increment(-1) },
+      { merge: true }
+    );
+    const deletedDoc = await deleteDoc(doc(this.db, `players/${id}`));
+    return { deletedDoc, decrementPlayer, message: "Player deleted" };
   }
 
   static async countPlayers() {
@@ -150,27 +166,24 @@ class PlayerAPI {
   }
 
   static displayName(player, fullname = false) {
-
     const { firstname, lastname, profileSettings } = player;
 
     if (fullname) {
       return `${lastname}, ${firstname}`;
     }
 
-    if( profileSettings?.isFullNameVisible ) {
+    if (profileSettings?.isFullNameVisible) {
       return `${lastname}, ${firstname}`;
     }
 
     // return `${lastname}, ${firstname.charAt(0)}`;
 
-    if(firstname) {
+    if (firstname) {
       return `${lastname}, ${firstname.charAt(0)}`;
     } else {
       return `${lastname}`;
     }
-    
   }
-  
 }
 
 export default PlayerAPI;
