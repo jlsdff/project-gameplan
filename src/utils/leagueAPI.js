@@ -7,6 +7,7 @@ export const createLeague = async (data) => {
     createdAt: FieldValue.serverTimestamp(),
     updatedAt: FieldValue.serverTimestamp(),
     createdBy: auth.currentUser.uid,
+    status: "Ongoing",
     ...data,
   };
   const uploadedImage = await uploadImage(data.leagueImage)
@@ -135,4 +136,12 @@ export const setLeagueStatus = async (id, status) => {
       updatedAt: FieldValue.serverTimestamp(),
       updatedBy: auth.currentUser.uid,
     }, {merge: true})
+}
+
+export const getOngoingLeagues = async () => {
+
+  return await firestore
+    .collection("leagues")
+    .where("status", "==", "Ongoing")
+    .get();
 }

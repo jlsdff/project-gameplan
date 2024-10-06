@@ -11,7 +11,11 @@ module.exports = {
     "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      backgroundImage: {
+        'gradient-to-b-transparent-black': 'linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.8))',
+      },
+    },
   },
   darkMode: "class",
   plugins: [

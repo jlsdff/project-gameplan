@@ -20,10 +20,6 @@ export default function LeagueIdTable({ teams, games }) {
 
   const columns = [
     {
-      key: "number",
-      title: "#",
-    },
-    {
       key: "TeamA",
       title: "Team A",
     },

@@ -10,6 +10,7 @@ import { Image, Link, Spinner } from "@nextui-org/react";
 import { firestore } from "@/lib/firebase/firebase";
 import { getLeaguesByLikeTitle } from "@/utils/leagueAPI";
 import LeaguesTable from "@/components/client/leagues/leaguesTable";
+import OngoingLeagueBanner from "@/components/client/leagues/ongoingLeagueBanner";
 
 export default function LeaguesDisplay({ page }) {
   const [leagues, setLeagues] = useState([]);
@@ -147,9 +148,11 @@ export default function LeaguesDisplay({ page }) {
           <section>
             {onGoingLeagues.length > 0 && (
               <div className="w-full ">
-                <h1 className="mb-2 text-2xl font-black">Ongoing League </h1>
+                {/* TODO: plural leagues if >1 leagues */}
+                <h1 className="mb-2 text-2xl font-black">Ongoing League </h1> 
+                < OngoingLeagueBanner ongoingLeagues={onGoingLeagues} />
                 {/* <LeaguesTable leagues={onGoingLeagues} /> */}
-                <Link
+                {/* <Link
                   href={`/leagues?id=${onGoingLeagues[0].id}`}
                   className="flex flex-col items-start justify-start gap-3 py-2 cursor-pointer sm:flex-row hover:underline "
                 >
@@ -183,7 +186,7 @@ export default function LeaguesDisplay({ page }) {
                       )}
                     </div>
                   </div>
-                </Link>
+                </Link> */}
               </div>
             )}
             <div>
