@@ -15,7 +15,7 @@ import useTeamByName from "@/hooks/useTeamByName";
 import { getPlayerById } from "@/utils/playerAPI";
 import GameStats from "./gameStats";
 import { getTeamTotalStats } from "@/helpers/getTotalPoints";
-import { createGame } from "@/utils/gamesAPI";
+import { createGame, testGame } from "@/utils/gamesAPI";
 import TotalStats from "./totalStats";
 
 const reducer = (state, action) => {

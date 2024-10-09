@@ -1,9 +1,13 @@
 import { firestore, Timestamp, FieldValue } from "@/lib/firebase/firebase";
 
+export const testGame = async (gameData) => {
+  console.log(testGame)
+}
+
 export const createGame = async (gameData) => {
 
   const { month , day, year } = gameData.gameTime;
-  const date = new Date(year, month, day);
+  const date = new Date(year, month+1, day);
   gameData.gameTime = Timestamp.fromDate(date);
 
   const winloss =
@@ -43,7 +47,10 @@ export const createGame = async (gameData) => {
       .collection("gameRecords")
       .doc(gameData.doc)
       .set(gameData.teamBStats, { merge: true });
-
+    
+    const players = [...gameData.stats.teamA.map(player => player.id), ...gameData.stats.teamB.map(player => player.id)]
+    const teams = [gameData.teamA.id, gameData.teamB.id]
+    
     const persisGame = firestore
       .collection("games")
       .doc(gameData.doc)
@@ -54,6 +61,8 @@ export const createGame = async (gameData) => {
         date: gameData.gameTime,
         leagueId: gameData.league.id,
         playerStats: gameData.stats,
+        players,
+        teams,
         teamA: {
           id: gameData.teamA.id,
           stats: gameData.teamAStats,
