@@ -112,3 +112,35 @@ export async function updatePlayer(id, data) {
 export async function deletePlayer(id) {
   return await firestore.collection("players").doc(id).delete();
 }
+
+export async function getLastPlayedTeam(playerId) {
+  const lastGame = await firestore
+    .collection("games")
+    .where("players", "array-contains", playerId)
+    .orderBy("date", "desc")
+    .limit(1)
+    .get()
+    .then((snap) => snap.docs[0]);
+  
+  if (!lastGame) {
+    return null;
+  }
+  console.log(lastGame)
+  const teamId = findCurrentTeam(playerId, lastGame.data());
+
+  const team = await firestore
+    .collection("teams")
+    .doc(teamId)
+    .get()
+    .then((doc) => ({ id: doc.id, ...doc.data() }));
+
+  return team;
+}
+
+function findCurrentTeam(playerId, game) {
+  const teamA = game.playerStats.teamA;
+
+  return teamA.some((player) => player.id === playerId)
+    ? game.teamA.id
+    : game.teamB.id;
+}

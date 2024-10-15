@@ -19,6 +19,11 @@ export default function TableClient({ columns, items, loading }) {
   const routeToPlayer = (id) => {
     router.push(`/players?id=${id}`);
   };
+
+  const toTeam = (teamId) => {
+    router.push('/teams?id=' + teamId)
+  }
+  
   // items.map(item => console.log(item.gameRecords))
   return (
     <Table removeWrapper aria-label="Data Display Table for Players">
@@ -42,7 +47,7 @@ export default function TableClient({ columns, items, loading }) {
             onClick={() => routeToPlayer(item.id)}
           >
             {(columnKey) => (
-              <TableCell>{renderPlayerCell(item, columnKey)}</TableCell>
+              <TableCell>{renderPlayerCell(item, columnKey, toTeam)}</TableCell>
             )}
           </TableRow>
         )}

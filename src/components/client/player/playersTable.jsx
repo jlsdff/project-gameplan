@@ -1,57 +1,65 @@
-import React, {useMemo, useState, useEffect, useCallback} from 'react'
-import SearchBarClient from '@/components/ui/searchBar/searchBar'
-import { Divider } from '@nextui-org/react'
-import TableClient from './tableClient'
-import PaginationUI from '@/components/ui/pagination'
+import React, { useMemo, useState, useEffect, useCallback } from "react";
+import SearchBarClient from "@/components/ui/searchBar/searchBar";
+import { Divider } from "@nextui-org/react";
+import TableClient from "./tableClient";
+import PaginationUI from "@/components/ui/pagination";
 import {
   getPlayerByLikeName,
   getPlayersByPage,
   getPlayersGameRecords,
+  getLastPlayedTeam,
 } from "@/utils/playerAPI";
 import { getPlayerCount } from "@/utils/countersAPI";
 
-export default function PlayersTable({page, name}) {
+export default function PlayersTable({ page, name }) {
+  const [players, setPlayers] = useState([]);
+  const [playersCount, setPlayersCount] = useState(0);
+  const [loading, setLoading] = useState(true);
 
-  const [players, setPlayers] = useState([])
-  const [playersCount, setPlayersCount] = useState(0)
-  const [loading, setLoading] = useState(true)
+  const columns = useMemo(
+    () => [
+      {
+        key: "player",
+        label: "Player",
+        description: "Player Name",
+      },
+      {
+        key: "PPG",
+        label: "PPG",
+        description: "Points Per Game",
+      },
+      {
+        key: "APG",
+        label: "APG",
+        description: "Assists Per Game",
+      },
+      {
+        key: "RPG",
+        label: "RPG",
+        description: "Rebounds Per Game",
+      },
+      {
+        key: "SPG",
+        label: "SPG",
+        description: "Steals Per Game",
+      },
+      {
+        key: "BPG",
+        label: "BPG",
+        description: "Blocks Per Game",
+      },
+      {
+        key: "LPT",
+        label: "Current Team",
+        description: "Current Team"
+      }
+    ],
+    []
+  );
 
-  const columns = useMemo(()=>[
-    {
-      key: "player",
-      label: "Player",
-      description: "Player Name",
-    },
-    {
-      key: "PPG",
-      label: "PPG",
-      description: "Points Per Game",
-    },
-    {
-      key: "APG",
-      label: "APG",
-      description: "Assists Per Game",
-    },
-    {
-      key: "RPG",
-      label: "RPG",
-      description: "Rebounds Per Game",
-    },
-    {
-      key: "SPG",
-      label: "SPG",
-      description: "Steals Per Game",
-    },
-    {
-      key: "BPG",
-      label: "BPG",
-      description: "Blocks Per Game",
-    },
-  ],[])
-
-  const fetchData = useCallback( async () => {
+  const fetchData = useCallback(async () => {
     if (name) {
-      const players = await getPlayerByLikeName(name).then((res) =>
+      let players = await getPlayerByLikeName(name).then((res) =>
         res.map((player) => {
           return {
             id: player.id,
@@ -59,6 +67,16 @@ export default function PlayersTable({page, name}) {
           };
         })
       );
+
+      players = await Promise.all(
+        players.map( async (player) => {
+          const lastTeam = await getLastPlayedTeam(player.id);
+          return {
+            ...player,
+            lastTeam: lastTeam,
+          };
+        })
+      )
 
       const proms = await getPlayersGameRecords(players).then((res) =>
         res.map((player) => {
@@ -76,7 +94,7 @@ export default function PlayersTable({page, name}) {
 
     const playersCount = await getPlayerCount();
 
-    const players = await getPlayersByPage(page - 1, 10).then((data) => {
+    let players = await getPlayersByPage(page - 1, 10).then((data) => {
       return data.docs.map((doc) => {
         return {
           id: doc.id,
@@ -84,6 +102,16 @@ export default function PlayersTable({page, name}) {
         };
       });
     });
+
+    players = await Promise.all(
+      players.map(async (player) => {
+        const lastTeam = await getLastPlayedTeam(player.id);
+        return {
+          ...player,
+          lastTeam: lastTeam,
+        };
+      })
+    );
 
     const proms = await getPlayersGameRecords(players).then((res) =>
       res.map((player) => {
@@ -97,26 +125,27 @@ export default function PlayersTable({page, name}) {
       players: proms,
       playersCount,
     };
-  }, [name, page])
+  }, [name, page]);
 
-  useEffect(()=>{
+  useEffect(() => {
     try {
-      fetchData().then((data) => {
-        setPlayers(data.players);
-        setPlayersCount(data.playersCount);
-        console.log(players)
-      }).catch(error => {
-        console.error(error)
-        throw new Error(error)
-      })
-
-    }catch(error){
-      console.error(error)
-    }finally{
-      setLoading(false)
+      fetchData()
+        .then((data) => {
+          setPlayers(data.players);
+          setPlayersCount(data.playersCount);
+          console.log(players);
+        })
+        .catch((error) => {
+          console.error(error);
+          throw new Error(error);
+        });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
-  },[fetchData])
-  
+  }, [fetchData]);
+
   return (
     // <div>PlayersTable</div>
     <section className="px-8 py-4 sm:py-8 sm:px-16">
@@ -143,5 +172,5 @@ export default function PlayersTable({page, name}) {
         />
       </div>
     </section>
-  )
+  );
 }

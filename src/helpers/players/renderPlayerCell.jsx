@@ -1,28 +1,35 @@
 import { User } from "@nextui-org/react";
 
-export default function renderPlayerCell(player, key) {
+export default function renderPlayerCell(player, key, toTeam) {
   switch (key) {
     case "number":
       return <span>{player.number}</span>;
     case "player":
+      let firstname = player.firstname ? player.firstname.split(" ") : null;
 
-      let firstname = player.firstname ? player.firstname.split(" "): null;
+      if (firstname) {
+        firstname = firstname
+          .map((name) => name.charAt(0).toUpperCase())
+          .join(" ");
+      }
 
-      if(firstname) {
-        firstname = firstname.map((name) => name.charAt(0).toUpperCase()).join(' ')
-      } 
-        
       return (
-        <User
-          className=" min-w-3.5"
-          name={player.firstname ? `${player.lastname}, ${firstname}` : player.lastname}
-          description={player.positions.join(" | ")}
-          avatar={{
-            src: player.avatar || null,
-            showFallback: true,
-            name: `${player.lastname}`,
-          }}
-        />
+        <div className="w-full">
+          <User
+            className=" min-w-3.5"
+            name={
+              player.firstname
+                ? `${player.lastname}, ${firstname}`
+                : player.lastname
+            }
+            description={player.positions.join(" | ")}
+            avatar={{
+              src: player.avatar || null,
+              showFallback: true,
+              name: `${player.lastname}`,
+            }}
+          />
+        </div>
       );
     case "PPG":
       const records = player.gameRecords;
@@ -70,12 +77,12 @@ export default function renderPlayerCell(player, key) {
         </span>
       );
     case "SPG":
-      if(player.gameRecords.length === 0) return <span>0</span>
+      if (player.gameRecords.length === 0) return <span>0</span>;
 
       const spg = player.gameRecords.reduce((acc, curr) => {
         return acc + curr.steals;
-      },0)
-      
+      }, 0);
+
       return (
         <span className="max-w-fit">
           {(spg / player.gameRecords.length).toLocaleString(undefined, {
@@ -83,13 +90,12 @@ export default function renderPlayerCell(player, key) {
             maximumFractionDigits: 2,
           })}
         </span>
-      )
+      );
     case "BPG":
-      if(player.gameRecords.length === 0) return <span>0</span>
+      if (player.gameRecords.length === 0) return <span>0</span>;
       const bpg = player.gameRecords.reduce((acc, curr) => {
         return acc + curr.blocks;
-      }
-      ,0)
+      }, 0);
       return (
         <span className="max-w-fit">
           {(bpg / player.gameRecords.length).toLocaleString(undefined, {
@@ -97,15 +103,15 @@ export default function renderPlayerCell(player, key) {
             maximumFractionDigits: 2,
           })}
         </span>
-      )
+      );
     case "FG%":
-      if(player.gameRecords.length === 0) return <span>0</span>
+      if (player.gameRecords.length === 0) return <span>0</span>;
       const fg = player.gameRecords.reduce((acc, curr) => {
         return acc + curr.twoPointsMade + curr.threePointsMade;
-      },0)
+      }, 0);
       const fga = player.gameRecords.reduce((acc, curr) => {
         return acc + curr.twoPointsAttempted + curr.threePointsAttempted;
-      },0)
+      }, 0);
       return (
         <span className="max-w-fit">
           {((fg / fga) * 100).toLocaleString(undefined, {
@@ -113,8 +119,23 @@ export default function renderPlayerCell(player, key) {
             maximumFractionDigits: 2,
           }) + "%"}
         </span>
-      )
+      );
     case "currentTeam":
       return <span>{}</span>;
+    case "LPT":
+      if (!player.lastTeam) return <span>None</span>;
+      return (
+        <div className="">
+          <User
+            name={player.lastTeam.teamName}
+            className="hover:cursor-pointer hover:underline"
+            avatarProps={{ src: player.lastTeam.teamLogo }}
+            onClick={(e) => {
+              e.stopPropagation();
+              toTeam(player.lastTeam.id);
+            }}
+          />
+        </div>
+      );
   }
 }
