@@ -4,6 +4,7 @@ import { Input, Select, SelectItem, Button } from "@nextui-org/react";
 import { filterOptions } from "./selectOptions";
 import AddIcon from "@/assets/addIcon";
 import { useRouter } from "next/navigation";
+import ReformatButton from "./reformatButton";
 
 export default function GamesDataDisplay() {
   
@@ -20,6 +21,7 @@ export default function GamesDataDisplay() {
         }}>
           <AddIcon />
         </Button>
+        {/* <ReformatButton /> */}
         <Select
           label="Filter Games"
           size="sm"

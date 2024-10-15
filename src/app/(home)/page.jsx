@@ -20,7 +20,6 @@ export default function Home() {
       {/* <MissionAndVision /> */}
       {/* <OngoingLeague /> */}
       <OngoingLeaguesAndRecentGames />
-
       <HowWeAchieveIt />
       <Footer />
     </main>
