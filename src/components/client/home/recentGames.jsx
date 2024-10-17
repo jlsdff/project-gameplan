@@ -2,19 +2,26 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { getGamesByPage } from "@/utils/gamesAPI";
-import { Spinner, User, Link } from "@nextui-org/react";
+import { Spinner, User, Link, Avatar } from "@nextui-org/react";
 import { getTeamById } from "@/utils/teamAPI";
-import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue} from "@nextui-org/react";
+import {
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+  getKeyValue,
+} from "@nextui-org/react";
 import { useRouter } from "next/navigation";
-
 
 export default function RecentGames() {
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
-  const router = useRouter()
+  const router = useRouter();
 
   const fetchData = useCallback(async () => {
-    const rawGames = await getGamesByPage(0 , 5).then((res) =>
+    const rawGames = await getGamesByPage(0, 5).then((res) =>
       res.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
     );
 
@@ -59,20 +66,19 @@ export default function RecentGames() {
     );
   };
 
-  
   const columns = [
     {
       key: "teamA",
       label: "Team A",
-    }, 
+    },
     {
       key: "teamB",
       label: "Team B",
-    }
-  ]
+    },
+  ];
 
   const renderCell = useCallback((item, key) => {
-    switch(key) {
+    switch (key) {
       case "teamA":
         return (
           <div className="flex items-center justify-between gap-2">
@@ -82,9 +88,12 @@ export default function RecentGames() {
               avatarProps={{
                 src: item.teamA.data.teamLogo,
               }}
-            /> <span className="text-green-500 font-bold">{getTotalScore(item.teamA)}</span>
+            />
+            <span className="font-bold text-green-500">
+              {getTotalScore(item.teamA)}
+            </span>
           </div>
-        )
+        );
       case "teamB":
         return (
           <div className="flex items-center justify-between gap-2">
@@ -94,11 +103,14 @@ export default function RecentGames() {
               avatarProps={{
                 src: item.teamB.data.teamLogo,
               }}
-            /> <span className="text-red-500 font-bold">{getTotalScore(item.teamB)}</span>
+            />{" "}
+            <span className="font-bold text-red-500">
+              {getTotalScore(item.teamB)}
+            </span>
           </div>
-        )
+        );
     }
-  }, [])
+  }, []);
 
   if (loading) {
     return (
@@ -110,20 +122,32 @@ export default function RecentGames() {
 
   return (
     <section className="px-2">
-      <Table aria-label="Recent Games of the Project Gameplan" hideHeader removeWrapper >
-      <TableHeader columns={columns}>
-        {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
-      </TableHeader>
-      <TableBody items={games} >
-        {(game) => (
-          <TableRow key={game.key} onClick={()=>{
-            router.push(`/games?id=${game.id}`)
-          }} className="hover:bg-slate-500/5 cursor-pointer">
-            {(columnKey) => <TableCell>{renderCell(game, columnKey)}</TableCell>}
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+      <Table
+        aria-label="Recent Games of the Project Gameplan"
+        hideHeader
+        removeWrapper
+      >
+        <TableHeader columns={columns}>
+          {(column) => (
+            <TableColumn key={column.key}>{column.label}</TableColumn>
+          )}
+        </TableHeader>
+        <TableBody items={games}>
+          {(game) => (
+            <TableRow
+              key={game.key}
+              onClick={() => {
+                router.push(`/games?id=${game.id}`);
+              }}
+              className="cursor-pointer hover:bg-slate-500/5"
+            >
+              {(columnKey) => (
+                <TableCell>{renderCell(game, columnKey)}</TableCell>
+              )}
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
     </section>
   );
 }

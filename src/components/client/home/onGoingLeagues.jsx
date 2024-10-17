@@ -10,6 +10,7 @@ export default function OngoingLeagues() {
 
   useEffect(() => {
     try {
+      setLoading(true)
       const res = getOngoingLeagues().then((snaps) =>
         setLeagues(snaps.docs.map((doc) => ({ id: doc.id, ...doc.data() })))
       );
@@ -37,10 +38,10 @@ export default function OngoingLeagues() {
       <section className="space-y-2.5">
         {leagues.map((league) => (
           <Link href={`/leagues?id=${league.id}`} key={league.id} className="rounded-lg hover:bg-transparent">
-            <div className="w-full sm:max-w-md relative group">
+            <div className="relative w-full sm:max-w-md group">
               <Image className="rounded-lg" src={league.leagueImage} alt={league.title} />
-              <div id="league-title" className="absolute bottom-0 left-0 w-full z-10 py-2 px-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 h-1/2 flex flex-col justify-end bg-gradient-to-b-transparent-black rounded-lg">
-                <h3 className="text-white font-bold text-lg sm:text-xl">{league.title}</h3>
+              <div id="league-title" className="absolute bottom-0 left-0 z-10 flex flex-col justify-end w-full px-4 py-2 transition-opacity duration-300 rounded-lg opacity-0 group-hover:opacity-100 h-1/2 bg-gradient-to-b-transparent-black">
+                <h3 className="text-lg font-bold text-white sm:text-xl">{league.title}</h3>
               </div>
             </div>
           </Link>
