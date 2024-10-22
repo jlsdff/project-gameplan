@@ -1,4 +1,5 @@
 import { User } from "@nextui-org/react";
+import { Suspense } from "react";
 
 export default function renderPlayerCell(player, key, toTeam) {
   switch (key) {

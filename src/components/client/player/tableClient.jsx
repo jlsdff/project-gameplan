@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { Suspense } from "react";
 import {
   Table,
   TableHeader,
@@ -9,6 +9,7 @@ import {
   TableCell,
   Tooltip,
   Spinner,
+  Skeleton,
 } from "@nextui-org/react";
 import renderPlayerCell from "@/helpers/players/renderPlayerCell";
 import { useRouter } from "next/navigation";
@@ -21,9 +22,9 @@ export default function TableClient({ columns, items, loading }) {
   };
 
   const toTeam = (teamId) => {
-    router.push('/teams?id=' + teamId)
-  }
-  
+    router.push("/teams?id=" + teamId);
+  };
+
   // items.map(item => console.log(item.gameRecords))
   return (
     <Table removeWrapper aria-label="Data Display Table for Players">
@@ -47,7 +48,7 @@ export default function TableClient({ columns, items, loading }) {
             onClick={() => routeToPlayer(item.id)}
           >
             {(columnKey) => (
-              <TableCell>{renderPlayerCell(item, columnKey, toTeam)}</TableCell>
+              <TableCell><Suspense fallback={<Skeleton className="w-16 h-8 " > </Skeleton>} >{renderPlayerCell(item, columnKey, toTeam)}</Suspense></TableCell>
             )}
           </TableRow>
         )}
