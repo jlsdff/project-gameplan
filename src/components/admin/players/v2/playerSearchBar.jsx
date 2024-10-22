@@ -1,17 +1,33 @@
-import React, { useContext } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { PlayersContext } from "./playersProvider";
-import { Input, Button, Tooltip } from "@nextui-org/react";
+import { Input, Button, Tooltip, useCalendar } from "@nextui-org/react";
 import SearchIcon from "@/assets/searchIcon";
 import AddIcon from "@/assets/addIcon";
 import { useRouter } from "next/navigation";
 import { PlayerModalContext } from "./modal/playerModalProvider";
+import WriteFullname from "../../../../../scripts/writefullname";
 
 export default function AdminPlayerSearchBar() {
 
   const playerContext = useContext(PlayersContext);
   const modalContext = useContext(PlayerModalContext)
   const router = useRouter()
+
+  //playerscripts
+  const [loading, setLoading] = useState(false)
   
+  const startScript = useCallback( async () => {
+    
+    try {
+      setLoading(true)
+      WriteFullname()
+    } catch (error) {
+      console.error("Error starting script", error)
+    } finally {
+      setLoading(false)
+    }
+    
+  }, [])
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -59,10 +75,15 @@ export default function AdminPlayerSearchBar() {
           Import
         </Button>
       </Tooltip>
-      
       <Tooltip content="Download All Players">
         <Button onPress={exportPlayers}>
           Export
+        </Button>
+      </Tooltip>
+      {/* DEV SCRIPTS */}
+      <Tooltip content="Batch import" >
+        <Button onPress={startScript} isLoading={loading} isDisabled={true} className="disabled:bg-current/5 disabled:cursor-not-allowed">
+          Apply Script
         </Button>
       </Tooltip>
     </section>
