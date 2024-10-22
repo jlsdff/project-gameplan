@@ -17,18 +17,15 @@ import {
   writeBatch,
   increment,
   updateDoc,
+  or
 } from "firebase/firestore";
 
 class PlayerAPI {
 
   static db = firestore;
 
-  constructor({ firstname, lastname, number, imageUrl, profileSettings }) {
-    this.firstname = firstname;
-    this.lastname = lastname;
-    this.number = number;
-    this.imageUrl = imageUrl;
-    this.profileSettings = profileSettings;
+  constructor({ ...player }) {
+    this.player = player;
   }
 
   static async createPlayer(player) {
@@ -98,7 +95,13 @@ class PlayerAPI {
     return await getDoc(playerCount);
   }
 
-  // DO NOT USE
+  /**
+   * 
+   * @param {page} page 
+   * @param {limitPerPage} limitPerPage 
+   * @deprecated
+   * @returns 
+   */
   static async getPlayerByPage(page, limitPerPage) {
     const playersRef = collection(this.db, "players");
 
@@ -120,7 +123,13 @@ class PlayerAPI {
     return await getDocs(q);
   }
 
-  // DO NOT USE
+  /**
+   * 
+   * @param {page} page 
+   * @param {limitPerPage} limitPerPage 
+   * @deprecated
+   * @returns 
+   */
   static async getLastDocOfPreviousPage(page, limitPerPage) {
     const playersRef = collection(this.db, "players");
     const q = query(
@@ -151,19 +160,24 @@ class PlayerAPI {
     return querySnapshot;
   }
 
+  /**
+   * 
+   * @param {name} name to be searched for 
+   * @returns a snapshot of the query
+   */
   static async getPlayerByName(name) {
-    const nameFormatted = name.charAt(0).toUpperCase() + name.slice(1);
-    const playersRef = collection(this.db, "players");
-    const q = query(
-      playersRef,
-      orderBy("lastname"),
-      where("lastname", "==", nameFormatted),
-      where("lastname", "<=", nameFormatted),
-      where("lastname", ">=", nameFormatted)
-    );
+    const playerRef = collection(this.db, "players")
 
-    const querySnapshot = await getDocs(q);
-    return querySnapshot;
+    const q = query(
+      playerRef,
+      or(
+      where("lastname", "<=", `${name}\uf8ff`),
+      where("lastname", ">=", `${name}`),
+      ),
+      limit(10)//for testing
+    )
+
+    return await getDocs(q)
   }
 
   static displayName(player, fullname = false) {

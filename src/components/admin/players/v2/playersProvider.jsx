@@ -45,7 +45,7 @@ export default function PlayersProvider({ children }) {
 
       if(name) {
         const res = await PlayerAPI.getPlayerByName(name)
-        console.log("By name:",res.docs)
+        console.log(`BY NAME: ${name}: `,res.docs)
         setPlayers(res.docs)
         router.push('?name='+name)
         return
