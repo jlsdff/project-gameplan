@@ -98,7 +98,8 @@ export default function PlayerModalProvider({ children }) {
 
   return (
     <PlayerModalContext.Provider value={value}>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} size={size}>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} size={size} scrollBehavior={"inside"}
+ >
         <ModalContent>
           {(onClose) => (
             <>

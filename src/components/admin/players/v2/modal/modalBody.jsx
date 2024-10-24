@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { Checkbox, Input, User, Button } from "@nextui-org/react";
 import { PlayerModalContext } from "./playerModalProvider";
 import PlayerAPI from "@/utils/v2/playerAPI";
+import ImportBody from "./importBody";
 
 export default function PlayerModalBody({ data, onChange }) {
   const playerContext = useContext(PlayerModalContext);
@@ -77,10 +78,7 @@ export function ImportPlayerModalBody() {
   
   return (
     <section>
-      <div className="flex items-center justify-between">
-        <h3>Import Player</h3>
-        <Button> Download Template </Button>
-      </div>
+        <ImportBody />
     </section>
   );
 }

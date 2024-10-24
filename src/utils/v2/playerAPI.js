@@ -17,11 +17,16 @@ import {
   writeBatch,
   increment,
   updateDoc,
-  or
+  or,
+  Timestamp,
 } from "firebase/firestore";
+import * as XLSX from "xlsx";
+import _ from "underscore";
+import _s from "underscore.string";
+
+_.mixin(_s.exports());
 
 class PlayerAPI {
-
   static db = firestore;
 
   constructor({ ...player }) {
@@ -37,7 +42,31 @@ class PlayerAPI {
     const playerRef = doc(collection(this.db, "players"));
     const playerCountRef = doc(this.db, "counters", "players");
 
-    batch.set(playerRef, player);
+    // Capitalize first letter of firstname and lastname
+    const firstname = player.firstname
+    ? player.firstname
+        .trim()
+        .split(" ")
+        .map((word) => _.capitalize(word))
+        .join(" ")
+    : ""
+    const lastname = player.lastname
+    ? player.lastname
+        .trim()
+        .split(" ")
+        .map((word) => _.capitalize(word))
+        .join(" ")
+    : ""
+    const fullname = `${firstname.toLowerCase()} ${lastname.toLowerCase()}`;
+
+    batch.set(playerRef, {
+      ...player,
+      firstname,
+      lastname,
+      fullname,
+      createAt: Timestamp.now(),
+      updatedAt: Timestamp.now(),
+    });
     batch.update(playerCountRef, { count: increment(1) });
 
     await batch.commit();
@@ -96,11 +125,11 @@ class PlayerAPI {
   }
 
   /**
-   * 
-   * @param {page} page 
-   * @param {limitPerPage} limitPerPage 
+   *
+   * @param {page} page
+   * @param {limitPerPage} limitPerPage
    * @deprecated
-   * @returns 
+   * @returns
    */
   static async getPlayerByPage(page, limitPerPage) {
     const playersRef = collection(this.db, "players");
@@ -124,11 +153,11 @@ class PlayerAPI {
   }
 
   /**
-   * 
-   * @param {page} page 
-   * @param {limitPerPage} limitPerPage 
+   *
+   * @param {page} page
+   * @param {limitPerPage} limitPerPage
    * @deprecated
-   * @returns 
+   * @returns
    */
   static async getLastDocOfPreviousPage(page, limitPerPage) {
     const playersRef = collection(this.db, "players");
@@ -161,23 +190,23 @@ class PlayerAPI {
   }
 
   /**
-   * 
-   * @param {name} name to be searched for 
+   *
+   * @param {name} name to be searched for
    * @returns a snapshot of the query
    */
   static async getPlayerByName(name) {
-    const playerRef = collection(this.db, "players")
+    const playerRef = collection(this.db, "players");
 
     const q = query(
       playerRef,
       or(
-      where("lastname", "<=", `${name}\uf8ff`),
-      where("lastname", ">=", `${name}`),
+        where("lastname", "<=", `${name}\uf8ff`),
+        where("lastname", ">=", `${name}`)
       ),
-      limit(10)//for testing
-    )
+      limit(10) //for testing
+    );
 
-    return await getDocs(q)
+    return await getDocs(q);
   }
 
   static displayName(player, fullname = false) {
@@ -202,23 +231,123 @@ class PlayerAPI {
 
   // GET GAME RECORDS OF PLAYER BY ID
   // @param id: string
-  static async getGameRecords(id){
-    const playerDoc = doc(this.db, 'players', id);
-    const docs = await getDocs(collection(playerDoc, 'gameRecords'));
+  static async getGameRecords(id) {
+    const playerDoc = doc(this.db, "players", id);
+    const docs = await getDocs(collection(playerDoc, "gameRecords"));
     return docs;
   }
 
-  static async averageStats(data) {
+  static async averageStats(data) {}
 
+  static downloadTemplate() {
+    const aoa = [["number", "firstname", "lastname", "showFullName"]];
 
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(aoa);
+    XLSX.utils.book_append_sheet(wb, ws, "Players");
 
+    XLSX.writeFile(wb, "players_template.xlsx");
   }
 
-  static downloadTemplate(){
-    
+  static async importPlayers(players) {
+    const errors = [];
+
+    await players.forEach((player) => {
+      this.createPlayer({
+        number: player.number,
+        firstname: player.firstname
+          ? player.firstname.toLowerCase().trim()
+          : "",
+        lastname: player.lastname ? player.lastname.toLowerCase().trim() : "",
+        imageUrl: player.imageUrl ? player.imageUrl : null,
+        profileSettings: {
+          isFullNameVisible: player.showFullName === 1 ? true : false,
+        },
+      })
+        .then((res) => {})
+        .catch((err) => {
+          errors.push({
+            error: "Error creating player",
+            player: player.__rowNum__,
+          });
+        });
+    });
+
+    return errors;
   }
 
+  static verifySheet(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
 
+      // When the file is loaded
+      reader.onload = (event) => {
+        const arrayBuffer = event.target.result;
+
+        try {
+          // Read the file as array buffer
+          const wb = XLSX.read(arrayBuffer, { type: "array" });
+
+          // Get the Players sheet (case insensitive check)
+          const ws = wb.Sheets["Players"] || wb.Sheets["players"];
+
+          // Verify if sheet exists
+          if (!ws) {
+            return reject({
+              message:
+                "No Player Sheet Found. Please make sure the sheet name is 'Players' or 'players'",
+              status: "error",
+            });
+          }
+
+          // Extract the actual headers from the sheet
+          const sheetData = XLSX.utils.sheet_to_json(ws, { header: 1 });
+          const actualHeaders = sheetData[0]; // First row of the sheet
+
+          // Define expected headers
+          const expectedHeaders = [
+            "number",
+            "firstname",
+            "lastname",
+            "showFullName",
+          ];
+
+          // Verify if the headers match the expected ones
+          const missingHeaders = expectedHeaders.filter(
+            (header) => !actualHeaders.includes(header)
+          );
+
+          if (missingHeaders.length > 0) {
+            return resolve({
+              message: `Missing headers: ${missingHeaders.join(", ")}`,
+              status: "error",
+            });
+          }
+
+          return resolve({
+            message: "Sheet Verified",
+            wb: wb,
+            status: "success",
+          });
+        } catch (error) {
+          return reject({
+            message: "Error processing the file",
+            status: "error",
+            error: error.message,
+          });
+        }
+      };
+
+      reader.onerror = () => {
+        return reject({
+          message: "Error reading the file",
+          status: "error",
+        });
+      };
+
+      // Read the file as an array buffer
+      reader.readAsArrayBuffer(file);
+    });
+  }
 }
-
 export default PlayerAPI;

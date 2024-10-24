@@ -10,6 +10,12 @@
     "export": "next export"
   },
   "dependencies": {
+    "@babel/compat-data": "7.19.4",
+    "@babel/core": "7.19.6",
+    "@babel/generator": "7.19.6",
+    "@babel/helper-compilation-targets": "7.19.3",
+    "@babel/helper-create-class-features-plugin": "7.19.0",
+    "@babel/helper-module-transforms": "7.19.6",
     "@editorjs/checklist": "^1.6.0",
     "@editorjs/code": "^2.9.0",
     "@editorjs/delimiter": "^1.4.0",
@@ -31,17 +37,16 @@
     "@nextui-org/react": "^2.2.9",
     "firebase": "^10.13.2",
     "framer-motion": "^10.16.16",
+    "nanoid": "^5.0.7",
     "next": "14.2.4",
     "react": "^18",
     "react-dom": "^18",
+    "react-drag-drop-files": "^2.4.0",
     "react-responsive-carousel": "^3.2.23",
     "react-share": "^5.1.0",
-    "@babel/core": "7.19.6",
-    "@babel/generator": "7.19.6",
-    "@babel/compat-data": "7.19.4",
-    "@babel/helper-compilation-targets": "7.19.3",
-    "@babel/helper-create-class-features-plugin": "7.19.0",
-    "@babel/helper-module-transforms": "7.19.6"
+    "underscore": "^1.13.7",
+    "underscore.string": "^3.3.6",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
   "devDependencies": {
     "autoprefixer": "^10.0.1",
