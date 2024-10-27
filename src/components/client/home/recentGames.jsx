@@ -121,7 +121,7 @@ export default function RecentGames() {
   }
 
   return (
-    <section className="px-2">
+    <section className="w-full px-2 overflow-x-scroll scrollbar-hide">
       <Table
         aria-label="Recent Games of the Project Gameplan"
         hideHeader

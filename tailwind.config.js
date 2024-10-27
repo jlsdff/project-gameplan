@@ -15,6 +15,13 @@ module.exports = {
       backgroundImage: {
         'gradient-to-b-transparent-black': 'linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.8))',
       },
+      scrollbar: {
+        hide: {
+          '::-webkit-scrollbar': { display: 'none' },
+          '-ms-overflow-style': 'none',  // IE and Edge
+          'scrollbar-width': 'none',  // Firefox
+        },
+      },
     },
   },
   darkMode: "class",
