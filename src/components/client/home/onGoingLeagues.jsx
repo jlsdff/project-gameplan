@@ -1,42 +1,35 @@
 "use client";
 
-import React, { useState, useCallback, useEffect } from "react";
+import React, { Suspense } from "react";
 import { getOngoingLeagues } from "@/utils/leagueAPI";
-import { Image, Link, Spinner } from "@nextui-org/react";
+import { Image, Link, Skeleton } from "@nextui-org/react";
+import { useQuery } from "@tanstack/react-query";
 
-export default function OngoingLeagues() {
-  const [leagues, setLeagues] = useState([]);
-  const [loading, setLoading] = useState(true);
+const fetchData = async () => {
+  const snaps = await getOngoingLeagues()
+  return snaps.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+}
 
-  useEffect(() => {
-    try {
-      setLoading(true)
-      const res = getOngoingLeagues().then((snaps) =>
-        setLeagues(snaps.docs.map((doc) => ({ id: doc.id, ...doc.data() })))
-      );
-    } catch (e) {
-      console.log(e);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+const Main = () => {
 
-  if (loading) {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["ongoingLeagues"],
+    queryFn: fetchData,
+    refetchOnWindowFocus: false,
+    suspense: true,
+    staleTime: "Infinity"
+  })
+
+  if(data.length === 0) {
     return (
-      <section className="w-full h-[300px] flex justify-center items-center">
-        <Spinner />
-      </section>
-    );
+      <p>No Ongoing League...</p>
+    )
   }
 
-  if (leagues.length === 0) {
-    return <></>;
-  }
-
-  if (leagues.length > 0) {
+  if (data.length > 0) {
     return (
       <section className="space-y-2.5">
-        {leagues.map((league) => (
+        {data.map((league) => (
           <Link href={`/leagues?id=${league.id}`} key={league.id} className="rounded-lg hover:bg-transparent">
             <div className="relative w-full sm:max-w-md group">
               <Image className="rounded-lg" src={league.leagueImage} alt={league.title} />
@@ -50,3 +43,23 @@ export default function OngoingLeagues() {
     );
   }
 }
+
+const Loading = () => {
+  return (
+    <div className="max-w-sm space-y-2.5 ">
+      <Skeleton className="w-max h-[100px] rounded-md" />
+      <Skeleton className="w-max h-[100px] rounded-md" />
+      <Skeleton className="w-max h-[100px] rounded-md" />
+    </div>
+  )
+}
+
+const OngoingLeagues = () => {
+  return (
+    <Suspense fallback={<Loading />}>
+      <Main />
+    </Suspense>
+  )
+}
+
+export default OngoingLeagues;

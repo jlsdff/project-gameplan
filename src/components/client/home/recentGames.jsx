@@ -14,7 +14,7 @@ import {
   User,
   Link,
   Skeleton,
-  Card
+  Card,
 } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
@@ -91,6 +91,9 @@ const MainComponent = () => {
               avatarProps={{
                 src: item.teamA.data.teamLogo,
               }}
+              classNames={{
+                name: "text-ellipsis line-clamp-1"
+              }}
             />
             <span className="font-bold text-green-500">
               {getTotalScore(item.teamA)}
@@ -154,15 +157,44 @@ const MainComponent = () => {
   );
 };
 
+const SkeletonAvatar = () => {
+  return (
+    <div className="max-w-[300px] w-full flex items-center gap-3">
+      <div>
+        <Skeleton className="flex w-12 h-12 rounded-full" />
+      </div>
+      <div className="flex flex-col w-full gap-2">
+        <Skeleton className="w-3/5 h-3 rounded-lg" />
+        <Skeleton className="w-4/5 h-3 rounded-lg" />
+      </div>
+    </div>
+  );
+};
+
 const Loading = () => {
   return (
-    <Card className="w-full space-y-2.5 bg-transparent" radius="none" >
-      <Skeleton className="rounded-md h-[50px] bg-slate-800 "/>
-      <Skeleton className="rounded-md h-[50px] bg-slate-800 "/>
-      <Skeleton className="rounded-md h-[50px] bg-slate-800 "/>
-      <Skeleton className="rounded-md h-[50px] bg-slate-800 "/>
-      <Skeleton className="rounded-md h-[50px] bg-slate-800 "/>
-    </Card>
+    <div className="w-full space-y-2.5 bg-transparent" radius="none">
+      <div className="flex items-center justify-between">
+        <SkeletonAvatar />
+        <SkeletonAvatar />
+      </div>
+      <div className="flex items-center justify-between">
+        <SkeletonAvatar />
+        <SkeletonAvatar />
+      </div>
+      <div className="flex items-center justify-between">
+        <SkeletonAvatar />
+        <SkeletonAvatar />
+      </div>
+      <div className="flex items-center justify-between">
+        <SkeletonAvatar />
+        <SkeletonAvatar />
+      </div>
+      <div className="flex items-center justify-between">
+        <SkeletonAvatar />
+        <SkeletonAvatar />
+      </div>
+    </div>
   );
 };
 
