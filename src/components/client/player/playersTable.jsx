@@ -30,8 +30,8 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { faker } from "@faker-js/faker";
 
 function Main({ page, name }) {
+
   const fetchPlayers = async ({ pageParam = 0 }) => {
-    console.log("fetching data: ", pageParam);
 
     let players;
 
@@ -72,7 +72,6 @@ function Main({ page, name }) {
         };
       })
     );
-    console.log("fetched next: ", proms);
 
     return {
       players: [...proms],
@@ -143,7 +142,6 @@ function Main({ page, name }) {
 
   const playersData = useMemo(() => {
     const players = data.pages.map((page) => page.players).flat();
-    console.log(players);
     return players;
   }, [data]);
 
@@ -171,9 +169,19 @@ function Main({ page, name }) {
   );
 }
 
+const Loading = () => {
+  return <div>Loading...</div>
+}
+
+const SearchBar = () => {
+  return (<div>
+    SearchBar Here
+  </div>)
+}
+
 const PlayersTable = ({ page, name }) => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Loading/>}>
       <Main />
     </Suspense>
   );
