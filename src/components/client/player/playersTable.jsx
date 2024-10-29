@@ -5,29 +5,25 @@ import React, {
   useCallback,
   Suspense,
 } from "react";
-import SearchBarClient from "@/components/ui/searchBar/searchBar";
 import {
-  Divider,
   Button,
-  Table,
+  Skeleton,
   TableColumn,
+  TableHeader,
+  Table,
   TableBody,
   TableRow,
   TableCell,
-  TableHeader,
 } from "@nextui-org/react";
 import TableClient from "./tableClient";
-import PaginationUI from "@/components/ui/pagination";
+import TableSkeleton from "@/components/ui/skeletons/TableSkeleton";
 import {
-  getPlayerByLikeName,
-  getPlayersByPage,
   getPlayersGameRecords,
   getLastPlayedTeam,
   getPlayersByLastRef,
 } from "@/utils/playerAPI";
-import { getPlayerCount } from "@/utils/countersAPI";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { faker } from "@faker-js/faker";
+import { motion, AnimatePresence } from "framer-motion";
 
 function Main({ page, name }) {
   const fetchPlayers = async ({ pageParam = 0 }) => {
@@ -142,16 +138,27 @@ function Main({ page, name }) {
   });
 
   const playersData = useMemo(() => {
-    const players = data.pages.map((page) => page.players).flat();
+    const players = data?.pages?.map((page) => page.players).flat();
     console.log(players);
     return players;
   }, [data]);
 
   return (
-    <section className="px-8 py-4 sm:py-8 sm:px-16">
-      <div>
+    <motion.section
+      className="px-8 py-4 sm:py-8 sm:px-16"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 20 }}
+      transition={{ duration: 0.5 }}
+    >
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         <h1 className="mb-2 text-xl font-bold sm:text-2xl">Players</h1>
-      </div>
+      </motion.div>
       <TableClient columns={columns} items={playersData} loading={isLoading} />
       <div className="flex items-center justify-center w-full">
         <Button
@@ -167,14 +174,28 @@ function Main({ page, name }) {
             : "No More Players"}
         </Button>
       </div>
-    </section>
+    </motion.section>
   );
 }
 
+const Loading = ({ isLoading }) => {
+  return (
+    <motion.section
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+      className="px-8 py-4 sm:py-8 sm:px-16"
+    >
+      <TableSkeleton />
+    </motion.section>
+  );
+};
+
 const PlayersTable = ({ page, name }) => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <Main />
+    <Suspense fallback={<Loading />}>
+        <Main />
     </Suspense>
   );
 };
