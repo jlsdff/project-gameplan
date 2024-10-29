@@ -3,7 +3,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import PlayersTable from "./playersTable";
 import PlayerPage from "./playerPage";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
+const queryClient = new QueryClient();
 
 export default function PlayersPage() {
   const params = useSearchParams();
@@ -16,9 +18,13 @@ export default function PlayersPage() {
     return <PlayerPage id={id}/>
   }
 
+  if(name) {
+    return <div>search table here</div>
+  }
+
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       <PlayersTable page={page || "1"} name={name} />
-    </>
+    </QueryClientProvider>
   );
 }

@@ -39,6 +39,7 @@
     "react-share": "^5.1.0"
   },
   "devDependencies": {
+    "@faker-js/faker": "^9.1.0",
     "autoprefixer": "^10.0.1",
     "eslint": "^8",
     "eslint-config-next": "14.0.4",

@@ -1,6 +1,6 @@
-import React, { useMemo, useState, useEffect, useCallback } from "react";
+import React, { useMemo, useState, useEffect, useCallback, Suspense } from "react";
 import SearchBarClient from "@/components/ui/searchBar/searchBar";
-import { Divider } from "@nextui-org/react";
+import { Divider, Button } from "@nextui-org/react";
 import TableClient from "./tableClient";
 import PaginationUI from "@/components/ui/pagination";
 import {
@@ -10,12 +10,64 @@ import {
   getLastPlayedTeam,
 } from "@/utils/playerAPI";
 import { getPlayerCount } from "@/utils/countersAPI";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { faker } from "@faker-js/faker";
 
-export default function PlayersTable({ page, name }) {
-  const [players, setPlayers] = useState([]);
-  const [playersCount, setPlayersCount] = useState(0);
-  const [loading, setLoading] = useState(true);
+const fetchData = async ({pageParams}) => {
+  console.log("fetching data: ", pageParams);
+  return [
+    {
+      name: faker.person.fullName(),
+      number: faker.number.int(1, 100)
+    }
+  ]
+  // Get the first 10 players
+  // let players = await getPlayersByPage(page - 1, 10).then((data) => {
+  //   return data.docs.map((doc) => {
+  //     return {
+  //       id: doc.id,
+  //       ref: doc.ref,
+  //       ...doc.data(),
+  //     };
+  //   });
+  // });
 
+  // // Get last played team
+  // players = await Promise.all(
+  //   players.map(async (player) => {
+  //     const lastTeam = await getLastPlayedTeam(player.id);
+  //     return {
+  //       ...player,
+  //       lastTeam: lastTeam,
+  //     };
+  //   })
+  // );
+
+  // // GET PLAYER GAME RECORDS
+  // const proms = await getPlayersGameRecords(players).then((res) =>
+  //   res.map((player) => {
+  //     return {
+  //       ...player,
+  //     };
+  //   })
+  // );
+
+  // return [...proms]
+}
+
+function Main({ page, name }) {
+
+  const fetchPlayers = async ({ pageParam = 0 }) => {
+    console.log("fetching data: ", pageParam);
+    return {
+      players: [1, 2, 3, 4, 5].map((i) => ({
+        name: faker.person.fullName(),
+        number: faker.number.int({ min: 1, max: 100 }),
+      })),
+      nextPage: pageParam + 1,
+      hasMore: pageParam < 4, // Assuming there are 5 pages in total
+    };
+  };
   const columns = useMemo(
     () => [
       {
@@ -57,120 +109,76 @@ export default function PlayersTable({ page, name }) {
     []
   );
 
-  const fetchData = useCallback(async () => {
-    if (name) {
-      let players = await getPlayerByLikeName(name).then((res) =>
-        res.map((player) => {
-          return {
-            id: player.id,
-            ...player.data(),
-          };
-        })
-      );
+  const {
+    data,
+    isLoading,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: ["players"],
+    queryFn: fetchPlayers,
+    getNextPageParam: (lastPage) => {
+      console.log("lastPage: ", lastPage);
+      return lastPage.hasMore ? lastPage.nextPage : undefined;
+    },
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    suspense: true,
+    staleTime: Infinity,
+  });
 
-      players = await Promise.all(
-        players.map( async (player) => {
-          const lastTeam = await getLastPlayedTeam(player.id);
-          return {
-            ...player,
-            lastTeam: lastTeam,
-          };
-        })
-      )
-
-      const proms = await getPlayersGameRecords(players).then((res) =>
-        res.map((player) => {
-          return {
-            ...player,
-          };
-        })
-      );
-
-      return {
-        players: proms,
-        playersCount: 1,
-      };
-    }
-
-    const playersCount = await getPlayerCount();
-
-    let players = await getPlayersByPage(page - 1, 10).then((data) => {
-      return data.docs.map((doc) => {
-        return {
-          id: doc.id,
-          ...doc.data(),
-        };
-      });
-    });
-
-    players = await Promise.all(
-      players.map(async (player) => {
-        const lastTeam = await getLastPlayedTeam(player.id);
-        return {
-          ...player,
-          lastTeam: lastTeam,
-        };
-      })
-    );
-
-    const proms = await getPlayersGameRecords(players).then((res) =>
-      res.map((player) => {
-        return {
-          ...player,
-        };
-      })
-    );
-
-    return {
-      players: proms,
-      playersCount,
-    };
-  }, [name, page]);
-
-  useEffect(() => {
-    try {
-      fetchData()
-        .then((data) => {
-          setPlayers(data.players);
-          setPlayersCount(data.playersCount);
-          console.log(players);
-        })
-        .catch((error) => {
-          console.error(error);
-          throw new Error(error);
-        });
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  }, [fetchData]);
+  console.log("data: ", data);
 
   return (
+    <div>
+      <div className="mb-2.5 font-bold">PlayersTable</div>
+      {data.pages.map((page, i) => (
+        <React.Fragment key={i}>
+          {page.players.map((player, j) => (
+            <div key={j}>{player.name}</div>
+          ))}
+        </React.Fragment>
+      ))}
+      <Button onClick={() => fetchNextPage()} disabled={!hasNextPage || isFetchingNextPage}>
+        {isFetchingNextPage ? "Loading more..." : hasNextPage ? "Load More" : "No More Players"}
+      </Button>
+    </div>
     // <div>PlayersTable</div>
-    <section className="px-8 py-4 sm:py-8 sm:px-16">
-      <h1 className="mb-2 text-xl font-bold sm:text-2xl">Players</h1>
-      {/* Search Bar */}
-      <div>
-        <SearchBarClient
-          label="Search Player"
-          searchUrl={"/players?name="}
-          inputProps={{ size: "sm" }}
-        />
-      </div>
-      <Divider className="my-2" />
-      {/* Table */}
-      <div className="w-full overflow-x-scroll">
-        <TableClient columns={columns} items={players} loading={loading} />
-      </div>
-      {/* Pagination */}
-      <div className="flex items-center justify-center mt-2">
-        <PaginationUI
-          url="/players?page="
-          totalPage={playersCount}
-          currentPage={page || 1}
-        />
-      </div>
-    </section>
+    // <section className="px-8 py-4 sm:py-8 sm:px-16">
+    //   <h1 className="mb-2 text-xl font-bold sm:text-2xl">Players</h1>
+    //   {/* Search Bar */}
+    //   <div>
+    //     <SearchBarClient
+    //       label="Search Player"
+    //       searchUrl={"/players?name="}
+    //       inputProps={{ size: "sm" }}
+    //     />
+    //   </div>
+    //   <Divider className="my-2" />
+    //   {/* Table */}
+    //   <div className="w-full overflow-x-scroll">
+    //     <TableClient columns={columns} items={players} loading={loading} />
+    //   </div>
+    //   {/* Pagination */}
+    //   <div className="flex items-center justify-center mt-2">
+    //     <PaginationUI
+    //       url="/players?page="
+    //       totalPage={playersCount}
+    //       currentPage={page || 1}
+    //     />
+    //   </div>
+    // </section>
   );
 }
+
+const PlayersTable = ({ page, name }) => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Main />
+    </Suspense>
+  )
+}
+
+export default PlayersTable;
