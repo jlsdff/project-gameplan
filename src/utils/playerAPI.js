@@ -34,6 +34,26 @@ export async function getPlayersByPage(page, limit, orderBy = "lastname") {
   return await query.get();
 }
 
+export async function getPlayersByLastRef(lastRef, limit=10, orderBy="lastname") {
+
+  let query;
+
+  if(!lastRef) {
+    query = firestore
+      .collection('players')
+      .orderBy(orderBy, 'asc')
+      .limit(limit)
+  } else {
+    query = firestore
+    .collection('players')
+    .orderBy(orderBy, 'asc')
+    .limit(limit)
+    .startAfter(lastRef)
+  }
+
+  return await query.get() 
+}
+
 export async function getAllPlayers() {
   return await firestore.collection("players").get();
 }
@@ -125,7 +145,6 @@ export async function getLastPlayedTeam(playerId) {
   if (!lastGame) {
     return null;
   }
-  console.log(lastGame)
   const teamId = findCurrentTeam(playerId, lastGame.data());
 
   const team = await firestore
