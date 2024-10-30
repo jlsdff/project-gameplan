@@ -26,8 +26,8 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 
 function Main({ page, name }) {
+
   const fetchPlayers = async ({ pageParam = 0 }) => {
-    console.log("fetching data: ", pageParam);
 
     let players;
 
@@ -68,7 +68,6 @@ function Main({ page, name }) {
         };
       })
     );
-    console.log("fetched next: ", proms);
 
     return {
       players: [...proms],
@@ -138,8 +137,7 @@ function Main({ page, name }) {
   });
 
   const playersData = useMemo(() => {
-    const players = data?.pages?.map((page) => page.players).flat();
-    console.log(players);
+    const players = data.pages.map((page) => page.players).flat();
     return players;
   }, [data]);
 
