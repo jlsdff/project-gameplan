@@ -10,6 +10,7 @@
     "export": "next export"
   },
   "dependencies": {
+    "@algolia/client-search": "^5.11.0",
     "@editorjs/checklist": "^1.6.0",
     "@editorjs/code": "^2.9.0",
     "@editorjs/delimiter": "^1.4.0",

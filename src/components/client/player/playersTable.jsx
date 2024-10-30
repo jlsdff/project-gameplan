@@ -4,6 +4,7 @@ import React, {
   useEffect,
   useCallback,
   Suspense,
+  useRef,
 } from "react";
 import {
   Button,
@@ -14,6 +15,7 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  Input,
 } from "@nextui-org/react";
 import TableClient from "./tableClient";
 import TableSkeleton from "@/components/ui/skeletons/TableSkeleton";
@@ -24,11 +26,11 @@ import {
 } from "@/utils/playerAPI";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
+import { useRouter } from "next/navigation";
+import SearchIcon from "@/assets/searchIcon";
 
 function Main({ page, name }) {
-
   const fetchPlayers = async ({ pageParam = 0 }) => {
-
     let players;
 
     if (pageParam === 0 || null || undefined) {
@@ -142,22 +144,23 @@ function Main({ page, name }) {
   }, [data]);
 
   return (
-    <motion.section
+    <motion.main
       className="px-8 py-4 sm:py-8 sm:px-16"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 20 }}
       transition={{ duration: 0.5 }}
     >
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <h1 className="mb-2 text-xl font-bold sm:text-2xl">Players</h1>
-      </motion.div>
-      <TableClient columns={columns} items={playersData} loading={isLoading} />
+      <section>
+        <SearchBar />
+      </section>
+      <section className="w-full overflow-x-scroll scrollbar-hide">
+        <TableClient
+          columns={columns}
+          items={playersData}
+          loading={isLoading}
+        />
+      </section>
       <div className="flex items-center justify-center w-full">
         <Button
           onClick={() => fetchNextPage()}
@@ -172,7 +175,7 @@ function Main({ page, name }) {
             : "No More Players"}
         </Button>
       </div>
-    </motion.section>
+    </motion.main>
   );
 }
 
@@ -185,15 +188,60 @@ const Loading = () => {
       transition={{ duration: 0.3 }}
       className="px-8 py-4 sm:py-8 sm:px-16"
     >
-      <TableSkeleton />
+      <div className="w-full overflow-x-scroll scrollbar-hide">
+        <TableSkeleton />
+      </div>
     </motion.section>
+  );
+};
+
+const SearchBar = ({ name }) => {
+  const router = useRouter();
+  const [inputVal, setInputVal] = useState(name);
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    if(inputVal === "") return;
+    router.push(`/players?name=${inputVal}`);
+  };
+
+  return (
+    <form
+      onSubmit={onSubmit}
+      className="flex items-center justify-center gap-2.5 mb-2.5"
+    >
+      <Input
+        startContent={<SearchIcon />}
+        isClearable
+        variant="bordered"
+        radius="md"
+        size="md"
+        label="Search Player..."
+        onValueChange={(value) => setInputVal(value)}
+        value={inputVal}
+      />
+      <Button isIconOnly variant="ghost" size="md">
+        <SearchIcon />
+      </Button>
+    </form>
+  );
+};
+
+const SearchResults = ({ name }) => {
+  return (
+    <main className="px-8 py-4 sm:py-8 sm:px-16">
+      <section>
+        <SearchBar />
+      </section>
+      <section></section>
+    </main>
   );
 };
 
 const PlayersTable = ({ page, name }) => {
   return (
     <Suspense fallback={<Loading />}>
-        <Main />
+      {name ? <SearchResults name={name} /> : <Main name={name} />}
     </Suspense>
   );
 };

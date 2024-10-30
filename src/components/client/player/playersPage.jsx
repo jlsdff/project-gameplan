@@ -18,10 +18,6 @@ export default function PlayersPage() {
     return <PlayerPage id={id}/>
   }
 
-  if(name) {
-    return <div>search table here</div>
-  }
-
   return (
     <QueryClientProvider client={queryClient}>
       <PlayersTable page={page || "1"} name={name} />

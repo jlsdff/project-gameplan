@@ -24,7 +24,7 @@ const UserSkeleton = () => {
 
 export default function TableSkeleton({ Columns = null, Rows = null }) {
   return (
-    <Table>
+    <Table removeWrapper>
       <TableHeader>
         {Columns ? (
           <Columns />
