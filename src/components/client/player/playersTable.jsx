@@ -178,7 +178,7 @@ function Main({ page, name }) {
   );
 }
 
-const Loading = ({ isLoading }) => {
+const Loading = () => {
   return (
     <motion.section
       initial={{ opacity: 0 }}
