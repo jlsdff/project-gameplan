@@ -10,7 +10,7 @@ export default function PaginationUI({ totalPage, currentPage, url }) {
   return (
     <Pagination
       total={total}
-      initialPage={parseInt(currentPage, 10)}
+      initialPage={parseInt(currentPage, 5)}
       isCompact
       onChange={(value) => router.push(`${url}${value}`)}
       showControls
