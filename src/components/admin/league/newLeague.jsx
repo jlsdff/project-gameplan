@@ -10,7 +10,7 @@ import {
   Avatar,
 } from "@nextui-org/react";
 import AddIcon from "@/assets/addIcon";
-import Editor from "@/components/ui/editor/editorJs";
+import Editor from "@/components/ui/editor/editor";
 import SearchIcon from "@/assets/searchIcon";
 import { getTeamByName, getTeamById } from "@/utils/teamAPI";
 import XIcon from "@/assets/xIcon";
