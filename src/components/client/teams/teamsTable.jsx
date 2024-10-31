@@ -22,6 +22,9 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import SearchIcon from "@/assets/searchIcon";
 import { motion } from "framer-motion";
+import { getByPath } from "@/utils/generalAPI";
+import useAlgolia from "@/hooks/useAlgolia";
+import { playerColumns } from "@/helpers/players/columns";
 
 const columns = [
   {
@@ -208,8 +211,92 @@ const SearchBar = ({ name }) => {
   );
 };
 
+const processTeamHits = async ({ hits, nextPage }) => {
+  let teams = await Promise.all(
+    hits.map(async (hit) => {
+      return await getByPath(hit.path);
+    })
+  );
+
+  teams = teams.map((team) => ({
+    id: team.id,
+    ref: team,
+    ...team.data(),
+  }));
+
+  teams = await Promise.all(
+    teams.map(async (team) => {
+      const games = await getGamesByTeamId(team.id).then((snapshot) =>
+        snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+      );
+      return {
+        ...team,
+        games,
+      };
+    })
+  );
+
+  console.log("Returning Teams: ", teams);
+  return {
+    hits: [...teams],
+    nextPage,
+  };
+};
+
 const SearchResults = ({ name }) => {
-  return <form>{name}</form>;
+  const limit = 10;
+
+  const {
+    hits,
+    data,
+    isLoading,
+    isFetching,
+    status,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useAlgolia({
+    indexName: "teams",
+    query: name,
+    customQueryFn: processTeamHits,
+    limit: limit,
+    staleTime: Infinity,
+    gcTime: Infinity,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  });
+
+  const teamsData = useMemo(() => {
+    const flattened = data?.pages?.map((page) => page.hits).flat();
+    console.log("Flattened: ", flattened);
+    console.log("Hits: ", hits);
+    console.log("Data: ", data);
+    return flattened;
+  }, [data, hits]);
+
+  return (
+    <section className="px-8 py-4 sm:py-8 sm:px-16">
+      <section>
+        <SearchBar name={name} />
+      </section>
+      {isLoading &&   <Loading />}
+      {!isLoading && !isFetching && (
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.5 }}
+          className="overflow-x-auto"
+        >
+          <TableDataDisplay
+            columns={columns}
+            items={data.pages.map((page) => page.hits).flat()}
+            loading={isLoading}
+          />
+        </motion.section>
+      )}
+    </section>
+  );
 };
 
 export default function TeamsTable({ name, page }) {

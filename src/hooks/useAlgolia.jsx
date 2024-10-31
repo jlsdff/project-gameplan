@@ -20,6 +20,7 @@ const useAlgolia = ({
             pageParam,
             limit
           );
+          console.log("hits from hook: ", hits)
           if (customQueryFn) {
             return await customQueryFn({ hits, nextPage });
           }

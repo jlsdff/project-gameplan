@@ -278,10 +278,13 @@ const SearchResults = ({ name }) => {
     limit: 10,
     staleTime: Infinity,
     gcTime: Infinity,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 
   return (
     <main className="px-8 py-4 sm:py-8 sm:px-16">
+      <h1 className="mb-2 text-xl font-bold sm:text-2xl">Players</h1>
       <section>
         <SearchBar name={name} />
       </section>
@@ -298,6 +301,7 @@ const SearchResults = ({ name }) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.5 }}
+          className="overflow-x-auto"
           >
             <TableClient
               columns={columns}
