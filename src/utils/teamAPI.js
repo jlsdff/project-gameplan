@@ -47,6 +47,21 @@ export async function getTeamByName(name){
   
 }
 
+export async function getTeamsByLastRef(lastDoc, limit=10, orderBy='teamName') {
+  let query;
+  if(lastDoc === null) {
+    query = firestore.collection("teams").orderBy(orderBy, "asc").limit(limit);
+  }else {
+    query = firestore.collection("teams").orderBy(orderBy, "asc").startAfter(lastDoc).limit(limit);
+  }
+
+  return await query.get();
+  
+}
+
+export async function getGamesByTeamId(id) {
+  return await firestore.collection("teams").doc(id).collection("gameRecords").get();
+}
 
 // POST FUNCTIONS
 export async function createTeam(team) {
@@ -107,5 +122,7 @@ export async function deleteTeam(id) {
     });
   })
 }
+
+
 
 // OTHER FUNCTIONS

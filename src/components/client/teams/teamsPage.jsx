@@ -3,8 +3,9 @@ import React from 'react'
 import { useSearchParams } from 'next/navigation';
 import TeamsTable from './teamsTable';
 import TeamPage from './teamPage';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-
+const queryClient = new QueryClient()
 
 export default function TeamsPage() {
 
@@ -19,8 +20,8 @@ export default function TeamsPage() {
   }
   
   return (
-    <>
-    <TeamsTable name={name} page={page} />
-    </>
+    <QueryClientProvider client={queryClient}>
+      <TeamsTable name={name} page={page} />
+    </QueryClientProvider>
   )
 }

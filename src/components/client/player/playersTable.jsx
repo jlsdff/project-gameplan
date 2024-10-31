@@ -73,7 +73,7 @@ function Main({ page, name }) {
   const fetchPlayers = async ({ pageParam = 0 }) => {
     let players;
 
-    if (pageParam === 0 || null || undefined) {
+    if (pageParam?.cursorRef === 0 || pageParam?.cursorRef === null || pageParam?.cursorRef === undefined) {
       players = await getPlayersByLastRef(null).then((snapshots) => {
         return snapshots.docs.map((player) => ({
           id: player.id,
@@ -82,7 +82,7 @@ function Main({ page, name }) {
         }));
       });
     } else {
-      const lastDoc = (players = await getPlayersByLastRef(
+      players = await getPlayersByLastRef(
         pageParam.cursorRef
       ).then((snapshots) => {
         return snapshots.docs.map((player) => ({
@@ -90,7 +90,7 @@ function Main({ page, name }) {
           ref: player,
           ...player.data(),
         }));
-      }));
+      });
     }
 
     players = await Promise.all(
@@ -150,6 +150,7 @@ function Main({ page, name }) {
       exit={{ opacity: 0, y: 20 }}
       transition={{ duration: 0.5 }}
     >
+      <h1 className="mb-2 text-xl font-bold sm:text-2xl">Players</h1>
       <section>
         <SearchBar name={name} />
       </section>
