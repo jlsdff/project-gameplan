@@ -14,7 +14,7 @@ import {
   Image,
 } from "@nextui-org/react";
 import { createBlog, getBlogById, updateBlog } from "@/utils/blogsAPI";
-import Editor from "@/components/ui/editorjs/editorJs";
+import Editor from "@/components/ui/editor/editorJs";
 import { useRouter, useSearchParams } from "next/navigation";
 import { updateLeague } from "@/utils/leagueAPI";
 
