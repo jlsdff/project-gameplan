@@ -14,7 +14,6 @@ export default function TeamsTable({ name, page }) {
   const [loading, setLoading] = useState(true);
 
   const columns = [
-    
     {
       key: "team",
       title: "Team",
@@ -105,13 +104,13 @@ export default function TeamsTable({ name, page }) {
   useEffect(() => {
     try {
       fetchData()
-        .then(res => {
+        .then((res) => {
           setTeams(res.data);
           setCount(res.count);
         })
-        .catch(error => {
-          throw new Error(error)
-        })
+        .catch((error) => {
+          throw new Error(error);
+        });
     } catch (error) {
       console.error(error);
     } finally {
@@ -136,7 +135,11 @@ export default function TeamsTable({ name, page }) {
               initialValue={name || ""}
             />
             <div className="w-full my-4 overflow-x-auto">
-              <TableDataDisplay columns={columns} items={teams} loading={loading} />
+              <TableDataDisplay
+                columns={columns}
+                items={teams}
+                loading={loading}
+              />
             </div>
             <div className="flex items-center justify-center">
               <PaginationUI

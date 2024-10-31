@@ -210,7 +210,11 @@ const SearchBar = ({ name }) => {
       className="flex items-center justify-center gap-2.5 mb-2.5"
     >
       <Input
-        startContent={<div className="p-1 flex justify-center items-center"><SearchIcon size={14} /></div>}
+        startContent={
+          <div className="flex items-center justify-center p-1">
+            <SearchIcon size={14} />
+          </div>
+        }
         isClearable
         variant="bordered"
         radius="md"
@@ -288,13 +292,20 @@ const SearchResults = ({ name }) => {
         transition={{ duration: 0.5 }}
       >
         {!isLoading && (
-          <TableClient
-            columns={columns}
-            items={data.pages?.map((page) => page.hits).flat()}
-            loading={isLoading}
-          />
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.5 }}
+          >
+            <TableClient
+              columns={columns}
+              items={data.pages?.map((page) => page.hits).flat()}
+              loading={isLoading}
+            />
+          </motion.div>
         )}
-        <div className="w-full flex justify-center items-center">
+        <div className="flex items-center justify-center w-full">
           {hasNextPage && (
             <Button
               variant="light"
