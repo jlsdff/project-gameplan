@@ -1,0 +1,29 @@
+[debug] [2024-10-31T23:36:56.108Z] ----------------------------------------------------------------------
+[debug] [2024-10-31T23:36:56.117Z] Command:       C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2024-10-31T23:36:56.119Z] CLI Version:   13.0.2
+[debug] [2024-10-31T23:36:56.120Z] Platform:      win32
+[debug] [2024-10-31T23:36:56.121Z] Node Version:  v20.10.0
+[debug] [2024-10-31T23:36:56.122Z] Time:          Fri Nov 01 2024 07:36:56 GMT+0800 (China Standard Time)
+[debug] [2024-10-31T23:36:56.122Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-10-31T23:36:56.615Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-10-31T23:36:56.617Z] > authorizing via signed-in user (juliusterrence.duff@gmail.com)
+[debug] [2024-10-31T23:36:56.618Z] [iam] checking project the-project-gameplan for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2024-10-31T23:36:56.623Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/the-project-gameplan:testIamPermissions [none]
+[debug] [2024-10-31T23:36:56.624Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/the-project-gameplan:testIamPermissions x-goog-quota-user=projects/the-project-gameplan
+[debug] [2024-10-31T23:36:56.625Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/the-project-gameplan:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2024-10-31T23:36:57.827Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/the-project-gameplan:testIamPermissions 200
+[debug] [2024-10-31T23:36:57.830Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/the-project-gameplan:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2024-10-31T23:36:57.833Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/the-project-gameplan [none]
+[debug] [2024-10-31T23:36:58.174Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/the-project-gameplan 200
+[debug] [2024-10-31T23:36:58.176Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/the-project-gameplan {"projectId":"the-project-gameplan","projectNumber":"1060600103566","displayName":"The Project Gameplan","name":"projects/the-project-gameplan","resources":{"hostingSite":"the-project-gameplan","realtimeDatabaseInstance":"the-project-gameplan-default-rtdb","storageBucket":"the-project-gameplan.appspot.com","locationId":"asia-southeast1"},"state":"ACTIVE","etag":"1_586eb54e-ba1e-48fb-b85d-1b055de93a40"}
+[debug] [2024-10-31T23:37:18.362Z] SyntaxError: Unexpected end of JSON input
+    at JSON.parse (<anonymous>)
+    at findDependency (C:\Users\juliu\AppData\Roaming\nvm\v20.10.0\node_modules\firebase-tools\lib\frameworks\utils.js:188:23)
+    at prepareFrameworks (C:\Users\juliu\AppData\Roaming\nvm\v20.10.0\node_modules\firebase-tools\lib\frameworks\index.js:124:64)
+    at deploy (C:\Users\juliu\AppData\Roaming\nvm\v20.10.0\node_modules\firebase-tools\lib\deploy\index.js:55:54)
+    at Command.actionFn (C:\Users\juliu\AppData\Roaming\nvm\v20.10.0\node_modules\firebase-tools\lib\commands\deploy.js:100:32)
+    at C:\Users\juliu\AppData\Roaming\nvm\v20.10.0\node_modules\firebase-tools\lib\command.js:228:25
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[error] 
+[error] Error: An unexpected error has occurred.
