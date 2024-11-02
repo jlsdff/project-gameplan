@@ -1,0 +1,37 @@
+import { Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure, 
+  Button
+} from "@nextui-org/react";
+
+export default function ImportModal({isOpen, onOpen, onOpenChange}){
+
+  return (
+    <Modal isOpen={isOpen} onOpenChange={onOpenChange} >
+      <ModalContent>
+        {
+          (onClose) => (
+            <>
+              <ModalHeader>
+                Import Game
+              </ModalHeader>
+              <ModalBody>
+
+              </ModalBody>
+              <ModalFooter>
+                <Button>Cancel</Button>
+                <Button>Import</Button>
+              </ModalFooter>
+            </>
+          )
+        }
+      </ModalContent>
+
+
+    </Modal>
+  )
+
+}

@@ -1,27 +1,52 @@
 import { firestore, Timestamp, FieldValue } from "@/lib/firebase/firebase";
+import { getTeamById } from "./teamAPI";
 
+// HELPER FUNCTIONS
 export const testGame = async (gameData) => {
-  console.log(testGame)
-}
+  g;
+};
+
+export const loadTeam = async (teams) => {
+  const snap = await Promise.all(
+    teams.map(async (id) => {
+      return await firestore.collection("teams").doc(id).get();
+    })
+  );
+
+  return snap;
+};
+
+export const loadPlayers = async (players) => {
+  const snap = await Promise.all(
+    players.map(async (id) => {
+      return await firestore.collection("players").doc(id).get();
+    })
+  );
+
+  return snap;
+};
+
+export const loadLeague = async (id) => {
+  return await firestore.collection("leagues").doc(id).get();
+};
 
 export const createGame = async (gameData) => {
-
-  const { month , day, year } = gameData.gameTime;
-  const date = new Date(year, month+1, day);
+  const { month, day, year } = gameData.gameTime;
+  const date = new Date(year, month + 1, day);
   gameData.gameTime = Timestamp.fromDate(date);
 
   const winloss =
     gameData.teamAStats.points > gameData.teamBStats.points
-      ? {winner: gameData.teamA.id, loser: gameData.teamB.id}
-      : {winner: gameData.teamB.id, loser: gameData.teamA.id};
+      ? { winner: gameData.teamA.id, loser: gameData.teamB.id }
+      : { winner: gameData.teamB.id, loser: gameData.teamA.id };
   firestore
     .collection("teams")
     .doc(winloss.winner)
-    .update({ wins: FieldValue.increment(1) }, {merge: true});
+    .update({ wins: FieldValue.increment(1) }, { merge: true });
   firestore
     .collection("teams")
     .doc(winloss.loser)
-    .update({ losses: FieldValue.increment(1) }, {merge: true});
+    .update({ losses: FieldValue.increment(1) }, { merge: true });
   try {
     const playerStats = [...gameData.stats.teamA, ...gameData.stats.teamB];
 
@@ -47,10 +72,13 @@ export const createGame = async (gameData) => {
       .collection("gameRecords")
       .doc(gameData.doc)
       .set(gameData.teamBStats, { merge: true });
-    
-    const players = [...gameData.stats.teamA.map(player => player.id), ...gameData.stats.teamB.map(player => player.id)]
-    const teams = [gameData.teamA.id, gameData.teamB.id]
-    
+
+    const players = [
+      ...gameData.stats.teamA.map((player) => player.id),
+      ...gameData.stats.teamB.map((player) => player.id),
+    ];
+    const teams = [gameData.teamA.id, gameData.teamB.id];
+
     const persisGame = firestore
       .collection("games")
       .doc(gameData.doc)
@@ -108,6 +136,21 @@ export const getGamesByDocs = async (docs) => {
   return await Promise.all(games);
 };
 
+export const getGamesByLastRef = async (
+  lastRef = null,
+  limit = 10,
+  orderBy = "date"
+) => {
+  const query = firestore
+    .collection("games")
+    .orderBy(orderBy, "desc")
+    .limit(limit);
+  if (lastRef) {
+    return await query.startAfter(lastRef).get();
+  }
+  return await query.get();
+};
+
 export const getGamesByPage = async (page, limit, orderBy = "date") => {
   let lastDoc = null;
 
@@ -121,11 +164,50 @@ export const getGamesByPage = async (page, limit, orderBy = "date") => {
     lastDoc = games.docs[games.docs.length - 1];
   }
 
-  let query = firestore.collection("games").orderBy(orderBy, "desc").limit(limit);
+  let query = firestore
+    .collection("games")
+    .orderBy(orderBy, "desc")
+    .limit(limit);
 
   if (lastDoc) {
     query = query.startAfter(lastDoc);
   }
 
   return await query.get();
+};
+
+export const deleteGameById = async (id) => {
+  firestore.runTransaction((transaction) => {
+
+    transaction.get(firestore.collection("games").doc(id)).then((doc) => {
+
+      const game = doc.data();
+      const { teamA, teamB, players } = game;
+
+      const teamARef = firestore.collection("teams").doc(teamA.id);
+      const teamBRef = firestore.collection("teams").doc(teamB.id);
+
+      const teamAStatsRef = teamARef.collection("gameRecords").doc(id);
+      const teamBStatsRef = teamBRef.collection("gameRecords").doc(id);
+
+      const playerStats = players.map((player) =>
+        firestore
+          .collection("players")
+          .doc(player)
+          .collection("gameRecords")
+          .doc(id)
+      );
+
+      transaction.delete(teamAStatsRef);
+      transaction.delete(teamBStatsRef);
+      playerStats.forEach((player) => transaction.delete(player));
+
+      transaction.delete(firestore.collection("games").doc(id));
+      transaction.update(firestore.collection("counters").doc("games"), {
+        size: FieldValue.increment(-1),
+      });
+      
+    });
+
+  });
 };
