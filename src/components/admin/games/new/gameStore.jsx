@@ -17,12 +17,10 @@ export const useNewGameStore = create((set) => ({
   teamParticipants: [],
   teamA: null,
   teamAPlayers: [],
+  teamAStats: [],
   teamB: null,
   teamBPlayers: [],
-  playerStats: {
-    teamA: [],
-    teamB: []
-  },
+  teamBStats: [],
   date: parseDate(getTodayFormatted()),
   number: null,
   lastGame: null,
