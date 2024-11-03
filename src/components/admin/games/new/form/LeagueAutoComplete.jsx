@@ -2,7 +2,8 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Autocomplete, AutocompleteItem } from "@nextui-org/react";
 import { useQuery } from "@tanstack/react-query";
 import { getLeaguesByLikeTitle } from "@/utils/leagueAPI";
-import { useNewGameStore } from "./NewGamePage";
+import { useNewGameStore } from "../gameStore";
+
 
 const searchLeagues = async (input) => {
   
@@ -17,8 +18,10 @@ const searchLeagues = async (input) => {
 
 };
 
-export default function LeagueAutoComplete({edit, ...props}) {
+export default function LeagueAutoComplete({id, ...props}) {
+
   const { league, setLeague } = useNewGameStore()
+
   const [fieldState, setFieldState] = useState({
     selectedkey: "",
     inputValue: "",
@@ -27,7 +30,7 @@ export default function LeagueAutoComplete({edit, ...props}) {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["leagues", fieldState.inputValue],
     queryFn: async () => {
-      return await searchLeagues(fieldState.inputValue);
+      return await searchLeagues(fieldState.inputValue)
     },
     staleTime: Infinity,
     gcTime: Infinity,
@@ -43,23 +46,16 @@ export default function LeagueAutoComplete({edit, ...props}) {
 
   const onSelectionChange = (key) => {
     const selectedItem = data?.find((item) => item.id === key);
+    
     if (selectedItem) {
+      setLeague(selectedItem)
       setFieldState((prev) => ({
         inputValue: selectedItem.title,
         selectedkey: key,
       }));
     }
-    setLeague(selectedItem)
-  };
 
-  useEffect(() => {
-    if(edit) {
-      setFieldState({
-        inputValue: league.title,
-        selectedkey: league.id
-      })
-    }
-  }, [])
+  };
 
   return (
     <Autocomplete

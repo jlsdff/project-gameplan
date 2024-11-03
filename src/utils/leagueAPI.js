@@ -145,3 +145,21 @@ export const getOngoingLeagues = async () => {
     .where("status", "==", "Ongoing")
     .get();
 }
+
+
+// OTHERS
+
+export const getParticipatingTeamsData = async ( teams ) => {
+
+  const participatingTeams = await Promise.all(
+    teams.map( async (team) => {
+      const res = await firestore.collection("teams").doc(team).get()
+      return res
+    })
+  )
+
+  return participatingTeams
+  
+}
+
+

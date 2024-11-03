@@ -126,3 +126,16 @@ export async function deleteTeam(id) {
 
 
 // OTHER FUNCTIONS
+
+export async function getPlayers(ids){
+  // if teamId is array of teamIds
+  
+  return await Promise.all( 
+    ids.map( async (id) => {
+      return await firestore.collection("players")
+      .doc(id)
+      .get()
+    })
+  )
+
+}

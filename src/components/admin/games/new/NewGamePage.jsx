@@ -1,21 +1,23 @@
 "use client";
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 import NewGame from "@/components/admin/games/new/NewGame";
-import { create } from "zustand";
 import {
   QueryClient,
   QueryClientProvider,
   useQueryClient,
 } from "@tanstack/react-query";
+import { useNewGameStore } from "./gameStore";
 
 const client = new QueryClient();
 
-export const useNewGameStore = create((set) => ({
-  league: null,
-  setLeague: (league) => set({ league })
-}));
-
 export default function NewGamePage({id}) {
+  
+  const { league } = useNewGameStore()
+
+  useEffect(() => {
+    console.log("Effect: ", league)
+  },[league])
+  
   return (
     <main className="min-h-screen p-8 sm:p-16">
       {/* <NewGame /> */}
