@@ -12,6 +12,22 @@ const getTodayFormatted = (_date = null) => {
   return `${yyyy}-${mm}-${dd}`;
 };
 
+const playerStatTemplate = {
+  id: null,
+  twoPointsMade: 0,
+  twoPointsAttempted: 0,
+  threePointsMade: 0,
+  threePointsAttempted: 0,
+  freeThrowsMade: 0,
+  freeThrowsAttempted: 0,
+  rebounds: 0,
+  assists: 0,
+  steals: 0,
+  blocks: 0,
+  turnovers: 0,
+  fouls: 0,
+};
+
 const reducer = (state, action) => {};
 
 export const useNewGameStore = create((set) => ({
@@ -21,12 +37,10 @@ export const useNewGameStore = create((set) => ({
   teamAPlayers: [],
   teamB: null,
   teamBPlayers: [],
-  stats: [
-    {
-      teamA: [],
-      teamB: [],
-    },
-  ],
+  stats: {
+    teamA: [],
+    teamB: [],
+  },
   date: parseDate(getTodayFormatted()),
   number: null,
   lastGame: null,
@@ -44,14 +58,48 @@ export const useNewGameStore = create((set) => ({
     players = await getPlayers(players).then((docs) =>
       docs.map((doc) => ({ id: doc.id, ref: doc, ...doc.data() }))
     );
-    set({ teamA: team, teamAPlayers: players });
+    set((state) => {
+      const initialStats = players.map((player) => ({
+        ...playerStatTemplate,
+        fullname: `${player.firstname} ${player.lastname}`,
+        firstname: player.firstname,
+        lastname: player.lastname,
+        number: player.number,
+        id: player.id,
+      }));
+      return {
+        teamA: team,
+        teamAPlayers: players,
+        stats: {
+          ...state.stats,
+          teamA: initialStats,
+        },
+      };
+    });
   },
   setTeamB: async (team) => {
     let players = team.players;
     players = await getPlayers(players).then((docs) =>
       docs.map((doc) => ({ id: doc.id, ref: doc, ...doc.data() }))
     );
-    set({ teamB: team, teamBPlayers: players });
+    set((state) => {
+      const initialStats = players.map((player) => ({
+        ...playerStatTemplate,
+        fullname: `${player.firstname} ${player.lastname}`,
+        firstname: player.firstname,
+        lastname: player.lastname,
+        number: player.number,
+        id: player.id,
+      }));
+      return {
+        teamB: team,
+        teamBPlayers: players,
+        stats: {
+          ...state.stats,
+          teamB: initialStats,
+        },
+      };
+    });
   },
   setDate: (date) => set({ date }),
   setGameNumber: (gameNumber) => set({ gameNumber }),

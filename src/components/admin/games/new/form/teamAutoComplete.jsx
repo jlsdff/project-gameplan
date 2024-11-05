@@ -9,7 +9,7 @@ export default function TeamAutoComplete({id, setTeam, ...props}) {
     inputValue: "",
   });
 
-  const { teamParticipants } = useNewGameStore()
+  const { teamParticipants, initStats } = useNewGameStore()
 
   const onSelectionChange = (key) => {
     const selectedItem = teamParticipants?.find((item) => item.id === key);

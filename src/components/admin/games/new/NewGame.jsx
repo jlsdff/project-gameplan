@@ -2,7 +2,14 @@
 import { useCallback, useState } from "react";
 import { useNewGameStore } from "./gameStore";
 import LeagueAutoComplete from "./form/LeagueAutoComplete";
-import { Button, ButtonGroup, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react";
+import {
+  Button,
+  ButtonGroup,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+} from "@nextui-org/react";
 import TeamAutoComplete from "./form/teamAutoComplete";
 import GameDatePicker from "./form/gameDataPicker";
 import GameNumber from "./form/gameNumber";
@@ -11,7 +18,18 @@ import ChevronIcon from "@/assets/chevronIcon";
 import ImportIcon from "@/assets/importIcon";
 
 export default function NewGame({ id }) {
-  const { league, teamA, teamB, teamAPlayers, teamBPlayers, gameNumber, date,  setTeamA, setTeamB } = useNewGameStore();
+  const {
+    league,
+    teamA,
+    teamB,
+    teamAPlayers,
+    teamBPlayers,
+    gameNumber,
+    date,
+    setTeamA,
+    setTeamB,
+    stats
+  } = useNewGameStore();
 
   const handleSave = useCallback(() => {
     console.log("Save: ", league);
@@ -21,11 +39,12 @@ export default function NewGame({ id }) {
     console.log("Team B Players: ", teamBPlayers);
     console.log("Date: ", date);
     console.log("Game Number: ", gameNumber);
-  }, [league, teamA, teamB, teamAPlayers, teamBPlayers, date, gameNumber]);
+    console.log("Team A Stats: ", stats.teamA);
+    console.log("Team B Stats: ", stats.teamB);
+  }, [league, teamA, teamB, teamAPlayers, teamBPlayers, date, gameNumber, stats]);
 
   return (
     <main>
-
       <section className="flex items-center justify-between w-full mb-4 ">
         <h1 className="text-xl font-semibold sm:text-2xl">New Game</h1>
 
@@ -36,8 +55,10 @@ export default function NewGame({ id }) {
                 <ChevronIcon size={14} />
               </Button>
             </DropdownTrigger>
-            <DropdownMenu aria-label="extra options" >
-              <DropdownItem startContent={<ImportIcon size={14}/>}>Import</DropdownItem>
+            <DropdownMenu aria-label="extra options">
+              <DropdownItem startContent={<ImportIcon size={14} />}>
+                Import
+              </DropdownItem>
             </DropdownMenu>
           </Dropdown>
         </div>
@@ -52,15 +73,10 @@ export default function NewGame({ id }) {
       </section>
 
       <form>
-      {
-        teamAPlayers && 
-        <StatTable id={id} players={teamAPlayers} />
-      }
-      {
-        teamBPlayers && 
-        <StatTable id={id} players={teamBPlayers} />
-      }
+        {teamAPlayers && <StatTable id={id} stats={stats.teamA} team="teamA" />}
+        {teamBPlayers && <StatTable id={id} stats={stats.teamB} team="teamB" />}
       </form>
+
       <section>
         <Button onClick={handleSave}>Save</Button>
       </section>
