@@ -72,10 +72,10 @@ export default function NewGame({ id }) {
         <GameNumber label="Game Number" />
       </section>
 
-      <form>
-        {teamAPlayers && <StatTable id={id} stats={stats.teamA} team="teamA" />}
-        {teamBPlayers && <StatTable id={id} stats={stats.teamB} team="teamB" />}
-      </form>
+      <section className="space-y-2">
+        {teamAPlayers && <StatTable id={id} team="teamA" />}
+        {teamBPlayers && <StatTable id={id} team="teamB" />}
+      </section>
 
       <section>
         <Button onClick={handleSave}>Save</Button>
