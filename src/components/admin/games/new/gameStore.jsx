@@ -14,21 +14,42 @@ const getTodayFormatted = (_date = null) => {
 
 const playerStatTemplate = {
   id: null,
-  twoPointsMade: 0,
-  twoPointsAttempted: 0,
-  threePointsMade: 0,
-  threePointsAttempted: 0,
-  freeThrowsMade: 0,
-  freeThrowsAttempted: 0,
-  rebounds: 0,
-  assists: 0,
-  steals: 0,
-  blocks: 0,
-  turnovers: 0,
-  fouls: 0,
+  twoPointsMade: null,
+  twoPointsAttempted: null,
+  threePointsMade: null,
+  threePointsAttempted: null,
+  freeThrowsMade: null,
+  freeThrowsAttempted: null,
+  rebounds: null,
+  assists: null,
+  steals: null,
+  blocks: null,
+  turnovers: null,
+  fouls: null,
+  isDNP: false,
 };
 
-const reducer = (state, action) => {};
+const reducer = (state, action) => {
+
+  const { type, id, team, value } = action
+
+  return {
+    ...state,
+    stats: {
+      ...state.stats,
+      [team]: state.stats[team].map( player => {
+        if(player.id === id) {
+          return {
+            ...player,
+            [type]: value
+          }
+        }
+        return player
+      })
+    }
+  }
+  
+};
 
 export const useNewGameStore = create((set) => ({
   league: null,
@@ -104,5 +125,27 @@ export const useNewGameStore = create((set) => ({
   setDate: (date) => set({ date }),
   setGameNumber: (gameNumber) => set({ gameNumber }),
   edit: (id) => {},
-  statDispatch: (action) => set((state) => reducer(state, action)),
+  statsDispatch: (action) => set((state) => reducer(state, action)),
+  markAsDNP: (id) => set(state => {
+    const team = state.teamAPlayers.find(player => player.id === id) ? 'teamA' : 'teamB';
+    return {
+      ...state,
+      stats: {
+        ...state.stats,
+        [team]: state.stats[team].map(player => {
+          if(player.id === id) {
+            return {
+              ...player,
+              isDNP: !player.isDNP
+            }
+          }
+          return player;
+        })
+      }
+    }
+    
+  }),
+  newPlayer: (player, team) => {
+    console.log("New Player: ", player, team);
+  }
 }));
