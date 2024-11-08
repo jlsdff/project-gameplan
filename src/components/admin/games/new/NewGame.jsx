@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useNewGameStore } from "./gameStore";
 import LeagueAutoComplete from "./form/LeagueAutoComplete";
 import {
@@ -20,6 +20,9 @@ import {
   ModalFooter,
   ModalBody,
   Checkbox,
+  CardBody,
+  RadioGroup,
+  Radio,
 } from "@nextui-org/react";
 import TeamAutoComplete from "./form/teamAutoComplete";
 import GameDatePicker from "./form/gameDataPicker";
@@ -64,9 +67,7 @@ export default function NewGame({ id }) {
     stats,
   ]);
 
-  const handleNewPlayer = useCallback((player, team) => {
-
-  }, [])
+  const handleNewPlayer = useCallback((player, team) => {}, []);
 
   return (
     <main>
@@ -98,16 +99,19 @@ export default function NewGame({ id }) {
       </section>
 
       <section>
+        <div className="">
+          <ButtonGroup size="sm" className="" variant="bordered">
+            <NewPlayerButton />
+            <PlayersButton />
+          </ButtonGroup>
+        </div>
+      </section>
+
+      <section>
         {teamAPlayers.length > 0 && teamBPlayers.length > 0 && (
           <Tabs aria-label="tabs-table">
             <Tab key={teamA.teamName} title={teamA.teamName}>
-              <div className="">
-                <ButtonGroup size="sm" className="" variant="bordered">
-                  <NewPlayerButton team={teamA} />
-                  <Button>Add Player</Button>
-                </ButtonGroup>
-                <StatTable id={id} team="teamA" />
-              </div>
+              <StatTable id={id} team="teamA" />
             </Tab>
             <Tab key={teamB.teamName} title={teamB.teamName}>
               <StatTable id={id} team="teamB" />
@@ -123,64 +127,121 @@ export default function NewGame({ id }) {
   );
 }
 
-const NewPlayerButton = ({team}) => {
-
-  const {isOpen, onOpen, onOpenChange} = useDisclosure()
-  const [firstname, setfirstname] = useState("")
-  const [lastname, setlastname] = useState("")
-  const [number, setnumber] = useState("")
-  const [showFullName, setshowFullName] = useState(false)
-  const {newPlayer} = useNewGameStore()
+const NewPlayerButton = () => {
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [firstname, setfirstname] = useState("");
+  const [lastname, setlastname] = useState("");
+  const [number, setnumber] = useState("");
+  const [showFullName, setshowFullName] = useState(false);
+  const { newPlayer, teamA, teamB } = useNewGameStore();
+  const [team, setteam] = useState(teamA.teamName);
 
   const handleSave = () => {
     const player = {
       firstname,
       lastname,
       number,
-      showFullName
-    }
-    newPlayer(player, team)
-    reset()
-  }
+      showFullName,
+    };
+    newPlayer(player, team === teamA.teamName ? teamA : teamB);
+    reset();
+  };
 
   const reset = () => {
-    setfirstname("")
-    setlastname("")
-    setnumber("")
-    setshowFullName(false)
-  }
-  
+    setfirstname("");
+    setlastname("");
+    setnumber("");
+    setshowFullName(false);
+  };
+
   return (
     <>
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-      <ModalContent>
-        {
-          (onClose) => (
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <ModalContent>
+          {(onClose) => (
             <>
-            <ModalHeader>New Player</ModalHeader>
-            <ModalBody>
-              <div className="space-y-2.5">
-                <div className="grid gap-2.5 grid-cols-1 sm:grid-cols-2">
-                <Input label="First Name" type="text" value={firstname} onValueChange={setfirstname} />
-                <Input label="Last Name" type="text" value={lastname} onValueChange={setlastname} />
+              <ModalHeader>New Player</ModalHeader>
+              <ModalBody>
+                <div className="space-y-2.5">
+                  <div className="grid gap-2.5 grid-cols-1 sm:grid-cols-2">
+                    <Input
+                      label="First Name"
+                      type="text"
+                      value={firstname}
+                      onValueChange={setfirstname}
+                    />
+                    <Input
+                      label="Last Name"
+                      type="text"
+                      value={lastname}
+                      onValueChange={setlastname}
+                    />
+                  </div>
+                  <Input
+                    type="number"
+                    label="Jersey Number"
+                    value={number}
+                    onValueChange={(value) => setnumber(value)}
+                  />
+                  <Checkbox
+                    isSelected={showFullName}
+                    onValueChange={setshowFullName}
+                  >
+                    {" "}
+                    Show Full Name{" "}
+                  </Checkbox>
+                  <RadioGroup label="Team" value={team} onValueChange={setteam}>
+                    <Radio value={teamA.teamName}>{teamA.teamName}</Radio>
+                    <Radio value={teamB.teamName}>{teamB.teamName}</Radio>
+                  </RadioGroup>
                 </div>
-                <Input type="number" label="Jersey Number" value={number} onValueChange={value => setnumber(value)} />
-                <Checkbox isSelected={showFullName} onValueChange={setshowFullName} > Show Full Name </Checkbox>
-              </div>
-            </ModalBody>
-            <ModalFooter>
-              <Button onClick={onClose}>Cancel</Button>
-              <Button onClick={() => {
-                handleSave()
-                onClose()
-              }}>Save</Button>
-            </ModalFooter>
+              </ModalBody>
+              <ModalFooter>
+                <Button onClick={onClose}>Cancel</Button>
+                <Button
+                  onClick={() => {
+                    handleSave();
+                    onClose();
+                  }}
+                >
+                  Save
+                </Button>
+              </ModalFooter>
             </>
-          )
-        }
-      </ModalContent>
-    </Modal>
-    <Button onPress={onOpen}>New Player</Button>
+          )}
+        </ModalContent>
+      </Modal>
+      <Button onPress={onOpen}>New Player</Button>
     </>
-  )
-}
+  );
+};
+
+const PlayersButton = () => {
+
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+  const playerBox = (player) => (
+    <Card>
+      <CardBody></CardBody>
+    </Card>
+  );
+
+  return (
+    <>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader>Players</ModalHeader>
+              <ModalBody></ModalBody>
+              <ModalFooter>
+                <Button onClick={onClose}>Close</Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+      <Button onPress={onOpen}>Players</Button>
+    </>
+  );
+};
