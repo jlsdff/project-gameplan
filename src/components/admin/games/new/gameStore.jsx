@@ -203,4 +203,30 @@ export const useNewGameStore = create((set) => ({
       }
     );
   },
+  removePlayerFromStats: (id, team) => {
+    set((state) => ({
+      stats: {
+        ...state.stats,
+        [team]: state.stats[team].filter((player) => player.id !== id),
+      },
+    }));
+  },
+  addPlayerToStats: (player, team) => {
+    set((state) => ({
+      stats: {
+        ...state.stats,
+        [team]: [
+          ...state.stats[team],
+          {
+            ...playerStatTemplate,
+            fullname: `${player.firstname} ${player.lastname}`,
+            firstname: player.firstname,
+            lastname: player.lastname,
+            number: player.number,
+            id: player.id,
+          },
+        ],
+      },
+    }));
+  },
 }));

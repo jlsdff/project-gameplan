@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useMemo, useState } from "react";
+import { lazy, useCallback, useMemo, useState } from "react";
 import { useNewGameStore } from "./gameStore";
 import LeagueAutoComplete from "./form/LeagueAutoComplete";
 import { motion } from "framer-motion";
@@ -24,6 +24,7 @@ import {
   CardBody,
   RadioGroup,
   Radio,
+  User,
 } from "@nextui-org/react";
 import TeamAutoComplete from "./form/teamAutoComplete";
 import GameDatePicker from "./form/gameDataPicker";
@@ -100,7 +101,12 @@ export default function NewGame({ id }) {
       </section>
 
       {teamA && teamB && (
-        <motion.section className="mt-2.5">
+        <motion.section
+          initial={{ opacity: 0, x: -100 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.3 }}
+          className="my-2.5"
+        >
           <div className="">
             <ButtonGroup size="sm" className="" variant="bordered">
               <NewPlayerButton />
@@ -110,8 +116,12 @@ export default function NewGame({ id }) {
         </motion.section>
       )}
 
-      <section>
-        {teamAPlayers.length > 0 && teamBPlayers.length > 0 && (
+      {teamAPlayers.length > 0 && teamBPlayers.length > 0 && (
+        <motion.section
+          initial={{ opacity: 0, x: -100 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.3 }}
+        >
           <Tabs aria-label="tabs-table">
             <Tab key={teamA.teamName} title={teamA.teamName}>
               <StatTable id={id} team="teamA" />
@@ -120,8 +130,8 @@ export default function NewGame({ id }) {
               <StatTable id={id} team="teamB" />
             </Tab>
           </Tabs>
-        )}
-      </section>
+        </motion.section>
+      )}
 
       <section>
         <Button onClick={handleSave}>Save</Button>
@@ -217,32 +227,68 @@ const NewPlayerButton = () => {
       <Button onPress={onOpen}>New Player</Button>
     </>
   );
-};
+}
 
 const PlayersButton = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const { teamA, teamAPlayers, teamB, teamBPlayers } = useNewGameStore();
+  const {
+    teamA,
+    teamAPlayers,
+    teamB,
+    teamBPlayers,
+    stats,
+    removePlayerFromStats,
+    addPlayerToStats,
+  } = useNewGameStore();
 
-  const playerBox = (player) => (
-    <Card>
-      <CardBody></CardBody>
-    </Card>
-  );
+  const playerBox = (player, team) => {
+    const onValueChange = (value) => {
+      if (value) {
+        addPlayerToStats(player, team);
+      } else {
+        removePlayerFromStats(player.id, team);
+      }
+    };
+
+    return (
+      <Checkbox
+        className="w-full"
+        key={player.id}
+        isSelected={stats[team].some((p) => p.id === player.id)}
+        onValueChange={onValueChange}
+      >
+        <User name={`${player.firstname ?? ""} ${player.lastname}`} />
+      </Checkbox>
+    );
+  };
 
   return (
     <>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+      <Modal
+        scrollBehavior="inside"
+        size="4xl"
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+      >
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader>Players</ModalHeader>
+              <ModalHeader>
+                <h1 className="text-xl text-primary">Players</h1>
+              </ModalHeader>
               <ModalBody>
-                <div>
+                <div className="grid grid-cols-1 sm:grid-cols-2">
                   <div>
-                    <h2>{teamA.teamName}</h2>
+                    <h2 className="mb-2.5 font-bold">{teamA.teamName}</h2>
+                    <div className="grid grid-cols-2">
+                      {teamAPlayers.map((player) => playerBox(player, "teamA"))}
+                    </div>
                   </div>
                   <div>
-                    <h2>{teamB.TeamName}</h2>
+                    <h2 className="mb-2.5 font-bold">{teamB.teamName}</h2>
+                    <div className="grid grid-cols-2">
+                      {teamBPlayers.map((player) => playerBox(player, "teamB"))}
+                    </div>
                   </div>
                 </div>
               </ModalBody>
