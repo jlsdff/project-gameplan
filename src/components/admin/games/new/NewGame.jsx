@@ -2,6 +2,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { useNewGameStore } from "./gameStore";
 import LeagueAutoComplete from "./form/LeagueAutoComplete";
+import { motion } from "framer-motion";
 import {
   Button,
   ButtonGroup,
@@ -98,14 +99,16 @@ export default function NewGame({ id }) {
         <GameNumber label="Game Number" />
       </section>
 
-      <section>
-        <div className="">
-          <ButtonGroup size="sm" className="" variant="bordered">
-            <NewPlayerButton />
-            <PlayersButton />
-          </ButtonGroup>
-        </div>
-      </section>
+      {teamA && teamB && (
+        <motion.section className="mt-2.5">
+          <div className="">
+            <ButtonGroup size="sm" className="" variant="bordered">
+              <NewPlayerButton />
+              <PlayersButton />
+            </ButtonGroup>
+          </div>
+        </motion.section>
+      )}
 
       <section>
         {teamAPlayers.length > 0 && teamBPlayers.length > 0 && (
@@ -217,8 +220,8 @@ const NewPlayerButton = () => {
 };
 
 const PlayersButton = () => {
-
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { teamA, teamAPlayers, teamB, teamBPlayers } = useNewGameStore();
 
   const playerBox = (player) => (
     <Card>
@@ -233,7 +236,16 @@ const PlayersButton = () => {
           {(onClose) => (
             <>
               <ModalHeader>Players</ModalHeader>
-              <ModalBody></ModalBody>
+              <ModalBody>
+                <div>
+                  <div>
+                    <h2>{teamA.teamName}</h2>
+                  </div>
+                  <div>
+                    <h2>{teamB.TeamName}</h2>
+                  </div>
+                </div>
+              </ModalBody>
               <ModalFooter>
                 <Button onClick={onClose}>Close</Button>
               </ModalFooter>
