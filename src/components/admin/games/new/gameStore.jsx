@@ -3,6 +3,8 @@ import { getParticipatingTeamsData } from "@/utils/leagueAPI";
 import { parseDate, getLocalTimeZone } from "@internationalized/date";
 import { useDateFormatter } from "@react-aria/i18n";
 import { getPlayers } from "@/utils/teamAPI";
+import { toast } from "sonner";
+import { createPlayerToTeam } from "@/utils/generalAPI";
 
 const getTodayFormatted = (_date = null) => {
   const date = _date ? _date : new Date();
@@ -30,25 +32,23 @@ const playerStatTemplate = {
 };
 
 const reducer = (state, action) => {
-
-  const { type, id, team, value } = action
+  const { type, id, team, value } = action;
 
   return {
     ...state,
     stats: {
       ...state.stats,
-      [team]: state.stats[team].map( player => {
-        if(player.id === id) {
+      [team]: state.stats[team].map((player) => {
+        if (player.id === id) {
           return {
             ...player,
-            [type]: value
-          }
+            [type]: value,
+          };
         }
-        return player
-      })
-    }
-  }
-  
+        return player;
+      }),
+    },
+  };
 };
 
 export const useNewGameStore = create((set) => ({
@@ -126,26 +126,81 @@ export const useNewGameStore = create((set) => ({
   setGameNumber: (gameNumber) => set({ gameNumber }),
   edit: (id) => {},
   statsDispatch: (action) => set((state) => reducer(state, action)),
-  markAsDNP: (id) => set(state => {
-    const team = state.teamAPlayers.find(player => player.id === id) ? 'teamA' : 'teamB';
-    return {
-      ...state,
-      stats: {
-        ...state.stats,
-        [team]: state.stats[team].map(player => {
-          if(player.id === id) {
-            return {
-              ...player,
-              isDNP: !player.isDNP
+  markAsDNP: (id) =>
+    set((state) => {
+      const team = state.teamAPlayers.find((player) => player.id === id)
+        ? "teamA"
+        : "teamB";
+      return {
+        ...state,
+        stats: {
+          ...state.stats,
+          [team]: state.stats[team].map((player) => {
+            if (player.id === id) {
+              return {
+                ...player,
+                isDNP: !player.isDNP,
+              };
             }
-          }
-          return player;
-        })
-      }
-    }
-    
-  }),
+            return player;
+          }),
+        },
+      };
+    }),
   newPlayer: (player, team) => {
     console.log("New Player: ", player, team);
-  }
+    toast.promise(
+      async () => {
+        return new Promise(async (resolve, reject) => {
+          await createPlayerToTeam(player, team)
+            .then((playerRef) => {
+              // update state
+              set((state) => {
+                const teamSide = team.id === state.teamA.id ? "teamA" : "teamB";
+                return {
+                  [`${teamSide}Players`]: [
+                    ...state[`${teamSide}Players`],
+                    {
+                      id: playerRef.id,
+                      ref: playerRef,
+                      ...player,
+                    },
+                  ],
+                  stats: {
+                    ...state.stats,
+                    [teamSide]: [
+                      ...state.stats[teamSide],
+                      {
+                        ...playerStatTemplate,
+                        fullname: `${player.firstname} ${player.lastname}`,
+                        firstname: player.firstname,
+                        lastname: player.lastname,
+                        number: player.number,
+                        id: playerRef.id,
+                      },
+                    ],
+                  },
+                };
+              });
+              // resolve
+              resolve({
+                firstname: player.firstname,
+                lastname: player.lastname,
+                teamName: team.teamName,
+              });
+            })
+            .catch((error) => {
+              reject(error);
+            });
+        });
+      },
+      {
+        loading: "Saving Player...",
+        success: (data) => {
+          return `${data.firstname} ${data.lastname} saved successfully for ${data.teamName}`;
+        },
+        error: "Error saving player",
+      }
+    );
+  },
 }));

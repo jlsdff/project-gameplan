@@ -140,6 +140,14 @@ const NewPlayerButton = ({team}) => {
       showFullName
     }
     newPlayer(player, team)
+    reset()
+  }
+
+  const reset = () => {
+    setfirstname("")
+    setlastname("")
+    setnumber("")
+    setshowFullName(false)
   }
   
   return (
