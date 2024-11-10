@@ -42,11 +42,13 @@
     "next": "14.0.4",
     "react": "^18",
     "react-dom": "^18",
+    "react-drag-drop-files": "^2.4.0",
     "react-responsive-carousel": "^3.2.23",
     "react-share": "^5.1.0",
     "sonner": "^1.7.0",
     "underscore": "^1.13.7",
     "underscore.string": "^3.3.6",
+    "xlsx": "^0.18.5",
     "zustand": "^5.0.1"
   },
   "devDependencies": {
