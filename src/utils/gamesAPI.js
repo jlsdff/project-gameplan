@@ -176,6 +176,7 @@ export const getGamesByPage = async (page, limit, orderBy = "date") => {
   return await query.get();
 };
 
+// TODO: update wins and loss of teams
 export const deleteGameById = async (id) => {
   firestore.runTransaction((transaction) => {
 

@@ -1,5 +1,5 @@
 "use client";
-import { lazy, useCallback, useMemo, useState } from "react";
+import { lazy, useCallback, useEffect, useMemo, useState } from "react";
 import { useNewGameStore } from "./gameStore";
 import LeagueAutoComplete from "./form/LeagueAutoComplete";
 import { motion } from "framer-motion";
@@ -43,6 +43,10 @@ import {
   checkLineUps,
   checkTeamCompatability,
 } from "@/utils/statsSheetAPI";
+import BasicTable from "@/components/ui/table/BasicTable";
+import { createColumnHelper } from "@tanstack/react-table";
+
+const columnHelper = createColumnHelper()
 
 export default function NewGame({ id }) {
   const {
@@ -303,6 +307,10 @@ const ImportButton = () => {
   const [file, setfile] = useState();
   const [wb, setwb] = useState(null);
   const [selectedSheet, setselectedSheet] = useState(null);
+  const [matches, setMatches] = useState([]);
+  const [status, setstatus] = useState({
+    handlingDuplicates: false,
+  })
   const { teamA, teamB, teamAPlayers, teamBPlayers } = useNewGameStore();
 
   const handleFile = (file) => {
@@ -319,10 +327,11 @@ const ImportButton = () => {
   const reset = () => {
     setfile(null);
     setwb(null);
+    setMatches([]);
     setselectedSheet(null);
   };
 
-  const mapSheetToPlayers = useMemo(async () => {
+  const mapMatches = useMemo(async () => {
     if (!wb || !selectedSheet) return;
     let stats = XLSX.utils.sheet_to_json(wb.Sheets[selectedSheet]);
     stats = stats.map((row) => ({
@@ -358,9 +367,7 @@ const ImportButton = () => {
 
     console.log("Stats: ", stats);
 
-    const teamARows = [];
-    const teamBRows = [];
-
+    // Check Lineups
     try {
       await checkLineUps(stats, {
         teamA,
@@ -378,7 +385,6 @@ const ImportButton = () => {
             action: {
               label: "Create Player",
               onClick: () => {
-                
                 const player = {
                   firstname: error.row.firstname,
                   lastname: error.row.lastname,
@@ -387,12 +393,17 @@ const ImportButton = () => {
                 };
 
                 return new Promise(async (resolve, reject) => {
-                  setTimeout(() => {
-                    toast.success(
-                      `Creating Player: ${player.lastname}, ${player.firstname} in ${error.team.teamName}`,
-                      { duration: 3000 }
-                    );
-                  }, 3000);
+                  try {
+                    await createPlayer(player, error.team).then(() => {
+                      toast.success(
+                        `Player ${error.row.Name} created successfully.`,
+                        { duration: 5000 }
+                      );
+                      resolve();
+                    });
+                  } catch (err) {
+                    reject(err);
+                  }
                 });
               },
             },
@@ -408,81 +419,27 @@ const ImportButton = () => {
       });
     }
 
-    // stats.forEach((row) => {
-    //   if (row.TEAM.toLowerCase() === teamA.teamName.toLowerCase()) {
-    //     // Player check for teamA
-    //     const isPresent = teamAPlayers.some(
-    //       (p) =>
-    //         p.lastname.toLowerCase() === row.lastname.toLowerCase() ||
-    //         p.number === row["#"]
-    //     );
+    const matches = stats.map((p) => {
+      if (p.TEAM?.toLowerCase() === teamA.teamName.toLowerCase()) {
+        const m = teamAPlayers.filter(
+          (player) =>
+            player.lastname?.toLowerCase() === p.lastname?.toLowerCase()
+        );
+        return { player: p, team: teamA, matches: m };
+      } else {
+        const m = teamBPlayers.filter(
+          (player) =>
+            player.lastname?.toLowerCase() === p.lastname?.toLowerCase()
+        );
+        return { player: p, team: teamB, matches: m };
+      }
+    }).map( match => ({...match, player: {...match.player, id: _.uniqueId("player_")}, id: _.uniqueId("match_")}));
+    setMatches(matches);
+    setstatus({ handlingDuplicates: true, viewingTable: false });
+    return matches;
+  }, [selectedSheet]);
 
-    //     if (!isPresent) {
-    //       toast.error(
-    //         `Player #${row["#"]} ${row.Name} not found in ${teamA.teamName}. Please add the player to the team first.`,
-    //         {
-    //           duration: Infinity,
-    //           cancel: {
-    //             label: "Okay",
-    //           },
-    //         }
-    //       );
-    //     } else {
-    //       teamARows.push(row);
-    //     }
-    //   } else {
-    //     // Player Check for teamB
-    //     const isPresent = teamBPlayers.some(
-    //       (p) =>
-    //         p.lastname.toLowerCase() === row.lastname.toLowerCase() ||
-    //         p.number === row["#"]
-    //     );
-
-    //     if (!isPresent) {
-    //       toast.error(
-    //         `Player #${row["#"]} ${row.Name} not found in ${teamB.teamName}. Please add the player to the team first.`,
-    //         {
-    //           duration: Infinity,
-    //           cancel: {
-    //             label: "Okay",
-    //           },
-    //         }
-    //       );
-    //     } else {
-    //       teamBRows.push(row);
-    //     }
-    //   }
-    // });
-
-    const grouped = {
-      teamA: teamARows,
-      teamB: teamBRows,
-    };
-
-    console.log("grouped: ", grouped);
-
-    // const mappedPlayers = stats.map((row) => {
-    //   const matches = players.filter(
-    //     (p) =>
-    //       p.lastname.toLowerCase() === row.lastname || p.number === row["#"]
-    //   );
-    //   return matches ? { row, matches: matches } : { row, matches: null };
-    // });
-
-    // mappedPlayers.forEach( player => {
-    //   if(player.matches?.length === 0) {
-    //     toast.error(`Player ${player.row.Name} not found.`, {duration: Infinity, action: {
-    //       label: "Create Player",
-    //       onClick: () => new Promise( async (resolve) => setTimeout(() => {console.log("Creating Player: ", player.row ), 3000}))
-    //     }})
-    //     onClose();
-    //     reset()
-    //   }
-    // })
-
-    // console.log("Mapped Players: ", mappedPlayers);
-    // return mappedPlayers;
-  }, [onClose, selectedSheet, teamAPlayers, teamBPlayers, wb]);
+  console.log("Matches: ", matches);
 
   return (
     <>
@@ -550,9 +507,26 @@ const ImportButton = () => {
                   )}
                 </div>
                 {/* Mapped Players */}
-                <div></div>
+                <div>
+                  {(matches.length > 0 && status.handlingDuplicates) && (
+                    <>
+                      <h2>Handle Duplicates</h2>
+                      <HandleDuplicates
+                        matches={matches}
+                        setMatches={setMatches}
+                        setStatus={setstatus}
+                      />
+                    </>
+                  ) }
+                  {
+                    status.viewingTable && <HandleTable matches={matches} />
+                  }
+                </div>
               </ModalBody>
               <ModalFooter>
+                <Button variant="light" onClick={() => reset()}>
+                  Reset
+                </Button>
                 <Button onClick={onClose}>Close</Button>
               </ModalFooter>
             </>
@@ -563,3 +537,173 @@ const ImportButton = () => {
     </>
   );
 };
+
+const HandleDuplicates = ({ matches, setMatches, setStatus }) => {
+
+  const [cleaned, setCleaned] = useState([]);
+  const [duplicates, setDuplicates] = useState([]);
+
+  useEffect(() => {
+
+    const cleaned = matches.filter((match) => match.matches.length === 1)
+      .map( match => ({ player: match.player, match: match.matches[0], team: match.team, id: match.id }));
+    const duplicates = matches.filter((match) => match.matches.length > 1);
+
+    setCleaned(cleaned);
+    setDuplicates(duplicates);
+    
+  }, [matches])
+
+  const handleClean = (match, player) => {
+
+
+    if(cleaned.some( cleanedMatch => cleanedMatch.id === match.id)){
+      const cleanedMatches = cleaned.map( cleanedMatch => {
+        if(cleanedMatch.id === match.id){
+          return { player: match.player, match: player, team: match.team, id: match.id };
+        }
+        return cleanedMatch;
+      });
+      setCleaned(cleanedMatches);
+      return
+    }
+    
+    const cleanedMatch = { player: match.player, match: player, team: match.team, id: match.id };
+
+    setCleaned([...cleaned, cleanedMatch]);
+    
+    
+    
+  }
+
+  if( cleaned.length === matches.length ) {
+    setStatus({ handlingDuplicates: false, viewingTable: true });
+    setMatches(cleaned)
+    console.log("Cleaned: ", cleaned)
+  }
+
+
+  return (
+    <section className="mt-2.5 space-y-2">
+      {
+        duplicates?.map((match, i) => {
+          return (
+            <Card key={match.player.id} >
+              <CardBody className="grid grid-cols-1 sm:grid-cols-2">
+                <div>
+                  <User name={`${match.player['#'] ?? "##"}-${match.player.Name}`} description={match.player.Name} avatarProps={{
+                    name: match.player.Name,
+                  }} />
+                </div>
+                <div className="space-y-1">
+                  {
+                    match.matches?.map((player, j) => {
+                      return (
+                        <div key={player.id} className={cn(
+                          ["p-2 rounded-md hover:bg-primary/5  cursor-pointer"],
+                          [ cleaned.some( c => c.match.id === player.id && c.id === match.id ) && "bg-green-500/50"],
+                          [ cleaned.some( c => c.match.id === player.id && c.id !== match.id ) && "bg-red-500/5 cursor-not-allowed opacity-20"],
+                        )} onClick={() => {
+                          if(cleaned.some( c => c.match.id === player.id && c.id !== match.id )) return
+                          handleClean(match, player)
+                        }}>
+                          <User name={`${player.number || "##"}-${player.firstname} ${player.lastname}`} description={player.number} avatarProps={{
+                            name: player.lastname,
+                          }} />
+                        </div>
+                      )
+                    })
+                  }
+                </div>
+              </CardBody>
+            </Card>
+          )
+        })
+      }
+    </section>
+  );
+};
+
+const HandleTable = ({ matches }) => {
+
+  const {teamA, teamB} = useNewGameStore();
+
+  const columns = useMemo(() => [
+    columnHelper.accessor("Name", {
+      header: "NAME"
+    }),
+    columnHelper.group({
+      header: "2 POINTS",
+      columns: [
+        columnHelper.accessor("2PM", {
+          header: "M"
+        }),
+        columnHelper.accessor("2PA", {
+          header: "A"
+        }),
+      ]
+    }),
+    columnHelper.group({
+      header: "3 POINTS",
+      columns: [
+        columnHelper.accessor("3PM", {
+          header: "M"
+        }),
+        columnHelper.accessor("3PA", {
+          header: "A"
+        }),
+      ]
+    }),
+    columnHelper.group({
+      header: "FREE THROWS",
+      columns: [
+        columnHelper.accessor("FTM", {
+          header: "M"
+        }),
+        columnHelper.accessor("FTA", {
+          header: "A"
+        }),
+      ]
+    }),
+    columnHelper.accessor("REB", {
+      header: "REBOUNDS"
+    }),
+    columnHelper.accessor("AST", {
+      header: "ASSISTS"
+    }),
+    columnHelper.accessor("STL", {
+      header: "STEALS"
+    }),
+    columnHelper.accessor("BLK", {
+      header: "BLOCKS"
+    }),
+    columnHelper.accessor("FLS", {
+      header: "FOULS"
+    }),
+    columnHelper.accessor("TO", {
+      header: "TURNOVERS"
+    }),
+
+  ], [])
+
+  const data = useMemo(() => ({
+    teamA: matches.filter( match => match.team.teamName?.toLowerCase() === teamA.teamName?.toLowerCase())
+    .map( match => match.player),
+    teamB: matches.filter( match => match.team.teamName?.toLowerCase() === teamB.teamName?.toLowerCase())
+    .map( match => match.player),
+  }), [matches])
+  
+  return (
+    <section>
+      <div>
+        <h2>{teamA.teamName}</h2>
+        <BasicTable columns={columns} data={data.teamA} />
+      </div>
+      <div>
+        <h2>{teamB.teamName}</h2>
+        <BasicTable columns={columns} data={data.teamB} />
+      </div>
+    </section>
+  )
+}
+
