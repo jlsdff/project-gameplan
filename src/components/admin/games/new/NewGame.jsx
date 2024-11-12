@@ -46,7 +46,7 @@ import {
 import BasicTable from "@/components/ui/table/BasicTable";
 import { createColumnHelper } from "@tanstack/react-table";
 
-const columnHelper = createColumnHelper()
+const columnHelper = createColumnHelper();
 
 export default function NewGame({ id }) {
   const {
@@ -310,8 +310,10 @@ const ImportButton = () => {
   const [matches, setMatches] = useState([]);
   const [status, setstatus] = useState({
     handlingDuplicates: false,
-  })
-  const { teamA, teamB, teamAPlayers, teamBPlayers } = useNewGameStore();
+    viewingTable: false,
+    finalizingTeamStats: false,
+  });
+  const { teamA, teamB, teamAPlayers, teamBPlayers, importPlayersStats } = useNewGameStore();
 
   const handleFile = (file) => {
     file.arrayBuffer().then((buffer) => {
@@ -329,6 +331,11 @@ const ImportButton = () => {
     setwb(null);
     setMatches([]);
     setselectedSheet(null);
+    setstatus({
+      handlingDuplicates: false,
+      viewingTable: false,
+      finalizingTeamStats: false,
+    });
   };
 
   const mapMatches = useMemo(async () => {
@@ -364,8 +371,6 @@ const ImportButton = () => {
       reset();
       return;
     }
-
-    console.log("Stats: ", stats);
 
     // Check Lineups
     try {
@@ -419,21 +424,27 @@ const ImportButton = () => {
       });
     }
 
-    const matches = stats.map((p) => {
-      if (p.TEAM?.toLowerCase() === teamA.teamName.toLowerCase()) {
-        const m = teamAPlayers.filter(
-          (player) =>
-            player.lastname?.toLowerCase() === p.lastname?.toLowerCase()
-        );
-        return { player: p, team: teamA, matches: m };
-      } else {
-        const m = teamBPlayers.filter(
-          (player) =>
-            player.lastname?.toLowerCase() === p.lastname?.toLowerCase()
-        );
-        return { player: p, team: teamB, matches: m };
-      }
-    }).map( match => ({...match, player: {...match.player, id: _.uniqueId("player_")}, id: _.uniqueId("match_")}));
+    const matches = stats
+      .map((p) => {
+        if (p.TEAM?.toLowerCase() === teamA.teamName.toLowerCase()) {
+          const m = teamAPlayers.filter(
+            (player) =>
+              player.lastname?.toLowerCase() === p.lastname?.toLowerCase()
+          );
+          return { player: p, team: teamA, matches: m };
+        } else {
+          const m = teamBPlayers.filter(
+            (player) =>
+              player.lastname?.toLowerCase() === p.lastname?.toLowerCase()
+          );
+          return { player: p, team: teamB, matches: m };
+        }
+      })
+      .map((match) => ({
+        ...match,
+        player: { ...match.player, id: _.uniqueId("player_") },
+        id: _.uniqueId("match_"),
+      }));
     setMatches(matches);
     setstatus({ handlingDuplicates: true, viewingTable: false });
     return matches;
@@ -445,7 +456,7 @@ const ImportButton = () => {
     <>
       <Modal
         scrollBehavior="inside"
-        size="4xl"
+        size="full"
         isOpen={isOpen}
         onOpenChange={onOpenChange}
       >
@@ -508,7 +519,7 @@ const ImportButton = () => {
                 </div>
                 {/* Mapped Players */}
                 <div>
-                  {(matches.length > 0 && status.handlingDuplicates) && (
+                  {matches.length > 0 && status.handlingDuplicates && (
                     <>
                       <h2>Handle Duplicates</h2>
                       <HandleDuplicates
@@ -517,10 +528,26 @@ const ImportButton = () => {
                         setStatus={setstatus}
                       />
                     </>
-                  ) }
-                  {
-                    status.viewingTable && <HandleTable matches={matches} />
-                  }
+                  )}
+                </div>
+                {/* Viewing Player Stats */}
+                <div className="w-full overflow-x-auto">
+                  {status.viewingTable && (
+                    <HandlePlayerTable matches={matches} />
+                  )}
+                </div>
+                {/* Viewing Team Stats */}
+                <div>
+                  {status?.finalizingTeamStats && (
+                    <HandleTeamTable
+                      teamA={matches.filter(
+                        (m) => m.team.teamName === teamA.teamName
+                      )}
+                      teamB={matches.filter(
+                        (m) => m.team.teamName === teamB.teamName
+                      )}
+                    />
+                  )}
                 </div>
               </ModalBody>
               <ModalFooter>
@@ -528,6 +555,30 @@ const ImportButton = () => {
                   Reset
                 </Button>
                 <Button onClick={onClose}>Close</Button>
+                {status.viewingTable && (
+                  <Button
+                    color="primary"
+                    variant="solid"
+                    onClick={() => {
+                      setstatus({
+                        handlingDuplicates: false,
+                        viewingTable: false,
+                        finalizingTeamStats: true,
+                      });
+                    }}
+                  >
+                    Finalize Stats
+                  </Button>
+                )}
+                {
+                  status?.finalizingTeamStats && (
+                    <Button variant="solid" color="primary" onClick={() => {
+                      importPlayersStats(matches);
+                      onClose();
+                      reset();
+                    }}>Import</Button>
+                  )
+                }
               </ModalFooter>
             </>
           )}
@@ -539,160 +590,202 @@ const ImportButton = () => {
 };
 
 const HandleDuplicates = ({ matches, setMatches, setStatus }) => {
-
   const [cleaned, setCleaned] = useState([]);
   const [duplicates, setDuplicates] = useState([]);
 
   useEffect(() => {
-
-    const cleaned = matches.filter((match) => match.matches.length === 1)
-      .map( match => ({ player: match.player, match: match.matches[0], team: match.team, id: match.id }));
+    const cleaned = matches
+      .filter((match) => match.matches.length === 1)
+      .map((match) => ({
+        player: match.player,
+        match: match.matches[0],
+        team: match.team,
+        id: match.id,
+      }));
     const duplicates = matches.filter((match) => match.matches.length > 1);
 
     setCleaned(cleaned);
     setDuplicates(duplicates);
-    
-  }, [matches])
+  }, [matches]);
 
   const handleClean = (match, player) => {
-
-
-    if(cleaned.some( cleanedMatch => cleanedMatch.id === match.id)){
-      const cleanedMatches = cleaned.map( cleanedMatch => {
-        if(cleanedMatch.id === match.id){
-          return { player: match.player, match: player, team: match.team, id: match.id };
+    if (cleaned.some((cleanedMatch) => cleanedMatch.id === match.id)) {
+      const cleanedMatches = cleaned.map((cleanedMatch) => {
+        if (cleanedMatch.id === match.id) {
+          return {
+            player: match.player,
+            match: player,
+            team: match.team,
+            id: match.id,
+          };
         }
         return cleanedMatch;
       });
       setCleaned(cleanedMatches);
-      return
+      return;
     }
-    
-    const cleanedMatch = { player: match.player, match: player, team: match.team, id: match.id };
+
+    const cleanedMatch = {
+      player: match.player,
+      match: player,
+      team: match.team,
+      id: match.id,
+    };
 
     setCleaned([...cleaned, cleanedMatch]);
-    
-    
-    
-  }
+  };
 
-  if( cleaned.length === matches.length ) {
+  if (cleaned.length === matches.length) {
     setStatus({ handlingDuplicates: false, viewingTable: true });
-    setMatches(cleaned)
-    console.log("Cleaned: ", cleaned)
+    setMatches(cleaned);
+    console.log("Cleaned: ", cleaned);
   }
-
 
   return (
     <section className="mt-2.5 space-y-2">
-      {
-        duplicates?.map((match, i) => {
-          return (
-            <Card key={match.player.id} >
-              <CardBody className="grid grid-cols-1 sm:grid-cols-2">
-                <div>
-                  <User name={`${match.player['#'] ?? "##"}-${match.player.Name}`} description={match.player.Name} avatarProps={{
+      {duplicates?.map((match, i) => {
+        return (
+          <Card key={match.player.id}>
+            <CardBody className="grid grid-cols-1 sm:grid-cols-2">
+              <div>
+                <User
+                  name={`${match.player["#"] ?? "##"}-${match.player.Name}`}
+                  description={match.team.teamName}
+                  avatarProps={{
                     name: match.player.Name,
-                  }} />
-                </div>
-                <div className="space-y-1">
-                  {
-                    match.matches?.map((player, j) => {
-                      return (
-                        <div key={player.id} className={cn(
-                          ["p-2 rounded-md hover:bg-primary/5  cursor-pointer"],
-                          [ cleaned.some( c => c.match.id === player.id && c.id === match.id ) && "bg-green-500/50"],
-                          [ cleaned.some( c => c.match.id === player.id && c.id !== match.id ) && "bg-red-500/5 cursor-not-allowed opacity-20"],
-                        )} onClick={() => {
-                          if(cleaned.some( c => c.match.id === player.id && c.id !== match.id )) return
-                          handleClean(match, player)
-                        }}>
-                          <User name={`${player.number || "##"}-${player.firstname} ${player.lastname}`} description={player.number} avatarProps={{
-                            name: player.lastname,
-                          }} />
-                        </div>
-                      )
-                    })
-                  }
-                </div>
-              </CardBody>
-            </Card>
-          )
-        })
-      }
+                  }}
+                />
+              </div>
+              <div className="space-y-1">
+                {match.matches?.map((player, j) => {
+                  return (
+                    <div
+                      key={player.id}
+                      className={cn(
+                        ["p-2 rounded-md hover:bg-primary/5  cursor-pointer"],
+                        [
+                          cleaned.some(
+                            (c) => c.match.id === player.id && c.id === match.id
+                          ) && "bg-green-500/50",
+                        ],
+                        [
+                          cleaned.some(
+                            (c) => c.match.id === player.id && c.id !== match.id
+                          ) && "bg-red-500/5 cursor-not-allowed opacity-20",
+                        ]
+                      )}
+                      onClick={() => {
+                        if (
+                          cleaned.some(
+                            (c) => c.match.id === player.id && c.id !== match.id
+                          )
+                        )
+                          return;
+                        handleClean(match, player);
+                      }}
+                    >
+                      <User
+                        name={`${player.number || "##"}-${player.lastname}, ${
+                          player.firstname
+                        }`}
+                        description={player.number}
+                        avatarProps={{
+                          name: player.lastname,
+                        }}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            </CardBody>
+          </Card>
+        );
+      })}
     </section>
   );
 };
 
-const HandleTable = ({ matches }) => {
+const HandlePlayerTable = ({ matches }) => {
+  const { teamA, teamB } = useNewGameStore();
 
-  const {teamA, teamB} = useNewGameStore();
+  const columns = useMemo(
+    () => [
+      columnHelper.accessor("Name", {
+        header: "NAME",
+      }),
+      columnHelper.group({
+        header: "2 POINTS",
+        columns: [
+          columnHelper.accessor("2PM", {
+            header: "M",
+          }),
+          columnHelper.accessor("2PA", {
+            header: "A",
+          }),
+        ],
+      }),
+      columnHelper.group({
+        header: "3 POINTS",
+        columns: [
+          columnHelper.accessor("3PM", {
+            header: "M",
+          }),
+          columnHelper.accessor("3PA", {
+            header: "A",
+          }),
+        ],
+      }),
+      columnHelper.group({
+        header: "FREE THROWS",
+        columns: [
+          columnHelper.accessor("FTM", {
+            header: "M",
+          }),
+          columnHelper.accessor("FTA", {
+            header: "A",
+          }),
+        ],
+      }),
+      columnHelper.accessor("REB", {
+        header: "REBOUNDS",
+      }),
+      columnHelper.accessor("AST", {
+        header: "ASSISTS",
+      }),
+      columnHelper.accessor("STL", {
+        header: "STEALS",
+      }),
+      columnHelper.accessor("BLK", {
+        header: "BLOCKS",
+      }),
+      columnHelper.accessor("FLS", {
+        header: "FOULS",
+      }),
+      columnHelper.accessor("TO", {
+        header: "TURNOVERS",
+      }),
+    ],
+    []
+  );
 
-  const columns = useMemo(() => [
-    columnHelper.accessor("Name", {
-      header: "NAME"
+  const data = useMemo(
+    () => ({
+      teamA: matches
+        .filter(
+          (match) =>
+            match.team.teamName?.toLowerCase() === teamA.teamName?.toLowerCase()
+        )
+        .map((match) => match.player),
+      teamB: matches
+        .filter(
+          (match) =>
+            match.team.teamName?.toLowerCase() === teamB.teamName?.toLowerCase()
+        )
+        .map((match) => match.player),
     }),
-    columnHelper.group({
-      header: "2 POINTS",
-      columns: [
-        columnHelper.accessor("2PM", {
-          header: "M"
-        }),
-        columnHelper.accessor("2PA", {
-          header: "A"
-        }),
-      ]
-    }),
-    columnHelper.group({
-      header: "3 POINTS",
-      columns: [
-        columnHelper.accessor("3PM", {
-          header: "M"
-        }),
-        columnHelper.accessor("3PA", {
-          header: "A"
-        }),
-      ]
-    }),
-    columnHelper.group({
-      header: "FREE THROWS",
-      columns: [
-        columnHelper.accessor("FTM", {
-          header: "M"
-        }),
-        columnHelper.accessor("FTA", {
-          header: "A"
-        }),
-      ]
-    }),
-    columnHelper.accessor("REB", {
-      header: "REBOUNDS"
-    }),
-    columnHelper.accessor("AST", {
-      header: "ASSISTS"
-    }),
-    columnHelper.accessor("STL", {
-      header: "STEALS"
-    }),
-    columnHelper.accessor("BLK", {
-      header: "BLOCKS"
-    }),
-    columnHelper.accessor("FLS", {
-      header: "FOULS"
-    }),
-    columnHelper.accessor("TO", {
-      header: "TURNOVERS"
-    }),
+    [matches]
+  );
 
-  ], [])
-
-  const data = useMemo(() => ({
-    teamA: matches.filter( match => match.team.teamName?.toLowerCase() === teamA.teamName?.toLowerCase())
-    .map( match => match.player),
-    teamB: matches.filter( match => match.team.teamName?.toLowerCase() === teamB.teamName?.toLowerCase())
-    .map( match => match.player),
-  }), [matches])
-  
   return (
     <section>
       <div>
@@ -704,6 +797,131 @@ const HandleTable = ({ matches }) => {
         <BasicTable columns={columns} data={data.teamB} />
       </div>
     </section>
-  )
-}
+  );
+};
 
+const HandleTeamTable = ({ teamA, teamB }) => {
+  const { teamA: teamAName, teamB: teamBName } = useNewGameStore();
+
+  const columns = useMemo(
+    () => [
+      columnHelper.accessor("teamName", {
+        header: "TEAM",
+      }),
+      columnHelper.group({
+        header: "2 POINTS",
+        columns: [
+          columnHelper.accessor("2PM", {
+            header: "M",
+          }),
+          columnHelper.accessor("2PA", {
+            header: "A",
+          }),
+        ],
+      }),
+      columnHelper.group({
+        header: "3 POINTS",
+        columns: [
+          columnHelper.accessor("3PM", {
+            header: "M",
+          }),
+          columnHelper.accessor("3PA", {
+            header: "A",
+          }),
+        ],
+      }),
+      columnHelper.group({
+        header: "FREE THROWS",
+        columns: [
+          columnHelper.accessor("FTM", {
+            header: "M",
+          }),
+          columnHelper.accessor("FTA", {
+            header: "A",
+          }),
+        ],
+      }),
+      columnHelper.accessor("REB", {
+        header: "REBOUNDS",
+      }),
+      columnHelper.accessor("AST", {
+        header: "ASSISTS",
+      }),
+      columnHelper.accessor("STL", {
+        header: "STEALS",
+      }),
+      columnHelper.accessor("BLK", {
+        header: "BLOCKS",
+      }),
+      columnHelper.accessor("FLS", {
+        header: "FOULS",
+      }),
+      columnHelper.accessor("TO", {
+        header: "TURNOVERS",
+      }),
+      columnHelper.accessor("PTS", {
+        header: "POINTS",
+      }),
+    ],
+    []
+  );
+
+  console.log("Team A: ", teamA);
+  console.log("Team B: ", teamB);
+
+  const getSums = useCallback((players) => {
+    return players.reduce(
+      (acc, player) => {
+        acc["2PM"] += player["2PM"];
+        acc["2PA"] += player["2PA"];
+        acc["3PM"] += player["3PM"];
+        acc["3PA"] += player["3PA"];
+        acc["FTM"] += player["FTM"];
+        acc["FTA"] += player["FTA"];
+        acc["REB"] += player["REB"];
+        acc["AST"] += player["AST"];
+        acc["STL"] += player["STL"];
+        acc["BLK"] += player["BLK"];
+        acc["FLS"] += player["FLS"];
+        acc["TO"] += player["TO"];
+        acc["PTS"] += player["PTS"];
+        return acc;
+      },
+      {
+        "2PM": 0,
+        "2PA": 0,
+        "3PM": 0,
+        "3PA": 0,
+        FTM: 0,
+        FTA: 0,
+        REB: 0,
+        AST: 0,
+        STL: 0,
+        BLK: 0,
+        FLS: 0,
+        TO: 0,
+        PTS: 0,
+      }
+    );
+  }, []);
+
+  const data = useMemo(() => {
+    const teamAData = getSums(teamA.map((match) => match.player));
+    const teamBData = getSums(teamB.map((match) => match.player));
+
+    return [
+      { ...teamAData, teamName: teamAName.teamName },
+      { ...teamBData, teamName: teamBName.teamName },
+    ];
+  }, [teamA, teamB]);
+
+  console.log("Data: ", data);
+
+  return (
+    <div>
+      <div>
+        <BasicTable columns={columns} data={data} />
+      </div>
+    </div>
+  );
+};

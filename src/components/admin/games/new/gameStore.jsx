@@ -229,4 +229,68 @@ export const useNewGameStore = create((set) => ({
       },
     }));
   },
+  importPlayersStats: (stats) => {
+    console.log("Importing Stats: ", stats);
+    set( state => {
+
+      const teamAStats = stats.filter( stat => state.teamA.teamName === stat.team.teamName )
+      .map( s => ({...s.player, id: s.match.id}))
+      .map( s => ({...state.teamAPlayers.find( p => p.id === s.id), stats: s}))
+      .map( s => ({
+        id: s.id,
+        twoPointsMade: s.stats['2PM'],
+        twoPointsAttempted: s.stats['2PA'],
+        threePointsMade: s.stats['3PM'],
+        threePointsAttempted: s.stats['3PA'],
+        freeThrowsMade: s.stats['FTM'],
+        freeThrowsAttempted: s.stats['FTA'],
+        rebounds: s.stats['REB'],
+        assists: s.stats['AST'],
+        steals: s.stats['STL'],
+        blocks: s.stats['BLK'],
+        turnovers: s.stats['TO'],
+        fouls: s.stats['FLS'],
+        isDNP: false,
+        firstname: s.firstname,
+        lastname: s.lastname,
+        number: s.number,
+        fullname: `${s.firstname} ${s.lastname}`
+      }))
+      const teamBStats = stats.filter( stat => state.teamB.teamName === stat.team.teamName )
+      .map( s => ({...s.player, id: s.match.id}))
+      .map( s => ({...state.teamBPlayers.find( p => p.id === s.id), stats: s}))
+      .map( s => ({
+        id: s.id,
+        twoPointsMade: s.stats['2PM'],
+        twoPointsAttempted: s.stats['2PA'],
+        threePointsMade: s.stats['3PM'],
+        threePointsAttempted: s.stats['3PA'],
+        freeThrowsMade: s.stats['FTM'],
+        freeThrowsAttempted: s.stats['FTA'],
+        rebounds: s.stats['REB'],
+        assists: s.stats['AST'],
+        steals: s.stats['STL'],
+        blocks: s.stats['BLK'],
+        turnovers: s.stats['TO'],
+        fouls: s.stats['FLS'],
+        isDNP: false,
+        firstname: s.firstname,
+        lastname: s.lastname,
+        number: s.number,
+        fullname: `${s.firstname} ${s.lastname}`
+      }))
+
+      console.log("teamAStats: ", teamAStats);
+      console.log("teamBStats: ", teamBStats);
+      console.log("state: ", state);
+      
+      return {
+        ...state,
+        stats: {
+          teamA: teamAStats,
+          teamB: teamBStats
+        }
+      }
+    })
+  }
 }));
