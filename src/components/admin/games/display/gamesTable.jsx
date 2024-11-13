@@ -108,7 +108,7 @@ const _ButtonGroup = ({ action }) => {
 };
 
 const Main = () => {
-  const limit = 1;
+  const limit = 10;
   const { isOpen, onOpen, onOpenChange, getButtonProps } = useDisclosure();
 
   const { data, isError, fetchNextPage, isFetchingNextPage, hasNextPage } =

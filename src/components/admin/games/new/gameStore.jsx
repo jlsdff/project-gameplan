@@ -292,5 +292,5 @@ export const useNewGameStore = create((set) => ({
         }
       }
     })
-  }
-}));
+  },
+ }));

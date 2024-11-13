@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { cn } from "@nextui-org/theme";
 import * as XLSX from "xlsx";
 import _, { map } from "underscore";
+import { getTeamTotalStats } from "@/helpers/getTotalPoints";
 import {
   Button,
   ButtonGroup,
@@ -45,6 +46,7 @@ import {
 } from "@/utils/statsSheetAPI";
 import BasicTable from "@/components/ui/table/BasicTable";
 import { createColumnHelper } from "@tanstack/react-table";
+import { createGamev2 } from "@/utils/gamesAPI";
 
 const columnHelper = createColumnHelper();
 
@@ -63,15 +65,29 @@ export default function NewGame({ id }) {
   } = useNewGameStore();
 
   const handleSave = useCallback(() => {
-    console.log("Save: ", league);
-    console.log("Team A: ", teamA);
-    console.log("Team B: ", teamB);
-    console.log("Team A Players: ", teamAPlayers);
-    console.log("Team B Players: ", teamBPlayers);
-    console.log("Date: ", date);
-    console.log("Game Number: ", gameNumber);
-    console.log("Team A Stats: ", stats.teamA);
-    console.log("Team B Stats: ", stats.teamB);
+
+    const gameData = {
+      league,
+      teamA,
+      teamB,
+      gameTime: date.toDate(),
+      date: date.toDate(),
+      gameNumber,
+      stats: {
+        teamA: getTeamTotalStats(stats.teamA),
+        teamB: getTeamTotalStats(stats.teamB),
+      }
+    }
+
+    console.log("Game Data: ", gameData); 
+
+    try {
+      
+    } catch( err ) {
+      toast.error("Something went wrong. Please try again. ");
+    }
+    
+    
   }, [
     league,
     teamA,
