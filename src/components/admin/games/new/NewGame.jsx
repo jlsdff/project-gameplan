@@ -47,6 +47,7 @@ import {
 import BasicTable from "@/components/ui/table/BasicTable";
 import { createColumnHelper } from "@tanstack/react-table";
 import { createGamev2 } from "@/utils/gamesAPI";
+import { useRouter } from "next/navigation";
 
 const columnHelper = createColumnHelper();
 
@@ -57,14 +58,16 @@ export default function NewGame({ id }) {
     teamB,
     teamAPlayers,
     teamBPlayers,
-    gameNumber,
+    number,
     date,
     setTeamA,
     setTeamB,
     stats,
   } = useNewGameStore();
+  const router = useRouter()
+  const [isSubmitting, setSubmitting] = useState(false);
 
-  const handleSave = useCallback(() => {
+  const handleSave = useCallback(async() => {
 
     const gameData = {
       league,
@@ -72,19 +75,33 @@ export default function NewGame({ id }) {
       teamB,
       gameTime: date.toDate(),
       date: date.toDate(),
-      gameNumber,
+      number,
       stats: {
         teamA: getTeamTotalStats(stats.teamA),
         teamB: getTeamTotalStats(stats.teamB),
-      }
+      },
+      playerStats: stats,
     }
-
     console.log("Game Data: ", gameData); 
 
     try {
-      
+      setSubmitting(true)
+      await createGamev2({...gameData})
+        .then(res => console.log("FINAL: ",res))
+        .then(res => {
+          router.push('/admin/dashboard/games')
+          toast.success("Game created successfully.")
+        })
     } catch( err ) {
-      toast.error("Something went wrong. Please try again. ");
+      console.error(err)
+      console.log(err.code)
+      if(err.code === 400) {
+        toast.error(err.message);
+      } else {
+        toast.error("An error occured while creating the game.");
+      }
+    } finally {
+      setSubmitting(false)
     }
     
     
@@ -95,7 +112,7 @@ export default function NewGame({ id }) {
     teamAPlayers,
     teamBPlayers,
     date,
-    gameNumber,
+    number,
     stats,
   ]);
 
@@ -148,7 +165,7 @@ export default function NewGame({ id }) {
       )}
 
       <section>
-        <Button onClick={handleSave}>Save</Button>
+        <Button isLoading={isSubmitting} onClick={handleSave}>Save</Button>
       </section>
     </main>
   );

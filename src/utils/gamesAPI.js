@@ -1,5 +1,13 @@
 import { firestore, Timestamp, FieldValue } from "@/lib/firebase/firebase";
 import { getTeamById } from "./teamAPI";
+import { getLocalTimeZone } from "@internationalized/date";
+
+class CustomError extends Error {
+  constructor(message, code) {
+    super(message);
+    this.code = code;
+  }
+}
 
 // HELPER FUNCTIONS
 export const testGame = async (gameData) => {
@@ -115,6 +123,97 @@ export const createGame = async (gameData) => {
   }
 };
 
+export const createGamev2 = async (gameData) => {
+  // check if gameData is valid
+  if (!gameData) {
+    const error = new CustomError("Data is required", 400);
+    throw error;
+  }
+  const isValid = Object.values(gameData).every(
+    (value) => value !== undefined && value !== null && value !== "" && value !== 0
+  );
+  if (!isValid) {
+    const error = new CustomError("Data is invalid", 400);
+    throw error;
+  }
+
+  const doc = `${gameData.league.title.toLowerCase().replace(/\s/g, "-")}-${
+    gameData.number
+  }`;
+  const isExist = await firestore
+    .collection("games")
+    .doc(doc)
+    .get()
+    .then((doc) => doc.exists);
+  if (isExist) {
+    throw new CustomError("Game number already exists", 400);
+  }
+
+  return firestore.runTransaction(async (transaction) => {
+
+    const gameRef = firestore.collection("games").doc(doc);
+    const winloss = gameData.stats.teamA.points > gameData.stats.teamB.points
+      ? { winner: gameData.teamA.id, loser: gameData.teamB.id }
+      : { winner: gameData.teamB.id, loser: gameData.teamA.id };
+
+    transaction.update( firestore.collection('teams').doc(winloss.winner), {
+      wins: FieldValue.increment(1)
+    });
+
+    transaction.update( firestore.collection('teams').doc(winloss.loser), {
+      losses: FieldValue.increment(1)
+    });
+
+    gameData.playerStats.teamA.map( player => {
+      transaction.set(
+        firestore.collection('players').doc(player.id).collection('gameRecords').doc(gameRef.id),
+        player
+      )
+    })
+    gameData.playerStats.teamB.map( player => {
+      transaction.set(
+        firestore.collection('players').doc(player.id).collection('gameRecords').doc(gameRef.id),
+        player
+      )
+    })
+
+    transaction.set(
+      firestore.collection('teams').doc(gameData.teamA.id).collection('gameRecords').doc(gameRef.id),
+      gameData.stats.teamA
+    )
+    transaction.set(
+      firestore.collection('teams').doc(gameData.teamB.id).collection('gameRecords').doc(gameRef.id),
+      gameData.stats.teamB
+    )
+
+    const players = [
+      ...gameData.playerStats.teamA.map( player => player.id),
+      ...gameData.playerStats.teamB.map( player => player.id)
+    ]
+    const teams = [gameData.teamA.id, gameData.teamB.id]
+
+    transaction.set(gameRef, {
+      date: Timestamp.fromDate(gameData.date),
+      doc: gameRef.id,
+      leagueId: gameData.league.id,
+      number: gameData.number,
+      playerStats: gameData.playerStats,
+      players,
+      teamA: {
+        id: gameData.teamA.id,
+        stats: gameData.stats.teamA
+      },
+      teamB: {
+        id: gameData.teamB.id,
+        stats: gameData.stats.teamB
+      },
+      teams,
+      time: Timestamp.fromDate(gameData.date)
+    })
+
+  })
+};
+
 export const getGameByDoc = async (doc) => {
   return await firestore
     .collection("games")
@@ -179,9 +278,7 @@ export const getGamesByPage = async (page, limit, orderBy = "date") => {
 // TODO: update wins and loss of teams
 export const deleteGameById = async (id) => {
   firestore.runTransaction((transaction) => {
-
     transaction.get(firestore.collection("games").doc(id)).then((doc) => {
-
       const game = doc.data();
       const { teamA, teamB, players } = game;
 
@@ -207,8 +304,6 @@ export const deleteGameById = async (id) => {
       transaction.update(firestore.collection("counters").doc("games"), {
         size: FieldValue.increment(-1),
       });
-      
     });
-
   });
 };

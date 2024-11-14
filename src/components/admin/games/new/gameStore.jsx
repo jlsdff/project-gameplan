@@ -65,6 +65,7 @@ export const useNewGameStore = create((set) => ({
   date: parseDate(getTodayFormatted()),
   number: null,
   lastGame: null,
+  setNumber: (number) => set({ number }),
   setLeague: async (league) => {
     const teamParticipants = await getParticipatingTeamsData(
       league.participatingTeams
