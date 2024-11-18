@@ -110,38 +110,72 @@ export default function LeagueDisplay({}) {
             <OngoingLeague OngoingLeagues={ongoingleagues} />
           )}
         </section>
-        <section>
+        <motion.section
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            duration: 0.5,
+            ease: "easeInOut",
+            delay: 0.3,
+          }}
+        >
           {isRecentLeaguesError ? (
             <div className="text-2xl font-black text-red-500">
               Failed to load recent leagues
             </div>
           ) : (
-            <FinishedLeagueTable
-              leagues={finishedLeagues}
-              fetchNextPage={fetchNextPage}
-              hasNextPage={hasNextPage}
-              isFetchingNextPage={isFetchingNextPage}
-            />
+            <div>
+              <h2
+                className={`mt-4 mb-2 text-2xl font-black ${josefinSans.className}`}
+              >
+                Recent Leagues
+              </h2>
+              <FinishedLeagueTable
+                leagues={finishedLeagues}
+                fetchNextPage={fetchNextPage}
+                hasNextPage={hasNextPage}
+                isFetchingNextPage={isFetchingNextPage}
+              />
+            </div>
           )}
-        </section>
+        </motion.section>
       </section>
     </>
   );
 }
 
 const OngoingLeague = ({ OngoingLeagues }) => {
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.3,
+        duration: 0.5,
+        ease: "easeInOut",
+      },
+    },
+  };
+
+  const item = {
+    hidden: { opacity: 0, y: 50 },
+    show: { opacity: 1, y: 0 },
+  };
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+      variants={container}
+      initial="hidden"
+      animate="show"
       className="space-y-2"
     >
       <h1
         className={`mb-2 text-2xl font-black ${josefinSans.className}`}
       >{`Ongoing League${OngoingLeagues.length > 1 && "s"}`}</h1>
       {OngoingLeagues.map((league) => (
-        <Banner league={league} key={league.id} />
+        <motion.div key={league.id} variants={item}>
+          <Banner league={league} />
+        </motion.div>
       ))}
     </motion.div>
   );
@@ -218,6 +252,9 @@ const FinishedLeagueTable = ({
     }),
     columnHelper.accessor("venue", {
       header: "Venue",
+      cell: ({ getValue }) => (
+        <div className="truncate whitespace-nowrap">{getValue()}</div>
+      ),
     }),
     columnHelper.accessor(
       (row) =>
@@ -242,18 +279,19 @@ const FinishedLeagueTable = ({
           if (from === undefined || to === undefined)
             return dateSchedule.join(", ");
 
-          return `${dateSchedule.join(", ")} | ${from?.toLocaleTimeString(
-            "en-US",
-            {
+          return (
+            <div className="truncate whitespace-nowrap">{`${dateSchedule.join(
+              ", "
+            )} | ${from?.toLocaleTimeString("en-US", {
               hour: "numeric",
               minute: "numeric",
               hour12: true,
-            }
-          )} - ${to?.toLocaleTimeString("en-US", {
-            hour: "numeric",
-            minute: "numeric",
-            hour12: true,
-          })}`;
+            })} - ${to?.toLocaleTimeString("en-US", {
+              hour: "numeric",
+              minute: "numeric",
+              hour12: true,
+            })}`}</div>
+          );
         },
       }
     ),
