@@ -5,7 +5,7 @@ import {
 } from "@/utils/leagueAPI";
 import { josefinSans } from "@/components/fonts";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Helmet } from "react-helmet";
 import {
   Image,
@@ -25,6 +25,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { useRouter } from "next/navigation";
 
 const fetchOngoingLeagues = async () => {
   return await getOngoingLeagues().then((snap) =>
@@ -243,6 +244,7 @@ const FinishedLeagueTable = ({
   fetchNextPage,
   isFetchingNextPage,
 }) => {
+  const router = useRouter()
   const columns = [
     columnHelper.accessor("title", {
       header: "Title",
@@ -312,6 +314,10 @@ const FinishedLeagueTable = ({
     getCoreRowModel: getCoreRowModel(),
   });
 
+  const handleRowClick = useCallback((id) => {
+    router.push(`/leagues?id=${id}`);
+  }, [router])
+
   return (
     <Table
       aria-labelledby="Recent Leagues"
@@ -342,7 +348,9 @@ const FinishedLeagueTable = ({
       </TableHeader>
       <TableBody>
         {table.getRowModel().rows.map((row) => (
-          <TableRow key={row.id}>
+          <TableRow key={row.id} className="cursor-pointer hover:bg-primary/5" onClick={() => {
+            handleRowClick(row.original.id)
+          }}>
             {row.getVisibleCells().map((cell) => (
               <TableCell key={cell.id}>
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
