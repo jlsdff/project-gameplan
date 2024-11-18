@@ -30,6 +30,7 @@ import { useRouter } from "next/navigation";
 import SearchIcon from "@/assets/searchIcon";
 import useAlgolia from "@/hooks/useAlgolia";
 import { getByPath } from "@/utils/generalAPI";
+import { Helmet } from "react-helmet";
 
 const columns = [
   {
@@ -331,15 +332,21 @@ const SearchResults = ({ name }) => {
 
 const PlayersTable = ({ page, name }) => {
   return (
+    <>
+    <Helmet>
+      <title>Players</title>
+      <meta name="description" content="Players table page" />
+    </Helmet>
     <Suspense
       fallback={
         <section className="px-8 py-4 sm:py-8 sm:px-16">
           <Loading className="w-full overflow-x-scroll scrollbar-hide" />
         </section>
       }
-    >
+      >
       {name ? <SearchResults name={name} /> : <Main name={name} />}
     </Suspense>
+      </>
   );
 };
 

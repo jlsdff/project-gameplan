@@ -5,7 +5,6 @@ import { Toaster } from "sonner";
 
 export const metadata = {
   title: "Project:Gameplan",
-  description: "Amateur Basketball League",
 };
 
 export default function RootLayout({ children }) {

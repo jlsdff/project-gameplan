@@ -18,6 +18,7 @@ import {
 import { getGamesByDocs } from "@/utils/gamesAPI";
 import PlayerTableById from "@/components/client/player/playerTableID";
 import { timestampToDate } from "@/helpers/timestampToDate";
+import { Helmet } from "react-helmet";
 
 async function getPlayerData(params) {
   const { id } = params;
@@ -128,6 +129,11 @@ export default function PlayerPage({ id }) {
     : "Loading...";
   return (
     <>
+      <Helmet>
+        <title>{name}</title>
+        <meta name="description" content={`Player Page for ${name}`} />
+        <meta name="keywords" content={`Player, ${name}`} />
+      </Helmet>
       {!player ? (
         <main className="flex items-center justify-center w-full h-screen">
           <Spinner label="Loading..." />
