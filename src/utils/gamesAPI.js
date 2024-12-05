@@ -277,8 +277,8 @@ export const getGamesByPage = async (page, limit, orderBy = "date") => {
 
 // TODO: update wins and loss of teams
 export const deleteGameById = async (id) => {
-  firestore.runTransaction((transaction) => {
-    transaction.get(firestore.collection("games").doc(id)).then((doc) => {
+  return firestore.runTransaction(async (transaction) => {
+    return transaction.get(firestore.collection("games").doc(id)).then((doc) => {
       const game = doc.data();
       const { teamA, teamB, players } = game;
 
