@@ -3,6 +3,7 @@ import { firestore } from "@/lib/firebase/firebase";
 import { Image, Card, Spinner } from "@nextui-org/react";
 import GameTabs from "@/components/client/games/gameTabs";
 import GameStats from "@/components/client/games/gameStats";
+import { Helmet } from "react-helmet";
 
 export default function GamePage({ id }) {
   const [game, setGame] = useState(null);
@@ -96,8 +97,19 @@ export default function GamePage({ id }) {
 
   return (
     <>
+      <Helmet>
+        <title>{game ? `${game.teamA.data.teamName} vs ${game.teamB.data.teamName}` : "Game"}</title>
+        <meta
+          name="description"
+          content={game ? `Game between ${game.teamA.data.teamName} and ${game.teamB.data.teamName}` : "Game"}
+        />
+        <meta 
+          name="keywords"
+          content={game ? `${game.teamA.data.teamName}, ${game.teamB.data.teamName}, game, project:gameplan` : "game"}
+        />
+      </Helmet>
       {!game ? (
-        <main className="flex justify-center items-center w-screen h-screen">
+        <main className="flex items-center justify-center w-screen h-screen">
           <Spinner label="Loading..." color="primary" />
         </main>
       ) : (

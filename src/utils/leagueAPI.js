@@ -43,16 +43,17 @@ export const getLeagueById = async (id) => {
   return await firestore.collection("leagues").doc(id).get();
 };
 
-export const getLeaguesByLikeTitle = async ( name, orderBy="createdAt" ) => {
-  name = name.replace(/\b\w/g, l => l.toUpperCase()); 
+export const getLeaguesByLikeTitle = async (name, orderBy = "createdAt") => {
+  name = name.replace(/\b\w/g, (l) => l.toUpperCase());
 
-  return await firestore.collection("leagues")
+  return await firestore
+    .collection("leagues")
     .where("title", ">=", name)
     .where("title", "<=", name + "\uf8ff")
     .orderBy(orderBy)
     .limit(5)
     .get();
-}
+};
 
 export const getLeagueSize = async () => {
   return await firestore
@@ -128,38 +129,50 @@ export const deleteLeague = async (id) => {
 };
 
 export const setLeagueStatus = async (id, status) => {
-  return await firestore
-    .collection('leagues')
-    .doc(id)
-    .update({
+  return await firestore.collection("leagues").doc(id).update(
+    {
       status: status,
       updatedAt: FieldValue.serverTimestamp(),
       updatedBy: auth.currentUser.uid,
-    }, {merge: true})
-}
+    },
+    { merge: true }
+  );
+};
 
 export const getOngoingLeagues = async () => {
-
   return await firestore
     .collection("leagues")
     .where("status", "==", "Ongoing")
     .get();
-}
+};
 
+export const getFinishedLeagues = async (
+  lastDoc = null,
+  limit = 10,
+  orderBy = "createdAt"
+) => {
+  const q = firestore
+    .collection("leagues")
+    .where("status", "==", "Finished")
+    .orderBy(orderBy, "desc")
+    .limit(limit);
+
+  if (lastDoc) {
+    return await q.startAfter(lastDoc).get();
+  }
+
+  return await q.get();
+};
 
 // OTHERS
 
-export const getParticipatingTeamsData = async ( teams ) => {
-
+export const getParticipatingTeamsData = async (teams) => {
   const participatingTeams = await Promise.all(
-    teams.map( async (team) => {
-      const res = await firestore.collection("teams").doc(team).get()
-      return res
+    teams.map(async (team) => {
+      const res = await firestore.collection("teams").doc(team).get();
+      return res;
     })
-  )
+  );
 
-  return participatingTeams
-  
-}
-
-
+  return participatingTeams;
+};

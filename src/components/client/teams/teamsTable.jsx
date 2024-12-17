@@ -25,6 +25,7 @@ import { motion } from "framer-motion";
 import { getByPath } from "@/utils/generalAPI";
 import useAlgolia from "@/hooks/useAlgolia";
 import { playerColumns } from "@/helpers/players/columns";
+import { Helmet } from "react-helmet";
 
 const columns = [
   {
@@ -301,6 +302,14 @@ const SearchResults = ({ name }) => {
 
 export default function TeamsTable({ name, page }) {
   return (
+    <>
+    <Helmet>
+      <title>Teams</title>
+      <meta
+        name="description"
+        content="View all the teams in the league"
+      />
+    </Helmet>
     <Suspense
       fallback={
         <section className="px-8 py-4 sm:py-8 sm:px-16">
@@ -310,5 +319,6 @@ export default function TeamsTable({ name, page }) {
     >
       {name ? <SearchResults name={name} /> : <Main />}
     </Suspense>
+      </>
   );
 }
