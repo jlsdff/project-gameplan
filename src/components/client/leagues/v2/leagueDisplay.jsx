@@ -163,6 +163,10 @@ const OngoingLeague = ({ OngoingLeagues }) => {
     show: { opacity: 1, y: 0 },
   };
 
+  if(OngoingLeagues?.length === 0) {
+    return <></>
+  }
+
   return (
     <motion.div
       variants={container}
@@ -172,7 +176,7 @@ const OngoingLeague = ({ OngoingLeagues }) => {
     >
       <h1
         className={`mb-2 text-2xl font-black ${josefinSans.className}`}
-      >{`Ongoing League${OngoingLeagues.length > 1 && "s"}`}</h1>
+      >{`Ongoing League${OngoingLeagues.length > 1 ? "s": ""}`}</h1>
       {OngoingLeagues.map((league) => (
         <motion.div key={league.id} variants={item}>
           <Banner league={league} />
