@@ -6,13 +6,22 @@ import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a lo
 export default function ImageCarousel() {
   const images = [
     {
-      original: "./carousel-1.png"
+      original: "./carousel-1.jpg"
     },
     {
-      original: "./carousel-2.png"
+      original: "./carousel-2.jpg"
     },
     {
-      original: "./carousel-3.png"
+      original: "./carousel-3.jpg"
+    },
+    {
+      original: "./carousel-4.jpg"
+    },
+    {
+      original: "./carousel-5.png"
+    },
+    {
+      original: "./carousel-6.jpg"
     }
   ];
 
