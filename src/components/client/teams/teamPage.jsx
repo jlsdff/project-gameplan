@@ -10,6 +10,7 @@ import {
   Spinner,
 } from "@nextui-org/react";
 import RecentGameTable from "@/components/client/teams/recentGameTable";
+import { Helmet } from "react-helmet";
 
 export default function TeamPage({ id }) {
   const [team, setTeam] = useState(null);
@@ -216,8 +217,13 @@ export default function TeamPage({ id }) {
 
   return (
     <>
+      <Helmet>
+        <title>{team ? team.teamName : "Team"} | Team</title>
+        <meta name="description" content={team ? `Stats and Recent Games for ${team?.teamName}` : "Stats and Recent Games"} />
+        <meta name="keywords" content={team ? `${team?.teamName}, ${team?.teamAbbr}, ${team?.teamName} stats, ${team?.teamName} recent games` : "team, stats, recent games"} />
+      </Helmet>
       {!team ? (
-        <main className="h-screen w-screen flex justify-center items-center">
+        <main className="flex items-center justify-center w-screen h-screen">
           <Spinner label="Loading..." />
         </main>
       ) : (

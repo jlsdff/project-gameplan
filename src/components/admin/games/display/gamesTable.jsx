@@ -1,6 +1,6 @@
 import { Suspense, useCallback, useMemo, useRef } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { getGamesByLastRef, getGamesByPage, loadTeam } from "@/utils/gamesAPI";
+import { getGamesByLastRef, getGamesByPage, loadTeam, deleteGameById } from "@/utils/gamesAPI";
 import { getLeagueById } from "@/utils/leagueAPI";
 import {
   Button,
@@ -32,6 +32,7 @@ import EditIcon from "@/assets/editIcon";
 import DeleteIcon from "@/assets/deleteIcon";
 import ImportIcon from "@/assets/importIcon";
 import ImportModal from "./importModal";
+import { toast } from "sonner";
 
 const fetchGames = async ({ pageParam, limit }) => {
   const { cursor } = pageParam;
@@ -147,7 +148,7 @@ const Main = () => {
   }, []);
 
   const BottomContent = hasNextPage ? (
-    <div className="w-full flex justify-center">
+    <div className="flex justify-center w-full">
       <Button isLoading={isFetchingNextPage} onClick={() => fetchNextPage()}>
         {isFetchingNextPage ? "Loading more..." : "Load More"}
       </Button>
@@ -155,7 +156,7 @@ const Main = () => {
   ) : null;
 
   const TopContent = (
-    <section className="w-full flex justify-between items-center mb-2">
+    <section className="flex items-center justify-between w-full mb-2">
       <ImportModal isOpen={isOpen} onOpenChange={onOpenChange} onOpen={onOpen}/>
       <h1 className="text-xl md:text-2xl">Recent Games</h1>
       <_ButtonGroup action={dropdownActions} />
@@ -165,7 +166,7 @@ const Main = () => {
   if (isError) {
     return (
       <section className="w-full h-full flex justify-center items-center gap-2.5 flex-col">
-        <h1 className="text-xl sm:text-2xl text-red-500">Error</h1>
+        <h1 className="text-xl text-red-500 sm:text-2xl">Error</h1>
         <p>Something went wrong fetching games</p>
       </section>
     );
@@ -214,7 +215,7 @@ const _Table = ({ items, bottomContent, topContent }) => {
       case "teamA":
         const teamA = item.teams.find((team) => team.id === item.teamA.id);
         return (
-          <div className="flex justify-between items-center">
+          <div className="flex items-center justify-between">
             <User
               src={teamA?.teamLogo}
               name={teamA?.teamName}
@@ -226,7 +227,7 @@ const _Table = ({ items, bottomContent, topContent }) => {
       case "teamB":
         const teamB = item.teams.find((team) => team.id === item.teamB.id);
         return (
-          <div className="flex justify-between items-center">
+          <div className="flex items-center justify-between">
             <User
               src={teamB?.teamLogo}
               name={teamB?.teamName}
@@ -284,6 +285,14 @@ const _Table = ({ items, bottomContent, topContent }) => {
 
   const deleteGame = async () => {
     console.log("Deleting Game: ", selectedGame.current.id);
+    try {
+      await deleteGameById(selectedGame.current.id).then(res => {
+        toast.success("Delete Successfully")
+      })
+    } catch(e) {
+      console.error(e)
+      toast.error("Something went wrong")
+    }
   };
 
   const editGame = async () => {

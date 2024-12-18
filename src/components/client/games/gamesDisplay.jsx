@@ -5,6 +5,7 @@ import { firestore } from "@/lib/firebase/firebase";
 import { getGamesByPage } from "@/utils/gamesAPI";
 import GamesTable from "@/components/client/games/gamesTable";
 import GamePagination from "@/components/client/games/gamePagination";
+import { Helmet } from "react-helmet";
 
 export default function GamesDisplay({ page, name }) {
   const [games, setGames] = useState([]);
@@ -82,6 +83,13 @@ export default function GamesDisplay({ page, name }) {
 
   return (
     <>
+      <Helmet>
+        <title>Games</title>
+        <meta
+          name="description"
+          content="Recent games played by teams"
+        />
+      </Helmet>
       {!games ? (
         <main className="flex items-center justify-center w-screen h-screen">
           <Spinner label="Loading..." color="primary" />
