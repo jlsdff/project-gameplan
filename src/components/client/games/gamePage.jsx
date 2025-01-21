@@ -1,3 +1,4 @@
+'use client'
 import React, { useCallback, useEffect, useState } from "react";
 import { firestore } from "@/lib/firebase/firebase";
 import { Image, Card, Spinner } from "@nextui-org/react";
@@ -97,7 +98,7 @@ export default function GamePage({ id }) {
 
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title>{game ? `${game.teamA.data.teamName} vs ${game.teamB.data.teamName}` : "Game"}</title>
         <meta
           name="description"
@@ -107,7 +108,7 @@ export default function GamePage({ id }) {
           name="keywords"
           content={game ? `${game.teamA.data.teamName}, ${game.teamB.data.teamName}, game, project:gameplan` : "game"}
         />
-      </Helmet>
+      </Helmet> */}
       {!game ? (
         <main className="flex items-center justify-center w-screen h-screen">
           <Spinner label="Loading..." color="primary" />
