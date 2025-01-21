@@ -23,7 +23,7 @@ export default function renderPlayerCell(player, key, toTeam) {
                 ? `${player.lastname}, ${firstname}`
                 : player.lastname
             }
-            description={player.positions.join(" | ")}
+            description={player?.positions?.join(" | ") || ""} 
             avatar={{
               src: player.avatar || null,
               showFallback: true,
