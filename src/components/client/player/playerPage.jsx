@@ -1,6 +1,6 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
-import { Divider, Spinner } from "@nextui-org/react";
+import { Divider, Spinner } from "@heroui/react";
 import { getPlayerById, getPlayerGamerecords } from "@/utils/playerAPI";
 import { firestore, Timestamp } from "@/lib/firebase/firebase";
 import {
@@ -19,6 +19,7 @@ import { getGamesByDocs } from "@/utils/gamesAPI";
 import PlayerTableById from "@/components/client/player/playerTableID";
 import { timestampToDate } from "@/helpers/timestampToDate";
 import { Helmet } from "react-helmet";
+import { heroui } from "@heroui/theme";
 
 async function getPlayerData(params) {
   const { id } = params;
@@ -79,9 +80,9 @@ async function getPlayerData(params) {
     ...player,
     gameRecords: records,
     games: gamesData.sort((a, b) => {
-      const aDate = a.date.toDate(); 
-      const bDate = b.date.toDate();  
-      return bDate.getTime() - aDate.getTime(); 
+      const aDate = a.date.toDate();
+      const bDate = b.date.toDate();
+      return bDate.getTime() - aDate.getTime();
     }),
   };
 }
@@ -92,7 +93,7 @@ export default function PlayerPage({ id }) {
 
   const fetchData = useCallback(async () => {
     const data = await getPlayerData({ id });
-    console.log("Player Data: ",data);
+    console.log("Player Data: ", data);
     return data;
   }, [id]);
 
@@ -229,9 +230,14 @@ export default function PlayerPage({ id }) {
             </div>
           </section>
           <Divider className="my-6" />
-          <h2 className="text-lg font-bold tracking-wide md:text-xl">
-            Games Played
-          </h2>
+          <div>
+            <h2 className="text-lg font-bold tracking-wide md:text-xl">
+              Games Played
+            </h2>
+            <div>
+
+            </div>
+          </div>
           <section>
             <PlayerTableById
               games={player.games || []}

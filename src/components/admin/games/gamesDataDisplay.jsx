@@ -1,6 +1,6 @@
 "use client";
 import React, { lazy, useState } from "react";
-import { Input, Select, SelectItem, Button, ButtonGroup, Dropdown } from "@nextui-org/react";
+import { Input, Select, SelectItem, Button, ButtonGroup, Dropdown } from "@heroui/react";
 import { filterOptions } from "./selectOptions";
 import AddIcon from "@/assets/addIcon";
 import { useRouter } from "next/navigation";

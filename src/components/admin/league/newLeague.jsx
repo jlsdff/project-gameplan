@@ -8,7 +8,7 @@ import {
   Button,
   ScrollShadow,
   Avatar,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import AddIcon from "@/assets/addIcon";
 import Editor from "@/components/ui/editor/editor";
 import SearchIcon from "@/assets/searchIcon";

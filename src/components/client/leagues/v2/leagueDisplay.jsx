@@ -17,7 +17,7 @@ import {
   TableRow,
   TableCell,
   Button,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { motion } from "framer-motion";
 import {
   createColumnHelper,

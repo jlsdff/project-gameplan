@@ -23,7 +23,7 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import TableSkeleton from "@/components/ui/skeletons/TableSkeleton";
 import ChevronIcon from "@/assets/chevronIcon";
 import { useRouter } from "next/navigation";

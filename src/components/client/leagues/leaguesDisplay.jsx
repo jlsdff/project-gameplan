@@ -6,7 +6,7 @@ import React, {
   useRef,
   useMemo,
 } from "react";
-import { Image, Link, Spinner } from "@nextui-org/react";
+import { Image, Link, Spinner } from "@heroui/react";
 import { firestore } from "@/lib/firebase/firebase";
 import { getLeaguesByLikeTitle } from "@/utils/leagueAPI";
 import LeaguesTable from "@/components/client/leagues/leaguesTable";

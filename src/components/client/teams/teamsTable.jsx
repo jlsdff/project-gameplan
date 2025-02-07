@@ -17,7 +17,7 @@ import {
 } from "@/utils/teamAPI";
 import { getTeamCount } from "@/utils/countersAPI";
 import PaginationUI from "@/components/ui/pagination";
-import { Spinner, Button, Input } from "@nextui-org/react";
+import { Spinner, Button, Input } from "@heroui/react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import SearchIcon from "@/assets/searchIcon";

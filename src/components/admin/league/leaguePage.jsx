@@ -1,6 +1,6 @@
 "use client";
 import React, { useRef, useReducer, useCallback } from "react";
-import { Input, Button, Link } from "@nextui-org/react";
+import { Input, Button, Link } from "@heroui/react";
 import SearchIcon from "@/assets/searchIcon";
 import AddIcon from "@/assets/addIcon";
 import LeagueDataDisplay from "./leagueDataDisplay";

@@ -3,7 +3,7 @@ import { useSearchParams } from "next/navigation";
 import React, { Suspense } from "react";
 import LeaguesDisplay from "./leaguesDisplay";
 import LeaguePage from "./leaguePage";
-import { Skeleton } from "@nextui-org/react";
+import { Skeleton } from "@heroui/react";
 import TableSkeleton from "@/components/ui/skeletons/TableSkeleton";
 import LeagueDisplay from "./v2/leagueDisplay";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";

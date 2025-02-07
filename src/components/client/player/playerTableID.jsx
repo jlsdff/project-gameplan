@@ -9,7 +9,7 @@ import {
   TableCell,
   Tooltip,
   User,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { useRouter } from "next/navigation";
 
 export default function PlayerTableById({ games, playerId }) {

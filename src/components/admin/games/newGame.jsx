@@ -9,7 +9,7 @@ import {
   TimeInput,
   Button,
   DateInput
-} from "@nextui-org/react";
+} from "@heroui/react";
 import useFetchLeague from "./fetchLeague";
 import useTeamByName from "@/hooks/useTeamByName";
 import { getPlayerById } from "@/utils/playerAPI";

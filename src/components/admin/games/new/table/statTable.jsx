@@ -14,7 +14,7 @@ import {
   DropdownMenu,
   DropdownTrigger,
   Input,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { useNewGameStore } from "../gameStore";
 import _, { map } from "underscore";
 import ChevronIcon from "@/assets/chevronIcon";

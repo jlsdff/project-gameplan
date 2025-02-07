@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Tabs, Tab, Card } from "@nextui-org/react";
+import { Tabs, Tab, Card } from "@heroui/react";
 import GameStats from "./gameStats";
 import PlayerTable from "./playerTable";
 

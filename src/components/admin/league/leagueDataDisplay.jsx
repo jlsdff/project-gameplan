@@ -15,7 +15,7 @@ import {
   Pagination,
   Button,
   Tooltip,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { useRouter } from "next/navigation";
 import DataDisplay from "../dataDisplay/dataDisplay";
 import { leagueColumns } from "@/helpers/leagues/columns";

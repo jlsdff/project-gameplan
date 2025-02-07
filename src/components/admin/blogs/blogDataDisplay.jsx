@@ -3,7 +3,7 @@ import React, { useState, useCallback, useEffect, useReducer } from "react";
 import {
   Input,
   Button,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import SearchIcon from "@/assets/searchIcon";
 import AddIcon from "@/assets/addIcon";
 import { useRouter } from "next/navigation";

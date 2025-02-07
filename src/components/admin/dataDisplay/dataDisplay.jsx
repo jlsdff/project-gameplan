@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Input, Divider, Button, Pagination } from "@nextui-org/react";
+import { Input, Divider, Button, Pagination } from "@heroui/react";
 import CustomTable from "../../ui/table/table";
 
 export default function DataDisplay({

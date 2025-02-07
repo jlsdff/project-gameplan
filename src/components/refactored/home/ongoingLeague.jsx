@@ -1,7 +1,7 @@
 import React from "react";
 import { josefinSans } from "@/components/fonts";
-import { Image } from "@nextui-org/react";
-import { Link } from "@nextui-org/react";
+import { Image } from "@heroui/react";
+import { Link } from "@heroui/react";
 
 export default function OngoingLeague() {
   return (

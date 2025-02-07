@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Autocomplete, AutocompleteItem } from "@nextui-org/react";
+import { Autocomplete, AutocompleteItem } from "@heroui/react";
 import { useQuery } from "@tanstack/react-query";
 import { getLeaguesByLikeTitle } from "@/utils/leagueAPI";
 import { useNewGameStore } from "../gameStore";

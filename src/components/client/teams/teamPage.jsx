@@ -8,7 +8,7 @@ import {
   Divider,
   Link,
   Spinner,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import RecentGameTable from "@/components/client/teams/recentGameTable";
 import { Helmet } from "react-helmet";
 

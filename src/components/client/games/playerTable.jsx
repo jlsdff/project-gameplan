@@ -7,7 +7,7 @@ import {
   TableRow,
   TableCell,
   User,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { useRouter } from "next/navigation";
 
 export default function PlayerTable({ stats }) {

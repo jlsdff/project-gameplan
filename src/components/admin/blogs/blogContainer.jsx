@@ -7,7 +7,7 @@ import {
   DropdownMenu,
   DropdownItem,
   Button,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import MoreIcon from "@/assets/moreIcon";
 import EditIcon from "@/assets/editIcon";
 import DeleteIcon from "@/assets/deleteIcon";

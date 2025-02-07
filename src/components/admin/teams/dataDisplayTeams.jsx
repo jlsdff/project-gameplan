@@ -17,7 +17,7 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import ToolbarDataDisplay from "../dataDisplay/toolbarDataDisplay";
 import SearchIcon from "@/assets/searchIcon";
 import AddIcon from "@/assets/addIcon";

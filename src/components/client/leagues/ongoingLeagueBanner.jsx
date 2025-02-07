@@ -1,4 +1,4 @@
-import { Image, Link, Spinner } from "@nextui-org/react";
+import { Image, Link, Spinner } from "@heroui/react";
 
 export default function OngoingLeagueBanner({ ongoingLeagues }) {
   return (

@@ -16,7 +16,7 @@ import {
   TableRow,
   TableCell,
   Input,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import TableClient from "./tableClient";
 import TableSkeleton from "@/components/ui/skeletons/TableSkeleton";
 import {

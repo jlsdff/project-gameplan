@@ -1,7 +1,7 @@
 'use client'
 import React, { useCallback, useEffect, useState } from "react";
 import { firestore } from "@/lib/firebase/firebase";
-import { Image, Card, Spinner } from "@nextui-org/react";
+import { Image, Card, Spinner } from "@heroui/react";
 import GameTabs from "@/components/client/games/gameTabs";
 import GameStats from "@/components/client/games/gameStats";
 import { Helmet } from "react-helmet";

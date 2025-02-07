@@ -16,7 +16,7 @@ import {
   ModalFooter,
   useDisclosure,
   Checkbox,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import DeleteIcon from "@/assets/deleteIcon";
 import EditIcon from "@/assets/editIcon";
 import SearchIcon from "@/assets/searchIcon";

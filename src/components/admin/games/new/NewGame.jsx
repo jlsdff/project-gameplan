@@ -3,7 +3,7 @@ import { lazy, useCallback, useEffect, useMemo, useState } from "react";
 import { useNewGameStore } from "./gameStore";
 import LeagueAutoComplete from "./form/LeagueAutoComplete";
 import { motion } from "framer-motion";
-import { cn } from "@nextui-org/theme";
+import { cn } from "@heroui/theme";
 import * as XLSX from "xlsx";
 import _, { map } from "underscore";
 import { getTeamTotalStats } from "@/helpers/getTotalPoints";
@@ -29,7 +29,7 @@ import {
   RadioGroup,
   Radio,
   User,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import TeamAutoComplete from "./form/teamAutoComplete";
 import GameDatePicker from "./form/gameDataPicker";
 import GameNumber from "./form/gameNumber";

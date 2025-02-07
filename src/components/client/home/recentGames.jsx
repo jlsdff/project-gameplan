@@ -15,11 +15,10 @@ import {
   Link,
   Skeleton,
   Card,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 const fetchData = async () => {
-  console.log("fetching data");
   const rawGames = await getGamesByPage(0, 5).then((res) =>
     res.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
   );
@@ -56,9 +55,6 @@ const MainComponent = () => {
     suspense: true,
     staleTime: 1000 * 60 * 5,
   });
-  if (data) {
-    console.log(data);
-  }
   const getTotalScore = (team) => {
     const stats = team.stats;
 

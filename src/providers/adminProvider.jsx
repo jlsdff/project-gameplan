@@ -2,7 +2,7 @@
 import React from "react";
 import { AdminContext } from "@/context/adminContext";
 import { useAuth } from "@/hooks/useAuth";
-import {Spinner} from "@nextui-org/react";
+import {Spinner} from "@heroui/react";
 
 export default function AdminProvider({ children }) {
   

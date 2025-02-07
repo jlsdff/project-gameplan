@@ -9,7 +9,7 @@ import {
   TableCell,
   User,
   Link,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { useRouter } from "next/navigation";
 
 export default function LeagueIdTable({ teams, games }) {

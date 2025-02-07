@@ -2,8 +2,8 @@
 import React from "react";
 import { josefinSans, montserrat } from "@/components/fonts";
 import { motion } from "framer-motion";
-import { Link } from "@nextui-org/react";
-import { Image } from "@nextui-org/react";
+import { Link } from "@heroui/react";
+import { Image } from "@heroui/react";
 import ImageCarousel from "./imageCarousel";
 
 export default function Hero() {

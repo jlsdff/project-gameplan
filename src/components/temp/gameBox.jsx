@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, Avatar } from '@nextui-org/react'
+import { Link, Avatar } from "@heroui/react"
 
 export default function GameBox({
   url,

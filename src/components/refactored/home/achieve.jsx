@@ -2,7 +2,7 @@
 import { motion } from "framer-motion";
 import React from "react";
 import { josefinSans, montserrat } from "@/components/fonts";
-import { Image } from "@nextui-org/react";
+import { Image } from "@heroui/react";
 
 export default function HowWeAchieveIt() {
   return (

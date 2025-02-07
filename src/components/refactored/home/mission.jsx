@@ -3,7 +3,7 @@
 import React from "react";
 import { josefinSans, montserrat } from "@/components/fonts";
 import { motion } from "framer-motion";
-import { Image } from "@nextui-org/react";
+import { Image } from "@heroui/react";
 
 export default function MissionAndVision() {
   return (
@@ -84,7 +84,7 @@ export default function MissionAndVision() {
 // import React from "react";
 // import { josefinSans, montserrat } from "@/components/fonts";
 // import { motion } from "framer-motion";
-// import { Image } from "@nextui-org/react";
+// import { Image } from "@heroui/react";
 
 // export default function MissionAndVision() {
 //   return (

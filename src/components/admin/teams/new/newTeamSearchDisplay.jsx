@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Spinner } from "@nextui-org/react";
+import { Spinner } from "@heroui/react";
 import PlayerContainer from "./playerContainer";
 import CheckIcon from "@/assets/checkIcon";
 import AddIcon from "@/assets/addIcon";

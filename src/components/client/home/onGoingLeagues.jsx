@@ -2,7 +2,7 @@
 
 import React, { Suspense } from "react";
 import { getOngoingLeagues } from "@/utils/leagueAPI";
-import { Image, Link, Skeleton } from "@nextui-org/react";
+import { Image, Link, Skeleton } from "@heroui/react";
 import { useQuery } from "@tanstack/react-query";
 
 const fetchData = async () => {

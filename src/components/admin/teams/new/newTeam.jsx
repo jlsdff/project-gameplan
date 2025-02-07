@@ -1,6 +1,6 @@
 "use client";
 import React, { useCallback, useEffect, useState, useReducer } from "react";
-import { Input, Button, Tooltip } from "@nextui-org/react";
+import { Input, Button, Tooltip } from "@heroui/react";
 import SearchIcon from "@/assets/searchIcon";
 import XIcon from "@/assets/xIcon";
 import NewTeamSearchDisplay from "./newTeamSearchDisplay";

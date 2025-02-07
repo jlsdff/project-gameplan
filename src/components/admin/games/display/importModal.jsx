@@ -5,7 +5,7 @@ import { Modal,
   ModalFooter,
   useDisclosure, 
   Button
-} from "@nextui-org/react";
+} from "@heroui/react";
 
 export default function ImportModal({isOpen, onOpen, onOpenChange}){
 

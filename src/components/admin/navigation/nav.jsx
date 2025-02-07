@@ -13,7 +13,7 @@ import {
   Dropdown,
   DropdownMenu,
   Avatar,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { usePathname } from "next/navigation";
 import { auth } from "@/lib/firebase/firebase";
 import { AdminContext } from "@/context/adminContext";

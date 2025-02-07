@@ -6,7 +6,7 @@ import {
   TableRow,
   TableCell,
   Skeleton,
-} from "@nextui-org/react";
+} from "@heroui/react";
 
 const UserSkeleton = () => {
   return (

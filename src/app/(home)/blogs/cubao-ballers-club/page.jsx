@@ -1,5 +1,5 @@
 import React from "react";
-import { Image, Divider } from "@nextui-org/react";
+import { Image, Divider } from "@heroui/react";
 import Footer from "@/components/client/footer/Footer";
 import dynamic from "next/dynamic";
 import Link from "next/link";

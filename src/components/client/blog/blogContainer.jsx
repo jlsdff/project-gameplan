@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useRouter } from "next/navigation";
-import { Image, Chip } from "@nextui-org/react";
+import { Image, Chip } from "@heroui/react";
 
 export default function BlogContainer({
   title,

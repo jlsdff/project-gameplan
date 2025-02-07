@@ -1,6 +1,6 @@
 import React from "react";
-import { Link } from "@nextui-org/react";
-import { Image } from "@nextui-org/react";
+import { Link } from "@heroui/react";
+import { Image } from "@heroui/react";
 import { josefinSans } from "@/components/fonts";
 
 export default function Footer() {

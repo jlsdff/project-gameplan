@@ -10,7 +10,7 @@ import {
   Tooltip,
   Spinner,
   Skeleton,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import renderPlayerCell from "@/helpers/players/renderPlayerCell";
 import { useRouter } from "next/navigation";
 

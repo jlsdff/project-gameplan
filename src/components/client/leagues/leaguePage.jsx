@@ -1,7 +1,7 @@
-import { Spinner } from "@nextui-org/react";
+import { Spinner } from "@heroui/react";
 import React, { useEffect, useState, useCallback } from "react";
 import { firestore } from "@/lib/firebase/firebase";
-import { Image, Divider, User, Link } from "@nextui-org/react";
+import { Image, Divider, User, Link } from "@heroui/react";
 import LeagueIdTable from "@/components/client/leagues/leagueIdTable";
 import { Helmet } from "react-helmet";
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar, Button } from "@nextui-org/react";
+import { Avatar, Button } from "@heroui/react";
 
 export default function PlayerContainer({ player, endContent }) {
   const { firstname, lastname, positions, number, imageUrl, id } = player;

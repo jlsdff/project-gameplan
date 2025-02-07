@@ -10,7 +10,7 @@ import {
   User,
   Pagination,
   Spinner
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { useRouter } from "next/navigation";
 
 export default function GamesTable({ games, loading }) {

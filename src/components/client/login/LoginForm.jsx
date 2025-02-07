@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useMemo, useReducer } from "react";
-import { Input, Button, Checkbox, Link } from "@nextui-org/react";
+import { Input, Button, Checkbox, Link } from "@heroui/react";
 import { signIn } from "@/helpers/signin";
 import { useRouter } from "next/navigation";
 

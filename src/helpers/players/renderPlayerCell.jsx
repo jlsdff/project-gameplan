@@ -1,4 +1,4 @@
-import { User } from "@nextui-org/react";
+import { User } from "@heroui/react";
 import { Suspense } from "react";
 
 export default function renderPlayerCell(player, key, toTeam) {

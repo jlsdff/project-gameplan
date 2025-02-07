@@ -1,5 +1,5 @@
 "use client";
-import { Pagination } from "@nextui-org/react";
+import { Pagination } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 

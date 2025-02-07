@@ -1,5 +1,5 @@
 import React from "react";
-import { Input, Divider, Button, Tooltip } from "@nextui-org/react";
+import { Input, Divider, Button, Tooltip } from "@heroui/react";
 
 export default function ToolbarDataDisplay({
   title,

@@ -1,6 +1,6 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
-import { Avatar, Link, Spinner } from "@nextui-org/react";
+import { Avatar, Link, Spinner } from "@heroui/react";
 import { firestore } from "@/lib/firebase/firebase";
 import { getGamesByPage } from "@/utils/gamesAPI";
 import GamesTable from "@/components/client/games/gamesTable";

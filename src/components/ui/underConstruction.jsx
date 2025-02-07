@@ -1,5 +1,5 @@
 import React from "react";
-import { Image } from "@nextui-org/react";
+import { Image } from "@heroui/react";
 import { josefinSans } from "../fonts";
 
 export default function UnderConstruction() {

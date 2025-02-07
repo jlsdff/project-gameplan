@@ -10,7 +10,7 @@ import {
   Tooltip,
   chip,
   Chip,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import React, { useCallback, useMemo } from "react";
 import XIcon from "@/assets/xIcon";
 

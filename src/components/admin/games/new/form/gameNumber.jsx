@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Input } from "@nextui-org/react"
+import { Input } from "@heroui/react"
 import { useNewGameStore } from "../gameStore"
 
 export default function GameNumber({id, ...props}) {
