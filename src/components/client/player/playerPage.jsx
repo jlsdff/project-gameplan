@@ -230,14 +230,6 @@ export default function PlayerPage({ id }) {
             </div>
           </section>
           <Divider className="my-6" />
-          <div>
-            <h2 className="text-lg font-bold tracking-wide md:text-xl">
-              Games Played
-            </h2>
-            <div>
-
-            </div>
-          </div>
           <section>
             <PlayerTableById
               games={player.games || []}

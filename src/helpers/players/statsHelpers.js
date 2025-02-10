@@ -1,3 +1,5 @@
+import { get } from "underscore";
+
 export const getPPG = (stats) => {
   if (!stats.length) return 0;
 
@@ -136,3 +138,34 @@ export const get3PG = (stats) => {
     maximumFractionDigits: 2,
   });
 };
+
+// GET GAME STATS OF A PLAYER FROM A GAME DOCUMENT
+export const getStats = (playerId, games) => {
+
+  const stats = []
+
+  games.forEach((game) => {
+
+    const playersStats =  [...game.playerStats.teamA, ...game.playerStats.teamB] 
+    console.log("game stats:", playersStats)
+    const playerStats = playersStats.find((player) => player.id === playerId)
+
+    if (playerStats) {
+      stats.push(playerStats)
+    }
+
+  })
+  console.log("STATS: ",stats)
+
+  return {
+    ppg: getPPG(stats),
+    apg: getAPG(stats),
+    rpg: getRPG(stats),
+    bpg: getBPG(stats),
+    spg: getSPG(stats),
+    fgp: getFGP(stats),
+    twoPG: get2PG(stats),
+    threePG: get3PG(stats),
+    ftp: getFTP(stats),
+  }
+}

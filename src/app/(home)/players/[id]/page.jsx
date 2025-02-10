@@ -3,41 +3,40 @@ import { firestore } from "@/lib/firebase/firebase";
 import Player from "@/pages/players/Player";
 
 async function getData({ id, searchParams }) {
-  
-  const player = await firestore.collection("players").doc(id).get().then(res => {
-    if (res.exists) {
-      return JSON.stringify({id: res.id, ...res.data()})
-    } else {
-      notFound();
-    }
-  })
-
-  let games = await firestore
-    .collection("games")
-    .where("players", "array-contains", id)
-    .get()
-  games = games.docs.map((doc) => ({id:doc.id, ...doc.data()}));
-  games = games.map( game => ({
-    ...game,
-    date: game.date.toDate(),
-    time: game.time.toDate()
-  }))
-  
-  const data = {
-    player,
-    games
+  const { league } = searchParams;
+  let player = await firestore.collection("players").doc(id).get();
+  if (!player.exists) {
+    notFound();
   }
-  console.log("Data: ", data)
-  return data
+
+  // GET GAMES
+  let games = firestore
+    .collection("games")
+    .where("players", "array-contains", id);
+  if (league) {
+    games = games.where("league", "==", league);
+  }
+  games = await games
+    .get()
+    .then((snapshot) => snapshot.docs.map((doc) => doc.data()))
+    .then( games => JSON.stringify(games));
+
+  player = JSON.stringify({id: player.id, ...player.data()});
+
+  return { player: player, games: games };
 }
 
 export default async function Page({ params, searchParams }) {
   const { id } = params;
 
   const data = await getData({ id, searchParams });
-  console.log("Data: ", data)
 
   return (
-      <Player data={data} />
+    <Player
+      data={{
+        player: JSON.parse(data.player),
+        games: JSON.parse(data.games),
+      }}
+    />
   );
 }

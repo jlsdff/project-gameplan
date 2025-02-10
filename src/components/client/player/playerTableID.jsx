@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Table,
   TableHeader,
@@ -9,20 +9,44 @@ import {
   TableCell,
   Tooltip,
   User,
+  Select,
+  SelectItem,
 } from "@heroui/react";
 import { useRouter } from "next/navigation";
 
 export default function PlayerTableById({ games, playerId }) {
-  console.log("games:", games)
   const router = useRouter();
-  
+
+  const leagues = useMemo(() => {
+    const leagueSet = new Set();
+    leagueSet.add("All");
+    games.forEach((games) => {
+      leagueSet.add(games.league.title);
+    });
+    return Array.from(leagueSet);
+  }, [games]);
+
+  const [selectedLeague, setSelectedLeague] = useState(new Set(["All"]));
+
+  const [displayedGames, setDisplayedGames] = useState(games);
+
+  useEffect(() => {
+    const selected = Array.from(selectedLeague)[0];
+
+    if (selected === "All") {
+      setDisplayedGames(games);
+    } else {
+      setDisplayedGames(games.filter((game) => game.league.title === selected));
+    }
+  }, [games, selectedLeague]);
+
   const findPlayerStats = (game) => {
     const stats = [...game.playerStats.teamA, ...game.playerStats.teamB];
 
     const playerStat = stats.find((stat) => stat.id === playerId);
-    if(!playerStat) {
-      console.log("unknown player: ",playerId)
-      console.log("game: ",game)
+    if (!playerStat) {
+      console.log("unknown player: ", playerId);
+      console.log("game: ", game);
     }
     return stats.find((stat) => stat.id === playerId);
   };
@@ -111,9 +135,9 @@ export default function PlayerTableById({ games, playerId }) {
 
   const renderCell = (game, key) => {
     const currentStat = findPlayerStats(game);
-    if(!currentStat) {
-      console.log(game)
-    };
+    if (!currentStat) {
+      console.log(game);
+    }
     const { currentTeam, opposingTeam } = findCurrentTeam(game);
     if (!currentTeam || !opposingTeam) return null;
     switch (key) {
@@ -126,13 +150,11 @@ export default function PlayerTableById({ games, playerId }) {
           day: "numeric",
           year: "numeric",
         });
-        return (
-          <span>{date}</span>
-        )
+        return <span>{date}</span>;
       case "points":
         const points =
-          (currentStat.twoPointsMade *  2) +
-          (currentStat.threePointsMade * 3) +
+          currentStat.twoPointsMade * 2 +
+          currentStat.threePointsMade * 3 +
           currentStat.freeThrowsMade;
         return <span>{points || 0}</span>;
       case "assists":
@@ -144,7 +166,7 @@ export default function PlayerTableById({ games, playerId }) {
       case "steals":
         const steals = currentStat.steals || 0;
         return <span>{steals}</span>;
-      case "blocks": 
+      case "blocks":
         const blocks = currentStat.blocks || 0;
         return <span>{blocks}</span>;
       case "currentTeam":
@@ -223,19 +245,41 @@ export default function PlayerTableById({ games, playerId }) {
           </span>
         );
       default:
-        return (
-          <span></span>
-        )
+        return <span></span>;
     }
   };
 
   return (
     <>
+      <div className="grid grid-cols-1 sm:grid-cols-2 sm:gap-1 mb-2">
+        <div>
+          <h2 className="text-lg font-bold tracking-wide md:text-xl max-w-sm">
+            Games Played
+          </h2>
+        </div>
+        <div className="flex items-center justify-end">
+          <Select
+            className="w-full sm:max-w-xs"
+            label="Filter by League"
+            size="sm"
+            variant="bordered"
+            selectedKeys={selectedLeague}
+            onSelectionChange={setSelectedLeague}
+          >
+            {leagues.map((league) => (
+              <SelectItem className="w-full" key={league}>
+                {league}
+              </SelectItem>
+            ))}
+          </Select>
+        </div>
+      </div>
+
       <Table aria-label="Games Played">
         <TableHeader columns={columns}>
           {(col) => <TableColumn key={col.key}>{col.title}</TableColumn>}
         </TableHeader>
-        <TableBody items={games}>
+        <TableBody items={displayedGames}>
           {(game) => {
             return (
               <TableRow

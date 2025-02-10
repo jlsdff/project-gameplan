@@ -1,4 +1,5 @@
 'use client'
+import { useState } from "react";
 import {
   get2PP,
   getAPG,
@@ -11,10 +12,19 @@ import {
   get3PG,
   getFTP,
 } from "@/helpers/players/statsHelpers";
+import Averages from "@/components/ui/player/averages";
+
 
 export default function Player({data}){
+  
+  const {player, games} = data;
+  
+  const [displayedGames, setDisplayedGames] = useState(games);
+  
   return (
-    <h1>PLAYER{data}</h1>
+    <main className="px-8 py-4 sm:py-8 sm:px-16">
+      <Averages player={player} games={displayedGames} />
+    </main>
   )
 }
 
@@ -24,7 +34,7 @@ function Player__({data}) {
   console.log("Player: ", player)
   console.log("Games: ", games )
   return (
-    <main className="px-8 py-4 sm:py-8 sm:px-16">
+    <main >
       <section className="flex flex-col items-center justify-between gap-4 md:flex-row">
             {/* INFO */}
             <div className="flex flex-col items-center justify-center gap-2 md:items-start">
