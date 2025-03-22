@@ -13,9 +13,9 @@ async function getData({ id, searchParams }) {
   let games = firestore
     .collection("games")
     .where("players", "array-contains", id);
-  if (league) {
-    games = games.where("league", "==", league);
-  }
+  // if (league) {
+  //   games = games.where("league", "==", league);
+  // }
   games = await games
     .get()
     .then((snapshot) => snapshot.docs.map((doc) => doc.data()));
@@ -41,7 +41,11 @@ async function getData({ id, searchParams }) {
 
   player = JSON.stringify({ id: player.id, ...player.data() });
 
-  return { player: player, games: JSON.stringify(games), leagues: JSON.stringify(leagues) };
+  return {
+    player: player,
+    games: JSON.stringify(games),
+    leagues: JSON.stringify(leagues),
+  };
 }
 
 export default async function Page({ params, searchParams }) {
@@ -55,7 +59,7 @@ export default async function Page({ params, searchParams }) {
         data={{
           player: JSON.parse(data.player),
           games: JSON.parse(data.games),
-          leagues: JSON.parse(data.leagues)
+          leagues: JSON.parse(data.leagues),
         }}
       />
     </>

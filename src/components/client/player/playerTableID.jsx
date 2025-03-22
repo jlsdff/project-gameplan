@@ -14,6 +14,8 @@ import {
 } from "@heroui/react";
 import { useRouter } from "next/navigation";
 
+// @decrapated
+// TODO: Remove this component
 export default function PlayerTableById({ games, playerId }) {
   const router = useRouter();
 
@@ -25,6 +27,7 @@ export default function PlayerTableById({ games, playerId }) {
     });
     return Array.from(leagueSet);
   }, [games]);
+  console.log("Games from PlayerTableById", games);
 
   const [selectedLeague, setSelectedLeague] = useState(new Set(["All"]));
 
