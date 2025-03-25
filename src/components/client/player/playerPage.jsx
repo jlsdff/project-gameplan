@@ -93,7 +93,6 @@ export default function PlayerPage({ id }) {
 
   const fetchData = useCallback(async () => {
     const data = await getPlayerData({ id });
-    console.log("Player Data: ", data);
     return data;
   }, [id]);
 
