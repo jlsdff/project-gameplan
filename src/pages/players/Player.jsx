@@ -1,14 +1,26 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, useContext } from "react";
 import Averages from "@/components/ui/player/averages";
 import { Divider, Select, SelectItem } from "@heroui/react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import {
+  useParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import PlayerTable from "@/components/client/player/v2/PlayerTable";
+import { firestore } from "@/lib/firebase/firebase";
+import { usePlayerStore } from "./PlayerWrapper";
+import { useQueryClient } from "@tanstack/react-query" 
+import { PlayerContext } from "@/context/playerContext";
 
-export default function Player({ data }) {
-  const { player, games, leagues } = data;
+export default function Player() {
+
+  const { player, games, leagues } = useContext(PlayerContext);
+  console.log("player", { player, games, leagues });
+
   const league = useSearchParams().get("league");
-  console.log("games", games);
+
   const displayedGames = useMemo(() => {
     if (league === "all" || league === null || league === undefined) {
       return games;
@@ -26,7 +38,6 @@ export default function Player({ data }) {
     });
     return selection;
   }, [leagues]);
-  console.log("displayedGames", displayedGames);
 
   return (
     <main className="px-8 py-4 sm:py-8 sm:px-16">
@@ -84,3 +95,5 @@ function LeagueFilter({ leagues }) {
     </>
   );
 }
+
+
