@@ -24,8 +24,7 @@ export default function TableClient({ columns, items, loading }) {
   const toTeam = (teamId) => {
     router.push("/teams?id=" + teamId);
   };
-  console.log("items: ", items)
-  // items.map(item => console.log(item.gameRecords))
+
   return (
     <Table removeWrapper aria-label="Data Display Table for Players">
       <TableHeader columns={columns}>
