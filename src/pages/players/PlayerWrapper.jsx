@@ -77,7 +77,10 @@ export function FetchLayer({ children }) {
     error
   } = useQuery({
     queryKey: ['player'],
-    queryFn: fetchPlayer
+    queryFn: fetchPlayer,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
   }); 
 
   if (isPending) return <div>...Loading</div>;
