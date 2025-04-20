@@ -98,6 +98,7 @@ export const createGame = async (gameData) => {
         leagueId: gameData.league.id,
         playerStats: gameData.stats,
         players,
+        playerOfTheGame: gameData.playerOfTheGame,
         teams,
         teamA: {
           id: gameData.teamA.id,

@@ -64,6 +64,7 @@ export default function NewGame({ id }) {
     setTeamA,
     setTeamB,
     stats,
+    playerOfTheGame: potg,
   } = useNewGameStore();
   const router = useRouter()
   const [isSubmitting, setSubmitting] = useState(false);
@@ -82,6 +83,7 @@ export default function NewGame({ id }) {
         teamB: getTeamTotalStats(stats.teamB),
       },
       playerStats: stats,
+      playerOfTheGame: potg
     }
     console.log("Game Data: ", gameData); 
 
