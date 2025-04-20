@@ -23,10 +23,25 @@ export default function PlayerOfTheGame(){
       >
         {
           selection.map( player => (
-            <SelectItem key={player.id} >{`${player.lastname}, ${player.firstname}`}</SelectItem>
+            <SelectItem key={player.id} >
+              <UserDisplay player={player} />
+            </SelectItem>
           ))
         }
       </Select>
+    </div>
+  )
+}
+
+function UserDisplay({player}){
+  return (
+    <div className="flex gap-2" >
+      <div className="min-w-[30px]" > 
+        {player.number}
+      </div>
+      <div className="font-semibold" >
+        {`${player.lastname}, ${player.firstname}`}
+      </div>
     </div>
   )
 }
