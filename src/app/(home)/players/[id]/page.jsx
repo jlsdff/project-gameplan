@@ -21,7 +21,7 @@ export async function generateMetadata({ params, searchParams }) {
     .collection("games")
     .where("players", "array-contains", id);
   if (league) {
-    games.where("leagueId", "==", league);
+    games = games.where("leagueId", "==", league);
   }
   games = await games
     .get()

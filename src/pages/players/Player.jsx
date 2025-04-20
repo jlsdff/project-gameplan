@@ -20,13 +20,21 @@ export default function Player() {
   console.log("player", { player, games, leagues });
 
   const league = useSearchParams().get("league");
-
+  console.log("search parameter: ",league)
   const displayedGames = useMemo(() => {
-    if (league === "all" || league === null || league === undefined) {
+    if (
+      league === "all" ||
+      league === "null" ||
+      league === "undefined" ||
+      league === null ||
+      league === undefined
+    ) {
       return games;
     }
     return games.filter((game) => game.leagueId === league);
-  }, [league, games]);
+  }, [league, games])
+
+  console.log("displayedGames: ", displayedGames)
 
   const leagueSelection = useMemo(() => {
     const selection = [{ name: "All", id: "all" }];
@@ -38,6 +46,8 @@ export default function Player() {
     });
     return selection;
   }, [leagues]);
+
+  console.log("league selection: ", leagueSelection)
 
   return (
     <main className="px-8 py-4 sm:py-8 sm:px-16">
@@ -63,7 +73,24 @@ function LeagueFilter({ leagues }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const [selected, setSelected] = useState("all");
+  let initialValue;
+  if(
+    searchParams.get("league") === null ||
+    searchParams.get("league") === undefined ||
+    searchParams.get("league") === "null" ||
+    searchParams.get("league") === "undefined" 
+  ) {
+    initialValue = "all"
+  } else {
+    const leagueParam = searchParams.get("league")
+    if(leagues.some( league => league.id === searchParams.get("league") )) {
+      initialValue = leagueParam;
+    } else {
+      initialValue = "all"
+    }
+  }
+
+  const [selected, setSelected] = useState(new Set([initialValue]));
 
   const handleSelectionChange = (selected) => {
     setSelected(selected);
