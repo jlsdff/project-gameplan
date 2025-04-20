@@ -17,24 +17,22 @@ import { PlayerContext } from "@/context/playerContext";
 export default function Player() {
 
   const { player, games, leagues } = useContext(PlayerContext);
-  console.log("player", { player, games, leagues });
 
   const league = useSearchParams().get("league");
-  console.log("search parameter: ",league)
+
   const displayedGames = useMemo(() => {
     if (
       league === "all" ||
       league === "null" ||
       league === "undefined" ||
       league === null ||
-      league === undefined
+      league === undefined ||
+      !leagues.some( l => l.id === league )
     ) {
       return games;
     }
     return games.filter((game) => game.leagueId === league);
   }, [league, games])
-
-  console.log("displayedGames: ", displayedGames)
 
   const leagueSelection = useMemo(() => {
     const selection = [{ name: "All", id: "all" }];
@@ -46,8 +44,6 @@ export default function Player() {
     });
     return selection;
   }, [leagues]);
-
-  console.log("league selection: ", leagueSelection)
 
   return (
     <main className="px-8 py-4 sm:py-8 sm:px-16">
