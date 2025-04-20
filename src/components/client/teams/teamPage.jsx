@@ -311,7 +311,7 @@ export default function TeamPage({ id }) {
                   <Link
                     className="w-full hover:underline"
                     key={player.id}
-                    href={`/players?id=${player.id}`}
+                    href={`/players/${player.id}`}
                   >
                     <User
                       className="justify-start cursor-pointer text-foreground "

@@ -3,7 +3,6 @@ import React, { useEffect, useState, useCallback } from "react";
 import { firestore } from "@/lib/firebase/firebase";
 import { Image, Divider, User, Link } from "@heroui/react";
 import LeagueIdTable from "@/components/client/leagues/leagueIdTable";
-import { Helmet } from "react-helmet";
 
 export default function LeaguePage({ id }) {
   const [league, setLeague] = useState(null);
@@ -174,17 +173,6 @@ export default function LeaguePage({ id }) {
 
   return (
     <>
-      <Helmet>
-        <title>{league ? league.title : "League"}</title>
-        <meta
-          name="description"
-          content={`League ${league ? `${league.title} recent games and standings` : "Recent Games and Standings"}`}
-        />
-        <meta
-          name="keywords"
-          content={`League, ${league ? league.title : "League"}, Recent Games, Standings`}
-        />
-      </Helmet>
       {!league ? (
         <main className="flex items-center justify-center w-screen h-screen">
           <Spinner label="Loading..." />

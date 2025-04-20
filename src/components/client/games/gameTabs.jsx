@@ -5,9 +5,10 @@ import GameStats from "./gameStats";
 import PlayerTable from "./playerTable";
 
 export default function GameTabs({ game }) {
+
   const { teamA, teamB, playerStats } = game;
   const [selectedTab, setSelectedTab] = useState("teamA");
-  console.log(playerStats);
+
   return (
     <>
       <Tabs
