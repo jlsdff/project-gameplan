@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import { firestore } from "@/lib/firebase/firebase";
 import { PlayerContext } from "@/context/playerContext";
 import LoadingPage from "@/components/ui/loading"
+import ErrorPage from "@/components/ui/error"
 
 const queryClient = new QueryClient();
 
@@ -88,7 +89,7 @@ export function FetchLayer({ children }) {
   if (isError) {
     console.log(error)
   }
-  if (isError) return <div>Something went wrong...</div>;
+  if (isError) return <ErrorPage />
 
   return <>{children}</>;
 }
