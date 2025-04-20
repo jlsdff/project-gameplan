@@ -48,6 +48,7 @@ import BasicTable from "@/components/ui/table/BasicTable";
 import { createColumnHelper } from "@tanstack/react-table";
 import { createGamev2 } from "@/utils/gamesAPI";
 import { useRouter } from "next/navigation";
+import PlayerOfTheGame from "./playerOfTheGame"
 
 const columnHelper = createColumnHelper();
 
@@ -129,7 +130,14 @@ export default function NewGame({ id }) {
         <GameDatePicker label="Date" />
         <GameNumber label="Game Number" />
       </section>
-
+      {
+        teamA && teamB && (
+          <>
+            <h2 className="font-semibold text-lg" >Player of the Game</h2>
+            <PlayerOfTheGame />
+          </>
+        )
+      }
       {teamA && teamB && (
         <motion.section
           initial={{ opacity: 0, x: -100 }}
@@ -137,6 +145,7 @@ export default function NewGame({ id }) {
           transition={{ duration: 0.3 }}
           className="my-2.5"
         >
+          <h2 className="font-semibold text-lg" >Tools</h2>
           <div className="">
             <ButtonGroup size="sm" className="" variant="bordered">
               <NewPlayerButton />
@@ -153,6 +162,7 @@ export default function NewGame({ id }) {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.3 }}
         >
+          <h2 className="font-semibold text-lg" >Stats</h2>
           <Tabs aria-label="tabs-table">
             <Tab key={teamA.teamName} title={teamA.teamName}>
               <StatTable id={id} team="teamA" />

@@ -62,6 +62,10 @@ export const useNewGameStore = create((set) => ({
     teamA: [],
     teamB: [],
   },
+  playerOfTheGame: new Set([]),
+  setPlayerOfTheGame: (player) => {
+    set({playerOfTheGame: player})
+  },
   date: parseDate(getTodayFormatted()),
   number: null,
   lastGame: null,
