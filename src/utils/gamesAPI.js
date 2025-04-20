@@ -86,7 +86,8 @@ export const createGame = async (gameData) => {
       ...gameData.stats.teamB.map((player) => player.id),
     ];
     const teams = [gameData.teamA.id, gameData.teamB.id];
-
+    
+    let potg = gameData.playerOfTheGame
     const persisGame = firestore
       .collection("games")
       .doc(gameData.doc)
@@ -209,7 +210,8 @@ export const createGamev2 = async (gameData) => {
         stats: gameData.stats.teamB
       },
       teams,
-      time: Timestamp.fromDate(gameData.date)
+      time: Timestamp.fromDate(gameData.date),
+      playerOfTheGame: gameData.playerOfTheGame
     })
 
   })

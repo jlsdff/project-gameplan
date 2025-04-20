@@ -14,6 +14,7 @@ export default function PlayerOfTheGame(){
     setPlayerOfTheGame(player)
   }
 
+  console.log("Selected: ", selected)
   return (
     <div>
       <Select 
@@ -23,7 +24,7 @@ export default function PlayerOfTheGame(){
       >
         {
           selection.map( player => (
-            <SelectItem key={player.id} >
+            <SelectItem key={player.id} textValue={`${player.number} - ${player.lastname}, ${player.firstname} `} >
               <UserDisplay player={player} />
             </SelectItem>
           ))

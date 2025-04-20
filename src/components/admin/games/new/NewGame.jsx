@@ -70,7 +70,6 @@ export default function NewGame({ id }) {
   const [isSubmitting, setSubmitting] = useState(false);
 
   const handleSave = useCallback(async() => {
-
     const gameData = {
       league,
       teamA,
@@ -83,9 +82,8 @@ export default function NewGame({ id }) {
         teamB: getTeamTotalStats(stats.teamB),
       },
       playerStats: stats,
-      playerOfTheGame: potg
+      playerOfTheGame: potg.currentKey
     }
-    console.log("Game Data: ", gameData); 
 
     try {
       setSubmitting(true)
