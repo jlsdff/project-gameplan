@@ -138,5 +138,9 @@ export default function renderPlayerCell(player, key, toTeam) {
           />
         </div>
       );
+    case "TGP":
+      return (
+        <div>{player.gameRecords ? player.gameRecords.length : 0}</div>
+      )
   }
 }

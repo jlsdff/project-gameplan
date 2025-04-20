@@ -64,6 +64,11 @@ const columns = [
     description: "Blocks Per Game",
   },
   {
+    key: "TGP",
+    label: "TGP",
+    description: "Total Games Played"
+  },
+  {
     key: "LPT",
     label: "Current Team",
     description: "Current Team",
@@ -137,7 +142,7 @@ function Main({ page, name }) {
     suspense: true,
     staleTime: Infinity,
   });
-
+  console.log(data)
   const playersData = useMemo(() => {
     const players = data.pages.map((page) => page.players).flat();
     return players;
