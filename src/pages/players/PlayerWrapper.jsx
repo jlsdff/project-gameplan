@@ -5,6 +5,7 @@ import { create } from "zustand";
 import { useParams } from "next/navigation";
 import { firestore } from "@/lib/firebase/firebase";
 import { PlayerContext } from "@/context/playerContext";
+import LoadingPage from "@/components/ui/loading"
 
 const queryClient = new QueryClient();
 
@@ -83,7 +84,7 @@ export function FetchLayer({ children }) {
     staleTime: Infinity,
   }); 
 
-  if (isPending) return <div>...Loading</div>;
+  if (isPending) return <LoadingPage />
   if (isError) {
     console.log(error)
   }

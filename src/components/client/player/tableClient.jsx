@@ -18,7 +18,7 @@ export default function TableClient({ columns, items, loading }) {
   const router = useRouter();
 
   const routeToPlayer = (id) => {
-    router.push(`/players?id=${id}`);
+    router.push(`/players/${id}`);
   };
 
   const toTeam = (teamId) => {
