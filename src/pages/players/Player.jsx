@@ -53,9 +53,9 @@ export default function Player() {
       <Divider className="my-4" />
       <section className="flex flex-col sm:flex-row gap-2 justify-between items-center">
         <h2 className="sm:text-xl font-semibold text-lg">Games Played</h2>
-        <div className="min-w-[300px]">
-          <LeagueFilter leagues={leagueSelection} />
-        </div>
+          <div className="min-w-[300px]">
+            <LeagueFilter leagues={leagueSelection} />
+          </div>
       </section>
       <section className="mt-4">
         <PlayerTable games={displayedGames} />

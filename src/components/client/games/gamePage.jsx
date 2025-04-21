@@ -1,9 +1,10 @@
 'use client'
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useMemo } from "react";
 import { firestore } from "@/lib/firebase/firebase";
 import { Image, Card, Spinner } from "@heroui/react";
 import GameTabs from "@/components/client/games/gameTabs";
 import GameStats from "@/components/client/games/gameStats";
+import PlayerOfTheGame from "./playerOfTheGame.jsx"
 
 export default function GamePage({ id }) {
   const [game, setGame] = useState(null);
@@ -95,6 +96,20 @@ export default function GamePage({ id }) {
     }
   };
 
+  const playerOfTheGameData = useMemo(() => {
+    
+    if (!game || !game.playerOfTheGame) {
+     return 
+    }
+
+    const players = [...game.playerStats.teamA, ...game.playerStats.teamB]
+    
+    return players.find(player => player.id === game.playerOfTheGame)
+
+  })
+
+  console.log("game: ", game)
+
   return (
     <>
       {!game ? (
@@ -142,6 +157,15 @@ export default function GamePage({ id }) {
               </div>
             </div>
           </section>
+
+          {
+            game.playerOfTheGame && (
+              <section className="px-8 sm:px-16 my-3">
+                <PlayerOfTheGame data={playerOfTheGameData} />
+              </section>
+            )
+          }
+
           <section className="flex flex-col items-start justify-start gap-3 px-8 my-4 sm:flex-row sm:px-16">
             <Card className="w-full sm:max-w-[250px] shrink-0">
               <GameStats teamA={game.teamA} teamB={game.teamB} />

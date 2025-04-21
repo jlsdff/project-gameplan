@@ -1,21 +1,32 @@
 import { getStats } from "@/helpers/players/statsHelpers";
+import ShareButtons from "@/components/ui/shareButtons"
+import { Tooltip } from "@heroui/react"
+import { usePathname } from "next/navigation"
 
 export default function Averages({player, games}) {
   
+  const pathname = usePathname()
+  const current_url = `${window.location.origin}${pathname}`
+
   const stats = getStats(player.id, games);
   
   return (
     <section className="flex flex-col items-center justify-between gap-4 md:flex-row">
       {/* INFO */}
       <div className="flex flex-col items-center justify-center gap-2 md:items-start">
+
         <h1 className="text-2xl font-black sm:text-4xl text-primary">
           {player.firstname
             ? `${player.lastname}, ${player.firstname}`
             : `${player.lastname}`}
         </h1>
-        <p className="font-light text-md sm:text-xl">
-          {stats.positions?.join(" | ") || ""}
-        </p>
+
+        <div className="my-4 flex w-full justify-start items-center">
+          <Tooltip content="Share Buttons">
+            <ShareButtons url={current_url} title={`${player.lastname} stats`} fill="#fef8f6" />
+          </Tooltip>
+        </div>
+
       </div>
       {/* STATS */}
       <div className="grid w-full grid-cols-3 grid-rows-3 gap-2 md:w-1/2 place-self-center">

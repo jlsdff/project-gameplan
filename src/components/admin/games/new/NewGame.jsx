@@ -90,8 +90,10 @@ export default function NewGame({ id }) {
       await createGamev2({...gameData})
         .then(res => console.log("FINAL: ",res))
         .then(res => {
-          router.push('/admin/dashboard/games')
           toast.success("Game created successfully.")
+          setTimeout(() => {
+            router.push('/admin/dashboard/games')
+          }, 2000)
         })
     } catch( err ) {
       console.error(err)
@@ -102,11 +104,13 @@ export default function NewGame({ id }) {
         toast.error("An error occured while creating the game.");
       }
     } finally {
-      setSubmitting(false)
+      setTimeout(() => {
+        setSubmitting(false)
+      }, 2000)
     }
     
     
-  }, [
+  }, [        
     league,
     teamA,
     teamB,

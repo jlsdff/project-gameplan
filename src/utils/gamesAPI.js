@@ -131,6 +131,7 @@ export const createGamev2 = async (gameData) => {
     const error = new CustomError("Data is required", 400);
     throw error;
   }
+  console.log("GameDATA: ", gameData)
   const isValid = Object.values(gameData).every(
     (value) => value !== undefined && value !== null && value !== "" && value !== 0
   );
