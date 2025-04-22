@@ -5,6 +5,7 @@ import { Image, Card, Spinner } from "@heroui/react";
 import GameTabs from "@/components/client/games/gameTabs";
 import GameStats from "@/components/client/games/gameStats";
 import PlayerOfTheGame from "./playerOfTheGame.jsx"
+import ShareButtons from "@/components/ui/shareButtons"
 
 export default function GamePage({ id }) {
   const [game, setGame] = useState(null);
@@ -158,6 +159,10 @@ export default function GamePage({ id }) {
             </div>
           </section>
 
+          <div className="flex justify-center items-center w-full">
+            <_ShareButtons />
+          </div>
+
           {
             game.playerOfTheGame && (
               <section className="px-8 sm:px-16 my-3">
@@ -178,4 +183,11 @@ export default function GamePage({ id }) {
       )}
     </>
   );
+}
+
+function _ShareButtons({}) {
+
+  return (
+    <ShareButtons url={`${window.location.href}`} />
+  )
 }
