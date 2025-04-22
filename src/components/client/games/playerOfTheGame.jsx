@@ -92,7 +92,7 @@ export default function PlayerOfTheGame({data}){
           (data.threePointsMade/data.threePointsAttempted) > 0.5 && (
         <div className="flex flex-col gap-2 min-w-[50px] justify-center items-center p-2">
           <div className="text-xl font-semibold text-primary">
-            2PT%
+            3PT%
           </div> 
           <div className="font-bold text-xl ">
             {((data.threePointsMade/data.threePointsAttempted) * 100)}%
