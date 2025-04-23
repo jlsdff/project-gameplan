@@ -81,11 +81,11 @@ export async function generateMetadata({ params, searchParams }) {
   const base_url = `/api/image/game?teamA=${teamA.teamAbbr ? teamA.teamAbbr : teamA.teamName.substring(0,2)}&teamB=${teamB.teamAbbr ? teamB.teamAbbr : teamB.teamName.substring(0,2)}&teamAScore=${data.teamA.stats.points}&teamBScore=${data.teamB.stats.points}`
   const imageUrl = potg ? base_url+"&"+potg : base_url;
 
-  console.log("Image URL: ", imageUrl)
+  console.log("DATA: ", data)
 
   return {
     title: `${teamA.teamName} vs ${teamB.teamName}`,
-    description: `${teamA.teamName} vs ${teamB.teamName}`,
+    description: `Final Score: ${teamA.teamName}-${data.teamA.stats.points} vs ${teamB.teamName}-${data.teamB.stats.points}`,
     openGraph: {
       images: [
         imageUrl

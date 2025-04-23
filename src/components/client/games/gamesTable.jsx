@@ -109,7 +109,7 @@ export default function GamesTable({ games, loading }) {
     }
   };
 
-  const toGame = (id) => router.push(`/games?id=${id}`)
+  const toGame = (id) => router.push(`/games/${id}`)
 
   return (
     <>

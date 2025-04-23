@@ -5,7 +5,6 @@ import { firestore } from "@/lib/firebase/firebase";
 import { getGamesByPage } from "@/utils/gamesAPI";
 import GamesTable from "@/components/client/games/gamesTable";
 import GamePagination from "@/components/client/games/gamePagination";
-import { Helmet } from "react-helmet";
 
 export default function GamesDisplay({ page, name }) {
   const [games, setGames] = useState([]);
@@ -13,9 +12,6 @@ export default function GamesDisplay({ page, name }) {
   const [loading, setLoading] = useState(true);
 
   const fetchData = useCallback(async () => {
-    if (name) {
-      // Implement search by game name
-    }
 
     let games = await getGamesByPage(page - 1, 10).then((snapshot) =>
       snapshot.docs.map((doc) => ({
@@ -83,13 +79,6 @@ export default function GamesDisplay({ page, name }) {
 
   return (
     <>
-      <Helmet>
-        <title>Games</title>
-        <meta
-          name="description"
-          content="Recent games played by teams"
-        />
-      </Helmet>
       {!games ? (
         <main className="flex items-center justify-center w-screen h-screen">
           <Spinner label="Loading..." color="primary" />
@@ -101,10 +90,7 @@ export default function GamesDisplay({ page, name }) {
           </div>
 
           <section>
-            {/* Search bar */}
-            <div></div>
-            {/* Data Display for games */}
-            <div className="px-8 sm:px-16">
+           <div className="px-8 sm:px-16">
               <GamesTable games={games} loading={loading}  />
             </div>
             <div className="flex items-center justify-center my-2">

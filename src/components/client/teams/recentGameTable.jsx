@@ -169,7 +169,7 @@ export default function RecentGameTable({ games, teamId, loading }) {
           <TableRow
             key={game.id}
             className="cursor-pointer hover:bg-primary-500/5"
-            onClick={() => router.push(`/games?id=${game.id}`)}
+            onClick={() => router.push(`/games/${game.id}`)}
           >
             {(key) => <TableCell>{renderCell(game, key)}</TableCell>}
           </TableRow>
