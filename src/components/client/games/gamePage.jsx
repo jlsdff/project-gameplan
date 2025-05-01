@@ -88,7 +88,7 @@ export default function GamePage({ id }) {
       setLoading(false);
     }
   }, [fetchData]);
-  
+
   const renderScore = (curr, oppo) => {
     if (curr.stats.points > oppo.stats.points) {
       return <span className="text-success">{curr.stats.points}</span>;
@@ -98,13 +98,13 @@ export default function GamePage({ id }) {
   };
 
   const playerOfTheGameData = useMemo(() => {
-    
+
     if (!game || !game.playerOfTheGame) {
-     return 
+      return
     }
 
     const players = [...game.playerStats.teamA, ...game.playerStats.teamB]
-    
+
     return players.find(player => player.id === game.playerOfTheGame)
 
   })
@@ -185,7 +185,7 @@ export default function GamePage({ id }) {
   );
 }
 
-function _ShareButtons({}) {
+function _ShareButtons({ }) {
 
   return (
     <ShareButtons url={`${window.location.href}`} />

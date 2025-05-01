@@ -8,7 +8,6 @@ export async function generateMetadata({ params, searchParams }) {
 
   if (!game.exists) {
     notFound();
-    return;
   }
 
   let teamA = (await game.data().teamA.id) ?? null;
@@ -35,10 +34,10 @@ export async function generateMetadata({ params, searchParams }) {
       .collection("players")
       .doc(potg)
       .get()
-      .then( doc => ({id: doc.id, ...doc.data()}) )
-    
+      .then(doc => ({ id: doc.id, ...doc.data() }))
+
     const stats = [...game.data().playerStats.teamA, ...game.data().playerStats.teamB]
-    const potgStats = stats.find( player => player.id === potg )
+    const potgStats = stats.find(player => player.id === potg)
 
     potg = {
       name: `${player.firstname} ${player.lastname}`.trim(),
@@ -56,13 +55,13 @@ export async function generateMetadata({ params, searchParams }) {
     }
 
     let potgParams = []
-    Object.entries(potg).forEach( ([key, value]) => {
+    Object.entries(potg).forEach(([key, value]) => {
       const partner = `${key}=${value}`
       potgParams.push(partner)
     })
     potgParams = potgParams.join("&")
     potg = potgParams;
-    console.log("POTG SEARCH PARAMETERS: ",potgParams)
+    console.log("POTG SEARCH PARAMETERS: ", potgParams)
 
   }
 
@@ -77,11 +76,9 @@ export async function generateMetadata({ params, searchParams }) {
       stats: game.data().teamB.stats
     },
   }
-  
-  const base_url = `/api/image/game?teamA=${teamA.teamAbbr ? teamA.teamAbbr : teamA.teamName.substring(0,2)}&teamB=${teamB.teamAbbr ? teamB.teamAbbr : teamB.teamName.substring(0,2)}&teamAScore=${data.teamA.stats.points}&teamBScore=${data.teamB.stats.points}`
-  const imageUrl = potg ? base_url+"&"+potg : base_url;
 
-  console.log("DATA: ", data)
+  const base_url = `/api/image/game?teamA=${teamA.teamAbbr ? teamA.teamAbbr : teamA.teamName.substring(0, 2)}&teamB=${teamB.teamAbbr ? teamB.teamAbbr : teamB.teamName.substring(0, 2)}&teamAScore=${data.teamA.stats.points}&teamBScore=${data.teamB.stats.points}`
+  const imageUrl = potg ? base_url + "&" + potg : base_url;
 
   return {
     title: `${teamA.teamName} vs ${teamB.teamName}`,
