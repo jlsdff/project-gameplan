@@ -3,21 +3,22 @@ import { useCallback, useEffect, useMemo, useState, useContext } from "react";
 import Averages from "@/components/ui/player/averages";
 import { Divider, Select, SelectItem } from "@heroui/react";
 import {
-  useParams,
   usePathname,
   useRouter,
   useSearchParams,
 } from "next/navigation";
 import PlayerTable from "@/components/client/player/v2/PlayerTable";
-import { firestore } from "@/lib/firebase/firebase";
-import { usePlayerStore } from "./PlayerWrapper";
-import { useQueryClient } from "@tanstack/react-query" 
+
 import { PlayerContext } from "@/context/playerContext";
+import LoadingPage from "@/components/ui/loading";
 
 export default function Player() {
 
-  const { player, games, leagues } = useContext(PlayerContext);
-
+  const ctx = useContext(PlayerContext);
+  if (!ctx) {
+    return <LoadingPage />
+  }
+  const { player, games, leagues } = ctx;
   const league = useSearchParams().get("league");
 
   const displayedGames = useMemo(() => {
@@ -27,7 +28,7 @@ export default function Player() {
       league === "undefined" ||
       league === null ||
       league === undefined ||
-      !leagues.some( l => l.id === league )
+      !leagues.some(l => l.id === league)
     ) {
       return games;
     }
@@ -53,9 +54,9 @@ export default function Player() {
       <Divider className="my-4" />
       <section className="flex flex-col sm:flex-row gap-2 justify-between items-center">
         <h2 className="sm:text-xl font-semibold text-lg">Games Played</h2>
-          <div className="min-w-[300px]">
-            <LeagueFilter leagues={leagueSelection} />
-          </div>
+        <div className="min-w-[300px]">
+          <LeagueFilter leagues={leagueSelection} />
+        </div>
       </section>
       <section className="mt-4">
         <PlayerTable games={displayedGames} />
@@ -70,16 +71,16 @@ function LeagueFilter({ leagues }) {
   const searchParams = useSearchParams();
 
   let initialValue;
-  if(
+  if (
     searchParams.get("league") === null ||
     searchParams.get("league") === undefined ||
     searchParams.get("league") === "null" ||
-    searchParams.get("league") === "undefined" 
+    searchParams.get("league") === "undefined"
   ) {
     initialValue = "all"
   } else {
     const leagueParam = searchParams.get("league")
-    if(leagues.some( league => league.id === searchParams.get("league") )) {
+    if (leagues.some(league => league.id === searchParams.get("league"))) {
       initialValue = leagueParam;
     } else {
       initialValue = "all"
