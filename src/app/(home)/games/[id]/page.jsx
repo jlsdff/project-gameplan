@@ -2,7 +2,8 @@ import GamePage from "@/components/client/games/gamePage";
 import { firestore } from "@/lib/firebase/firebase";
 import { notFound } from "next/navigation";
 
-export async function generateMetadata({ params, searchParams }) {
+export async function generateMetadata(props) {
+  const params = await props.params;
 
   const game = await firestore.collection("games").doc(params.id).get();
 
@@ -91,6 +92,7 @@ export async function generateMetadata({ params, searchParams }) {
   };
 }
 
-export default function Page({ params }) {
+export default async function Page(props) {
+  const params = await props.params;
   return <GamePage id={params.id} />;
 }

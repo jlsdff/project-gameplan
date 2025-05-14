@@ -5,7 +5,9 @@ import { getStats } from "@/helpers/players/statsHelpers";
 import PlayerWrapper, { FetchLayer } from "@/pages/players/PlayerWrapper";
 import PlayerProvider from "@/providers/playerProvider"
 
-export async function generateMetadata({ params, searchParams }) {
+export async function generateMetadata(props) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const { league } = searchParams;
   const { id } = params;
 
