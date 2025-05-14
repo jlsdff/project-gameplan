@@ -7,6 +7,10 @@ runConfig:
   cpu: 1
   memoryMiB: 1024
 
+outputFiles:
+  serverApp:
+    include: [public]
+
 # Environment variables and secrets.
 env:
   # Configure environment variables.
