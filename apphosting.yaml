@@ -11,6 +11,10 @@ outputFiles:
   serverApp:
     include: [public]
 
+scripts:
+  buildCommand: next build
+  runCommand: next start
+
 # Environment variables and secrets.
 env:
   # Configure environment variables.
