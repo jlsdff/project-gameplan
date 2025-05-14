@@ -7,10 +7,6 @@ runConfig:
   cpu: 1
   memoryMiB: 1024
 
-outputFiles:
-  serverApp:
-    include: [public]
-
 scripts:
   buildCommand: next build
 
