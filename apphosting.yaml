@@ -9,11 +9,10 @@ runConfig:
 
 outputFiles:
   serverApp:
-    include: [public]
+    include: [.]
 
 scripts:
   buildCommand: next build
-  runCommand: next start
 
 # Environment variables and secrets.
 env:
