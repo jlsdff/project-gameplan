@@ -3,16 +3,13 @@
 runConfig:
   minInstances: 0
   maxInstances: 10
-  concurrency: 50
+  concurrency: 100
   cpu: 1
   memoryMiB: 1024
 
 outputFiles:
   serverApp:
     include: [.]
-
-scripts:
-  buildCommand: next build
 
 # Environment variables and secrets.
 env:
