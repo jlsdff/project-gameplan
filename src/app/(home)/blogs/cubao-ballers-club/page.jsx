@@ -1,12 +1,11 @@
+'use client'
 import React from "react";
 import { Image, Divider } from "@heroui/react";
 import Footer from "@/components/client/footer/Footer";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 
-const ShareButtons = dynamic(() => import("@/components/ui/shareButtons"), {
-  ssr: false,
-});
+const ShareButtons = dynamic(() => import("@/components/ui/shareButtons"));
 
 export default function PapawisSchedKings() {
   return (
@@ -49,7 +48,6 @@ export default function PapawisSchedKings() {
           </h2>
           <p
             className="text-sm leading-relaxed tracking-wide indent-8 md:text-medium"
-            text-justify
           >
             Around 2014 nasali ako sa isang group, then eventually ako na nag
             manage dahil sa passion for the game, nag stop during pandemic then

@@ -5,8 +5,7 @@ import { Image } from "@heroui/react";
 import Link from "next/link";
 
 const BlogContainer = dynamic(
-  () => import("@/components/client/blog/blogContainer"),
-  { ssr: false }
+  () => import("@/components/client/blog/blogContainer")
 );
 
 export default function BlogPage() {

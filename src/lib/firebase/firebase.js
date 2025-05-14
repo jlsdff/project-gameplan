@@ -31,9 +31,9 @@ if (firebase.apps.length === 0) {
 
 const auth = app.auth();
 const firestore = app.firestore()
-if (process.env.NODE_ENV === "development") {
-  firestore.useEmulator("127.0.0.1", 8080);
-}
+// if (process.env.NODE_ENV === "development") {
+//   firestore.useEmulator("127.0.0.1", 8080);
+// }
 
 const storage = app.storage();
 

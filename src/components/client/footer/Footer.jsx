@@ -1,3 +1,4 @@
+'use client'
 import React from "react";
 import { Link } from "@heroui/react";
 import { Image } from "@heroui/react";

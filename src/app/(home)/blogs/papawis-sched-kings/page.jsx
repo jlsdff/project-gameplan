@@ -1,12 +1,11 @@
+'use client'
 import React from "react";
 import { Image, Divider } from "@heroui/react";
 import Footer from "@/components/client/footer/Footer";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 
-const ShareButtons = dynamic(() => import("@/components/ui/shareButtons"), {
-  ssr: false,
-});
+const ShareButtons = dynamic(() => import("@/components/ui/shareButtons"));
 
 export default function PapawisSchedKings() {
   return (
@@ -51,7 +50,6 @@ export default function PapawisSchedKings() {
           </h2>
           <p
             className="text-sm leading-relaxed tracking-wide indent-8 md:text-medium"
-            text-justify
           >
             Nagsimula ang grupo namin noong 2013, pero mas matagal pa dyan
             kaming sumasali sa mga liga, dumadayo kung saan may alam kaming
